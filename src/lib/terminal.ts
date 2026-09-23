@@ -1,4 +1,4 @@
-import { experience } from "@/content/experience";
+import { earlier } from "@/content/earlier";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
 
@@ -80,7 +80,7 @@ const commands: Record<string, Command> = {
       return {
         lines: [
           text(`building  ${featured?.title ?? "–"} (${done}/${roadmap.length} milestones)`),
-          text(`learning  ${profile.skills["Currently learning"].join(", ")}`),
+          text(`learning  ${profile.learning.join(", ")}`),
           text(`open to   ${profile.status.replace(/^Open to /i, "")}`),
         ],
       };
@@ -115,6 +115,7 @@ const commands: Record<string, Command> = {
         text(project.hook),
         blank,
         ...project.bullets.map((b) => text(`  + ${b}`)),
+        ...(project.learned ? [blank, text(`learned: ${project.learned}`)] : []),
         blank,
         text(`stack: ${project.meta}`, "muted"),
       ];
@@ -129,13 +130,14 @@ const commands: Record<string, Command> = {
       return { lines };
     },
   },
-  experience: {
-    summary: "work experience",
+  earlier: {
+    summary: "before university",
     run: () => ({
-      lines: experience.flatMap((role) => [
-        text(`${role.role} @ ${role.org}`, "accent"),
-        text(`${role.start}${role.end !== role.start ? ` – ${role.end}` : ""} · ${role.place}`, "muted"),
-        ...role.bullets.map((b) => text(`  + ${b}`)),
+      lines: earlier.flatMap((item) => [
+        text(`${item.what} @ ${item.org}`, "accent"),
+        text(item.when, "muted"),
+        text(`  + ${item.summary}`),
+        ...(item.repo ? [link(`  repo → ${item.repo.replace("https://", "")}`, item.repo)] : []),
       ]),
     }),
   },
@@ -259,7 +261,8 @@ const aliases: Record<string, string> = {
   projects: "ls",
   dir: "ls",
   cls: "clear",
-  work: "experience",
+  work: "earlier",
+  experience: "earlier",
   cv: "resume",
   email: "contact",
   "?": "help",

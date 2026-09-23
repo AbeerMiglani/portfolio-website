@@ -17,10 +17,14 @@ export function ProjectCard({ project }: { project: Project }) {
     );
   }
 
+  // Secondary projects sit side by side with their art on wide screens: full width,
+  // but smaller type and no roadmap, so the featured card stays the anchor.
   return (
-    <article className="group flex flex-col rounded-xl border border-border bg-surface p-6 sm:p-7 transition duration-200 hover:border-accent/50 hover:shadow-lg motion-safe:hover:-translate-y-0.5">
-      <ProjectArt slug={project.slug} />
-      <div className="mt-6 flex flex-1 flex-col">
+    <article className="group grid grid-cols-1 gap-6 rounded-xl border border-border bg-surface p-5 sm:p-7 md:grid-cols-[2fr_3fr] md:gap-8 transition duration-200 hover:border-accent/50 hover:shadow-lg motion-safe:hover:-translate-y-0.5">
+      <div className="min-w-0 md:self-center">
+        <ProjectArt slug={project.slug} />
+      </div>
+      <div className="flex min-w-0 flex-col">
         <CardBody project={project} />
       </div>
     </article>
@@ -46,6 +50,12 @@ function CardBody({ project, large = false }: { project: Project; large?: boolea
           </li>
         ))}
       </ul>
+      {project.learned && (
+        <div className="mt-5 border-l-2 border-accent/60 pl-4 text-sm leading-relaxed">
+          <p className="font-mono text-xs text-muted">what I learned</p>
+          <p className="mt-1">{project.learned}</p>
+        </div>
+      )}
       <p className="mt-5 font-mono text-xs text-muted">
         {project.meta} · {project.dates}
       </p>

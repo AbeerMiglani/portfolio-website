@@ -20,6 +20,7 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 - Check widths of 390px and 1280px, in both light and dark themes.
 - Confirm there's no horizontal overflow: `document.documentElement.scrollWidth - innerWidth` should be 0.
 - Confirm there are no console errors.
+- Run axe-core (`npm i --no-save axe-core` in the scratchpad, inject `axe.min.js`) in both themes and expect zero violations. Contrast is the usual failure: small text on the dark terminal needs at least `text-white/55`, and the light `--accent-soft` was set to `#fdefe7` so accent text on it reaches 4.5:1.
 
 ## Git and pull requests
 
@@ -40,16 +41,15 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 
 | Path | What it is |
 | --- | --- |
-| `src/content/profile.ts` | Name, tagline, pitch, status, email, links, education (with `graduation`), about text, `problemSolving` stats, interests, skills |
-| `src/content/projects.ts` | Project cards, including `featured`, the optional `roadmap` milestones and `shortName` (used as `~/name` and by `cat`) |
-| `src/content/experience.ts` | Roles, newest first |
+| `src/content/profile.ts` | Name, tagline, pitch, status, `learning`, email, links, education, about text, `problemSolving` stats, skills |
+| `src/content/projects.ts` | Project cards, including `featured`, the optional `roadmap` milestones, the optional `learned` note and `shortName` (used as `~/name` and by `cat`) |
+| `src/content/earlier.ts` | Pre-university work (the LOHUM summer training), shown as one-line entries under Projects and by the terminal's `earlier` |
 | `src/lib/terminal.ts` | Terminal command table: pure functions that return `Line[]` plus optional effects (`clear`, `open`, `theme`) |
 | `src/components/Terminal.tsx` | Terminal UI (client component): history, Tab completion, Ctrl+L, suggestion chips |
 | `src/components/Hero.tsx` | Name, tagline, pitch, status, CTAs, and the terminal |
-| `src/components/FactsStrip.tsx` | Row of numbers under the hero, all derived from content |
-| `src/components/ProjectCard.tsx` | Featured (wide, with roadmap) and normal card layouts |
+| `src/components/ProjectCard.tsx` | Featured (wide, with roadmap) and secondary (full width, art beside text, smaller type) card layouts |
 | `src/components/ProjectArt.tsx` | One illustration per project, chosen by `slug` |
-| `src/components/Sections.tsx` | Experience (on the band), About (the `man abeer` page), Contact (the panel) |
+| `src/components/Sections.tsx` | Earlier (under Projects), About (the `man abeer` page, on the band), Contact (the panel) |
 | `src/components/SectionHeader.tsx` | `$ command` line above a plain section title |
 | `src/components/TopBar.tsx`, `Footer.tsx`, `ThemeToggle.tsx` | Chrome |
 | `src/app/layout.tsx` | Fonts, metadata, and the pre-paint theme script |
@@ -63,9 +63,9 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 
 Change a number in one place and every view updates:
 
-- **LeetCode and DSA counts** (`profile.problemSolving`) appear in the facts strip, the About page and the terminal's `whoami`.
-- **The featured project's `roadmap`** feeds the roadmap on the Redis card, the facts strip (`4/10`) and the terminal's `now` and `cat redis`. To record progress, flip `done: false` to `true`.
-- **`profile.education.graduation`** feeds the facts strip.
+- **LeetCode and DSA counts** (`profile.problemSolving`) appear in the About page's Education entry and the terminal's `whoami`. They're deliberately kept low-key; don't promote them back to a headline stat.
+- **The featured project's `roadmap`** feeds the roadmap on the Redis card and the terminal's `now` and `cat redis`. To record progress, flip `done: false` to `true`.
+- **Dates** use one format everywhere: `Mon YYYY`, a range as `Jul 2026 – present` (en dash with spaces). The résumé uses its own `Jul. 2026 – Present` style.
 
 **Adding a project:**
 
@@ -113,9 +113,9 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 **Patterns to reuse:**
 
 - **Section headings:** every section opens with `SectionHeader` (`$ ls ~/projects`, `$ cat experience.log`, `$ man abeer`) and a plain title.
-- **Anchors:** the section `id`s (`projects`, `experience`, `about`, `contact`, `terminal`) are nav anchors, so don't rename them.
+- **Anchors:** the section `id`s (`projects`, `about`, `contact`, `terminal`) are nav anchors, so don't rename them. There is no Experience section until there's a real internship to show; pre-university work goes in `earlier.ts`.
 - **About page:** laid out as a man page. `ABEER(1)` in the header corners and the footer is the standard man-page header and footer convention, so it's intentional.
-- **Section backgrounds:** only Experience sits on the full-width `--band`, to break up the run of cards. Adding bands everywhere looks busy.
+- **Section backgrounds:** only About sits on the full-width `--band`, to break up the page. Adding bands everywhere looks busy.
 - **Contact panel:** uses the `panel` tokens, never `ink`. `ink` inverts to near-white in dark mode.
 - **Card hover:** `group` plus `transition hover:border-accent/50 hover:shadow-lg motion-safe:hover:-translate-y-0.5`. Tailwind v4 uses the CSS `translate` property, not `transform`.
 
@@ -128,12 +128,16 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 
 ## Accuracy rules (the site and résumé must match the repos)
 
-- **Redis:** `redis-cpp` implements a length-prefixed binary protocol (a 4-byte length, then the payload) with `read_full`/`write_all` loops and a 4 KB guard. It does not implement RESP, so don't claim RESP.
+- **Redis:** `redis-cpp` implements a length-prefixed binary protocol (a 4-byte length in host byte order, so little-endian on x86/ARM, then the payload) with `read_full`/`write_all` loops and a 4 KB guard. It does not implement RESP and has no key-value store yet, so call it a "Redis-style server", never "Redis-compatible", until it speaks RESP. It serves one client at a time with blocking calls; "Concurrent I/O models" in the roadmap is the book's chapter on the options, not an implementation. Started Jul 2026.
+- **Positioning:** the headline is C++ only. Python stays in the skills list, but don't lead with it.
 - **Ripple:** link to `github.com/AbeerMiglani/ripple`, not `SatishSystemsInc`. `SatishSystemsInc` is the hackathon record and must stay untouched.
   - Describe Ripple as "Manipal Hackathon 2026".
   - The "sole developer" wording is Abeer's choice, so keep it.
+  - Lead with its systems parts (the Rust PyO3 extension, WebSocket streaming); the web stack (FastAPI, Neo4j, Celery) stays out of the card's tech line.
+- **LOHUM:** it was summer training in Grade 11 (Jun 2023), not a job. Don't give it a job title on the site; the résumé calls it "Summer Trainee (Grade 11)".
 - **Skills:** only list skills backed by the résumés or repos. For example, "Linux" was deliberately left out.
-- **Excluded projects:** AI Scam Protect, AI Voice Detector and the HCL GUVI variant are deliberately left off the site and résumé.
+- **Excluded projects:** AI Scam Protect, AI Voice Detector and the HCL GUVI variant are deliberately left off the site and résumé. The Terminal quiz is off the site but stays on the résumé.
+- **Skills:** Google Cloud was removed because no project uses it. Docker and GitHub Actions stay (Ripple uses both).
 - **Phone number:** it must never be committed. `public/resume.pdf` is the web version without it.
 
 ## Résumé

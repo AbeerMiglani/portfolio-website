@@ -4,14 +4,14 @@
 export function ProjectArt({ slug }: { slug: string }) {
   if (slug === "redis") return <FrameArt />;
   if (slug === "ripple") return <CascadeArt />;
-  if (slug === "quiz") return <QuizArt />;
   return null;
 }
 
 /* ---------- Redis: the length-prefixed wire format ---------- */
 
 function Frame({ label, payload }: { label: string; payload: string }) {
-  const header = ["00", "00", "00", payload.length.toString(16).padStart(2, "0")];
+  // The length is copied in host byte order, i.e. little-endian on x86 and ARM.
+  const header = [payload.length.toString(16).padStart(2, "0"), "00", "00", "00"];
   return (
     <div>
       <p className="mb-1.5 font-mono text-[0.65rem] tracking-wider text-muted uppercase">{label}</p>
@@ -149,24 +149,5 @@ function Legend({ className, label }: { className: string; label: string }) {
       <span className={`size-2.5 rounded-full ${className}`} />
       {label}
     </span>
-  );
-}
-
-/* ---------- Quiz: a round of the command-line quiz ---------- */
-
-function QuizArt() {
-  return (
-    <div aria-hidden="true" className="rounded-lg bg-chip/60 p-4 font-mono text-[0.72rem] leading-relaxed text-fg">
-      <p className="text-muted">Q3/10 · SQL</p>
-      <p>Which clause filters grouped rows?</p>
-      <p className="mt-1 text-muted">
-        a) WHERE&nbsp;&nbsp; b) HAVING&nbsp;&nbsp; c) ORDER BY
-      </p>
-      <p className="mt-2">
-        <span className="text-accent">&gt;</span> b
-      </p>
-      <p className="text-ok">✓ correct · score 3/3</p>
-      <p className="mt-2 truncate text-muted">INSERT INTO responses (user_id, q_id, answer) …</p>
-    </div>
   );
 }

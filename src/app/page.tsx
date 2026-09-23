@@ -1,9 +1,8 @@
-import { FactsStrip } from "@/components/FactsStrip";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeader } from "@/components/SectionHeader";
-import { About, Contact, Experience } from "@/components/Sections";
+import { About, Contact, Earlier } from "@/components/Sections";
 import { TopBar } from "@/components/TopBar";
 import { projects } from "@/content/projects";
 
@@ -15,7 +14,6 @@ export default function Home() {
       <TopBar />
       <main>
         <Hero />
-        <FactsStrip />
 
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeader id="projects" command="ls ~/projects">
@@ -23,15 +21,13 @@ export default function Home() {
           </SectionHeader>
           <div className="grid grid-cols-1 gap-4">
             <ProjectCard project={featured} />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {rest.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
-              ))}
-            </div>
+            {rest.map((project) => (
+              <ProjectCard key={project.slug} project={project} />
+            ))}
           </div>
+          <Earlier />
         </section>
 
-        <Experience />
         <About />
         <Contact />
       </main>
