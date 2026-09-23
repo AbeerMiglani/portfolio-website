@@ -6,7 +6,7 @@ export type Milestone = {
 export type Project = {
   slug: string;
   title: string;
-  /** Short label used on the card artwork and in the terminal (`cat <slug>`). */
+  /** Directory-style name shown on the card and accepted by `cat` in the terminal. */
   shortName: string;
   eyebrow: string;
   hook: string;
@@ -17,8 +17,6 @@ export type Project = {
   repo?: string;
   demo?: string;
   featured?: boolean;
-  /** Card colour, see the `--card-*` tokens in globals.css. */
-  color: "blue" | "green" | "sand";
   roadmap?: Milestone[];
 };
 
@@ -39,7 +37,6 @@ export const projects: Project[] = [
     dates: "Ongoing",
     repo: "https://github.com/AbeerMiglani/redis-cpp",
     featured: true,
-    color: "blue",
     roadmap: [
       { label: "Socket programming", done: true },
       { label: "TCP server + client", done: true },
@@ -67,8 +64,7 @@ export const projects: Project[] = [
     tags: ["python", "fastapi", "neo4j", "rust", "react"],
     meta: "FastAPI · Neo4j · PostGIS · Celery · deck.gl",
     dates: "Sep 2026",
-    repo: "https://github.com/AbeerMiglani/SatishSystemsInc",
-    color: "green",
+    repo: "https://github.com/AbeerMiglani/ripple",
   },
   {
     slug: "quiz",
@@ -83,6 +79,5 @@ export const projects: Project[] = [
     tags: ["python", "mysql", "sql"],
     meta: "Python · MySQL · SQL",
     dates: "Jan – Feb 2025",
-    color: "sand",
   },
 ];

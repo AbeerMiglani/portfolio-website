@@ -61,11 +61,30 @@ const commands: Record<string, Command> = {
     run: () => ({
       lines: [
         text(profile.name, "accent"),
-        text(profile.role),
+        text(profile.tagline),
         text(`${profile.education.degree}, ${profile.education.school}`, "muted"),
+        text(
+          `dsa: ${profile.problemSolving.total} problems solved (${profile.problemSolving.leetcode} on LeetCode)`,
+          "muted",
+        ),
         text(`status: ${profile.status}`, "muted"),
       ],
     }),
+  },
+  now: {
+    summary: "what I'm working on",
+    run: () => {
+      const featured = projects.find((p) => p.featured);
+      const roadmap = featured?.roadmap ?? [];
+      const done = roadmap.filter((m) => m.done).length;
+      return {
+        lines: [
+          text(`building  ${featured?.title ?? "–"} (${done}/${roadmap.length} milestones)`),
+          text(`learning  ${profile.skills["Currently learning"].join(", ")}`),
+          text(`open to   ${profile.status.replace(/^Open to /i, "")}`),
+        ],
+      };
+    },
   },
   about: {
     summary: "a little more about me",
@@ -281,3 +300,6 @@ export function complete(input: string): string {
 export const welcome: Line[] = [
   text(`Welcome to ${profile.handle}@portfolio. Type \`help\` to get started.`, "muted"),
 ];
+
+/** Commands shown as already run when the page loads. */
+export const preloaded = ["now"];
