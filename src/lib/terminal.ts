@@ -194,7 +194,8 @@ const commands: Record<string, Command> = {
   ping: {
     summary: "a tiny Redis, in your browser",
     usage: "ping/set/get/keys",
-    run: (args) => ({ lines: [text(args.length ? `"${args.join(" ")}"` : "PONG")] }),
+    // Real Redis answers PONG; this one has an inside joke instead.
+    run: (args) => ({ lines: [text(args.length ? `"${args.join(" ")}"` : "Chishit Rib")] }),
   },
   set: {
     summary: "",
