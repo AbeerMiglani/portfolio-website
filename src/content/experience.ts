@@ -1,29 +1,27 @@
 export type Role = {
   role: string;
   org: string;
+  orgUrl?: string;
+  place: string;
   start: string;
   end: string;
   bullets: string[];
+  repo?: string;
 };
 
-// TODO: replace with your real roles, newest first. Keep it to 1-2 impact bullets
-// each; the full detail lives in the résumé PDF.
 export const experience: Role[] = [
   {
-    role: "Software Engineering Intern",
-    org: "Company Name",
-    start: "May 2026",
-    end: "Aug 2026",
+    role: "Technical Project Trainee, Special Projects",
+    org: "LOHUM Cleantech",
+    orgUrl: "https://lohum.com/",
+    place: "Kasna, UP",
+    start: "Jun 2023",
+    end: "Jun 2023",
     bullets: [
-      "Built X using Y, which improved Z by N%.",
-      "Owned A end to end, from design through deployment.",
+      "Built an automated metal-price scraper in Python with Selenium WebDriver across multiple commodity pages.",
+      "Used XPath selectors and explicit waits to reliably extract dynamically rendered content.",
+      "Cleaned and exported pricing data with Pandas, plus a lightweight HTML dashboard to share it.",
     ],
-  },
-  {
-    role: "Teaching Assistant, Data Structures",
-    org: "University Name",
-    start: "Sep 2025",
-    end: "Present",
-    bullets: ["Ran weekly labs for 40 students on C++ and algorithm design."],
+    repo: "https://github.com/AbeerMiglani/metal-price-scraper",
   },
 ];

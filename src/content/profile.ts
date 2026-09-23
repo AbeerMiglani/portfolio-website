@@ -3,26 +3,38 @@ export type Link = {
   href: string;
 };
 
-// TODO: replace the placeholder pitch, status, links and about text with your own.
 export const profile = {
   name: "Abeer Miglani",
   handle: "abeer",
   siteUrl: "https://portfolio.abbykayo.com",
-  pitch: "Software engineer who likes systems, performance and clean tooling.",
-  status: "Open to SWE internships and new-grad roles",
-  email: "you@example.com",
+  role: "Systems-minded software engineer",
+  pitch:
+    "ECE undergrad at Shiv Nadar University. Currently writing a Redis-compatible server in C++, after building a simulator for how city infrastructure fails.",
+  status: "Open to SWE internships",
+  email: "am319@snu.edu.in",
   resume: "/resume.pdf",
   links: [
     { label: "GitHub", href: "https://github.com/AbeerMiglani" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/your-handle" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/abeermiglani/" },
   ] satisfies Link[],
   about: [
-    "I build software mostly in Python and C++, and I enjoy the parts of a project where performance and correctness actually matter.",
-    "Right now I'm learning Rust and looking for an internship where I can ship real things alongside strong engineers.",
+    "I'm a second-year Electrical and Computer Engineering student at Shiv Nadar Institution of Eminence, and most of what I build leans towards systems: sockets, protocols, graphs and the data structures underneath them.",
+    "Right now I'm building a Redis-compatible server in C++ from first principles, and learning Rust, which I've already used to speed up the hottest path in Ripple.",
   ],
+  education: {
+    school: "Shiv Nadar Institution of Eminence",
+    degree: "B.Tech, Electrical and Computer Engineering",
+    dates: "Aug 2025 – May 2029",
+    place: "Dadri, UP",
+  },
+  problemSolving:
+    "100+ data structures and algorithms problems solved across LeetCode, Codeforces, CodeChef and HackerRank, including 75 on LeetCode.",
+  interests: ["Systems programming", "Computer networks", "Data structures & algorithms"],
   skills: {
-    Languages: ["Python", "C++", "TypeScript", "SQL"],
-    Tools: ["Git", "Linux", "CMake", "Docker"],
+    Languages: ["C++", "Python", "C", "SQL", "TypeScript", "HTML/CSS"],
+    "Frameworks & libraries": ["FastAPI", "Flask", "React", "Celery", "NetworkX", "Pandas", "Selenium"],
+    Databases: ["PostgreSQL + PostGIS", "Neo4j", "Redis", "MySQL"],
+    Tools: ["Git", "Docker", "GitHub Actions", "Google Cloud", "VS Code"],
     "Currently learning": ["Rust"],
   } satisfies Record<string, string[]>,
 };

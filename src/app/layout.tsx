@@ -1,16 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Hanken_Grotesk, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
+// Pixel font for accent words and card labels. SIL OFL, see src/fonts/.
+const departure = localFont({
+  variable: "--font-departure",
+  src: "../fonts/DepartureMono-Regular.woff2",
 });
 
 const title = `${profile.name} · Software Engineer`;
@@ -32,8 +40,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0d1117" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f7f8" },
+    { media: "(prefers-color-scheme: dark)", color: "#111113" },
   ],
 };
 
@@ -43,10 +51,10 @@ const themeScript = `(() => {
     const saved = localStorage.getItem("theme");
     const theme = saved === "light" || saved === "dark"
       ? saved
-      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     document.documentElement.dataset.theme = theme;
   } catch {
-    document.documentElement.dataset.theme = "dark";
+    document.documentElement.dataset.theme = "light";
   }
 })();`;
 
@@ -54,7 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+      className={`${hanken.variable} ${plexMono.variable} ${departure.variable} antialiased`}
       suppressHydrationWarning
     >
       <head>

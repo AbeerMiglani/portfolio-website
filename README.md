@@ -6,11 +6,15 @@ Source for [portfolio.abbykayo.com](https://portfolio.abbykayo.com), built with 
 
 All the text lives in `src/content/`, so you don't need to touch components to update the site:
 
-- `profile.ts`: name, pitch, availability status, email, links, about text and skills
-- `projects.ts`: project cards. Put the strongest one first and set `featured: true`.
+- `profile.ts`: name, pitch, availability status, email, links, education, about text and skills
+- `projects.ts`: project cards. Set `featured: true` on the one to highlight (it gets the wide card and roadmap).
 - `experience.ts`: roles, newest first
 
-Replace `public/resume.pdf` with your real résumé (keep the same file name).
+The interactive terminal (`src/lib/terminal.ts`) reads from the same files, so it stays in sync.
+
+`public/resume.pdf` is the public copy of the résumé. It deliberately leaves out the phone number; keep the full version for applications.
+
+Fonts: Departure Mono (pixel accent) and Hanken Grotesk are vendored in `src/fonts/` under the SIL Open Font License.
 
 ## Development
 
