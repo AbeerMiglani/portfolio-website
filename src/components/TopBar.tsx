@@ -1,35 +1,50 @@
 import { profile } from "@/content/profile";
 import { ThemeToggle } from "./ThemeToggle";
 
-const sections = ["projects", "experience", "about", "contact"];
+const sections = [
+  { id: "terminal", label: "Terminal" },
+  { id: "projects", label: "Projects" },
+  { id: "experience", label: "Experience" },
+  { id: "about", label: "About" },
+];
 
 export function TopBar() {
   return (
-    <header className="sticky top-0 z-10 border-b border-border bg-bg/85 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-divider bg-bg/85 backdrop-blur">
       <nav
         aria-label="Main"
-        className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 font-mono text-sm sm:px-6"
+        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6"
       >
-        <a href="#top" className="shrink-0 hover:text-accent">
-          <span className="text-accent">{profile.handle}@portfolio</span>
-          <span className="text-muted">:~$</span>
-        </a>
-        <div className="flex items-center gap-4">
-          <ul className="hidden gap-4 md:flex">
-            {sections.map((id) => (
-              <li key={id}>
-                <a href={`#${id}`} className="text-muted hover:text-fg">
-                  {id}
+        <div className="flex items-center gap-8">
+          <a href="#top" className="flex items-center gap-2">
+            <span className="font-pixel text-lg text-fg">{profile.handle}</span>
+            <span className="rounded bg-ink px-1.5 py-0.5 font-mono text-[0.6rem] font-medium uppercase tracking-wider text-ink-fg">
+              swe
+            </span>
+          </a>
+          <ul className="hidden gap-6 text-sm text-muted md:flex">
+            {sections.map((section) => (
+              <li key={section.id}>
+                <a href={`#${section.id}`} className="hover:text-fg">
+                  {section.label}
                 </a>
               </li>
             ))}
           </ul>
+        </div>
+        <div className="flex items-center gap-2 sm:gap-3">
           <ThemeToggle />
           <a
             href={profile.resume}
-            className="rounded bg-accent px-3 py-1 text-xs font-semibold text-accent-contrast hover:opacity-90"
+            className="hidden rounded-full border border-border bg-surface px-4 py-1.5 text-sm hover:border-fg sm:inline-block"
           >
-            résumé
+            Résumé ↗
+          </a>
+          <a
+            href={`mailto:${profile.email}`}
+            className="rounded-lg bg-ink px-3.5 py-1.5 text-sm font-medium text-ink-fg shadow-sm hover:opacity-90"
+          >
+            Get in touch
           </a>
         </div>
       </nav>
