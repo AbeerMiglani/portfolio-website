@@ -3,6 +3,7 @@ import { experience } from "@/content/experience";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
 import { SectionHeader } from "./SectionHeader";
+import { ArrowIcon } from "./ArrowIcon";
 
 export function Experience() {
   return (
@@ -48,9 +49,10 @@ export function Experience() {
                 {role.repo && (
                   <a
                     href={role.repo}
-                    className="mt-5 self-start font-mono text-sm text-muted underline decoration-border underline-offset-4 hover:text-fg hover:decoration-accent"
+                    className="group/link mt-5 inline-flex items-center gap-1.5 self-start font-mono text-sm text-muted underline decoration-border underline-offset-4 hover:text-fg hover:decoration-accent"
                   >
-                    {role.repo.replace("https://", "")} ↗
+                    {role.repo.replace("https://", "")}
+                    <ArrowIcon className="transition-transform motion-safe:group-hover/link:translate-x-0.5 motion-safe:group-hover/link:-translate-y-0.5" />
                   </a>
                 )}
               </div>
@@ -199,9 +201,10 @@ export function Contact() {
             <a
               key={link.label}
               href={link.href}
-              className="rounded-md border border-current/25 px-4 py-2.5 text-sm hover:border-current"
+              className="group/link inline-flex items-center gap-1.5 rounded-md border border-current/25 px-4 py-2.5 text-sm hover:border-current"
             >
-              {link.label} ↗
+              {link.label}
+              <ArrowIcon className="transition-transform motion-safe:group-hover/link:translate-x-0.5 motion-safe:group-hover/link:-translate-y-0.5" />
             </a>
           ))}
         </div>

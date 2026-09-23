@@ -1,4 +1,5 @@
 import { profile } from "@/content/profile";
+import { ArrowIcon } from "./ArrowIcon";
 import { Terminal } from "./Terminal";
 
 export function Hero() {
@@ -32,8 +33,13 @@ export function Hero() {
               Résumé (PDF)
             </a>
             {profile.links.map((link) => (
-              <a key={link.label} href={link.href} className="px-2 py-2.5 text-sm text-muted hover:text-fg">
-                {link.label} ↗
+              <a
+                key={link.label}
+                href={link.href}
+                className="group/link inline-flex items-center gap-1 px-2 py-2.5 text-sm text-muted hover:text-fg"
+              >
+                {link.label}
+                <ArrowIcon className="transition-transform motion-safe:group-hover/link:translate-x-0.5 motion-safe:group-hover/link:-translate-y-0.5" />
               </a>
             ))}
           </div>
