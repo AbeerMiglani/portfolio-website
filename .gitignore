@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# résumé copy with the phone number (see scripts/render-resume.mjs)
+/resume/out/

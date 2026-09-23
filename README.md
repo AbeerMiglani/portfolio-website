@@ -12,7 +12,7 @@ All the text lives in `src/content/`, so you don't need to touch components to u
 
 The interactive terminal (`src/lib/terminal.ts`) reads from the same files, so it stays in sync.
 
-`public/resume.pdf` is the public copy of the résumé. It deliberately leaves out the phone number; keep the full version for applications.
+`public/resume.pdf` is the public copy of the résumé and is generated from `resume/resume.html`. After editing the HTML, run `npm run resume` (it uses your local Google Chrome). The public copy deliberately leaves out the phone number; `RESUME_PHONE="…" npm run resume` also writes a full copy to `resume/out/`, which is gitignored.
 
 The site uses IBM Plex Sans and IBM Plex Mono (loaded with `next/font`). TTF copies in `src/fonts/` (SIL Open Font License) are only used to render the link-preview image.
 
