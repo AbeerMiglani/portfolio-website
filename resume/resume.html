@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Abeer Miglani - Résumé</title>
+<!--
+  Résumé source. Render with `npm run resume` (see scripts/render-resume.mjs).
+  The phone number is never stored here: set RESUME_PHONE when rendering the
+  full copy and the script inserts it at the start of the first contact line.
+-->
+<style>
+  @font-face { font-family: "Source Serif 4"; font-weight: 400; font-style: normal; src: url("fonts/SourceSerif4-400.ttf"); }
+  @font-face { font-family: "Source Serif 4"; font-weight: 400; font-style: italic; src: url("fonts/SourceSerif4-400-italic.ttf"); }
+  @font-face { font-family: "Source Serif 4"; font-weight: 600; font-style: normal; src: url("fonts/SourceSerif4-600.ttf"); }
+  @font-face { font-family: "Source Serif 4"; font-weight: 700; font-style: normal; src: url("fonts/SourceSerif4-700.ttf"); }
+  @page { size: A4; margin: 12mm 14mm 11mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Source Serif 4", Georgia, serif; font-size: 9.9pt; line-height: 1.27; color: #111; }
+  a { color: inherit; text-decoration: none; }
+  header { text-align: center; margin-bottom: 7pt; }
+  h1 { font-size: 23pt; font-weight: 700; margin: 0 0 3pt; letter-spacing: 0.2pt; }
+  .contact { font-size: 9.4pt; white-space: nowrap; line-height: 1.4; }
+  .contact span + span::before { content: "|"; margin: 0 4pt; color: #444; }
+  .contact a { text-decoration: underline; text-underline-offset: 1.5pt; text-decoration-thickness: 0.4pt; }
+  h2 { font-size: 11pt; font-weight: 600; font-variant: small-caps; letter-spacing: 0.4pt; margin: 9pt 0 4pt; padding-bottom: 1.5pt; border-bottom: 0.7pt solid #111; }
+  .entry { margin: 0 0 5pt; }
+  .row { display: flex; justify-content: space-between; gap: 12pt; }
+  .row > span:last-child { white-space: nowrap; }
+  .row .l { font-weight: 700; }
+  .row .l .stack { font-weight: 400; font-style: italic; }
+  .sub { font-style: italic; font-size: 9.6pt; }
+  ul { margin: 2pt 0 0; padding-left: 13pt; }
+  li { margin: 0 0 1.4pt; padding-left: 1pt; }
+  li::marker { font-size: 8pt; }
+  .skills p { margin: 0 0 1.6pt; }
+  .skills b { font-weight: 700; }
+  .link { font-weight: 400; font-size: 9.2pt; text-decoration: underline; text-underline-offset: 1.5pt; text-decoration-thickness: 0.4pt; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Abeer Miglani</h1>
+  <div class="contact" data-contact-primary>
+    <span><a href="mailto:am319@snu.edu.in">am319@snu.edu.in</a></span>
+    <span><a href="https://portfolio.abbykayo.com">portfolio.abbykayo.com</a></span>
+  </div>
+  <div class="contact">
+    <span><a href="https://www.linkedin.com/in/abeermiglani/">linkedin.com/in/abeermiglani</a></span>
+    <span><a href="https://github.com/AbeerMiglani">github.com/AbeerMiglani</a></span>
+  </div>
+</header>
+
+<h2>Education</h2>
+<div class="entry">
+  <div class="row"><span class="l">Shiv Nadar Institution of Eminence</span><span>Dadri, UP</span></div>
+  <div class="row sub"><span>Bachelor of Technology in Electrical and Computer Engineering</span><span>Aug. 2025 – May 2029</span></div>
+</div>
+
+<h2>Experience</h2>
+<div class="entry">
+  <div class="row"><span class="l">Technical Project Trainee – Special Projects</span><span>Jun. 2023</span></div>
+  <div class="row sub"><span><a href="https://lohum.com/">LOHUM Cleantech Pvt. Ltd.</a></span><span>Kasna, UP</span></div>
+  <ul>
+    <li>Built an automated metal-price scraper in Python using Selenium WebDriver to collect pricing across multiple commodity pages.</li>
+    <li>Used XPath selectors and explicit WebDriver waits to reliably extract content from dynamically rendered pages.</li>
+    <li>Cleaned, structured and exported pricing data with Pandas to CSV for downstream analysis.</li>
+    <li>Generated a lightweight HTML dashboard to visualize and share the collected pricing data.</li>
+  </ul>
+</div>
+
+<h2>Projects</h2>
+<div class="entry">
+  <div class="row"><span class="l">Redis-Compatible Server <span class="stack">| C++, POSIX Sockets</span> <a class="link" href="https://github.com/AbeerMiglani/redis-cpp">GitHub</a></span><span>Ongoing</span></div>
+  <ul>
+    <li>Building a Redis-compatible in-memory key-value server in C++ from first principles, following <i>Build Your Own Redis with C/C++</i>.</li>
+    <li>Implemented TCP client–server communication directly on POSIX sockets.</li>
+    <li>Designed a length-prefixed binary protocol (4-byte header + payload) to frame messages over a TCP byte stream, with read/write loops that handle partial reads and writes and a 4 KB message-size guard.</li>
+    <li>Next on the roadmap: event loop with non-blocking I/O, hashtable-backed key-value store, TTL expiry and a thread pool.</li>
+  </ul>
+</div>
+<div class="entry">
+  <div class="row"><span class="l">Ripple – Cascading Infrastructure Failure Simulator <span class="stack">| Python, FastAPI, Neo4j, React, Rust</span> <a class="link" href="https://github.com/AbeerMiglani/ripple">GitHub</a></span><span>Sep. 2026</span></div>
+  <ul>
+    <li>Sole developer for team SatishSystemsInc at Manipal Hackathon 2026 (Disaster Resilience track).</li>
+    <li>Built a Motter–Lai overload cascade engine on an in-memory NetworkX graph of power, water, transit and telecom assets, streaming each failure wave to a React/deck.gl map over WebSockets.</li>
+    <li>Designed a recommendation engine that verifies every intervention (capacity hardening, redundancy links) by re-running the cascade, ranked by failures prevented, hospitals kept online and population spared.</li>
+    <li>Wrote a Rust (PyO3) extension for the all-pairs shortest-path hotspot, called 20+ times per recommendation request; ran PostgreSQL/PostGIS, Neo4j, Redis and Celery with Docker Compose and GitHub Actions CI.</li>
+  </ul>
+</div>
+<div class="entry">
+  <div class="row"><span class="l">Terminal-Based Quiz System <span class="stack">| Python, MySQL, SQL</span></span><span>Jan. 2025 – Feb. 2025</span></div>
+  <ul>
+    <li>Built a terminal-based quiz system in Python with MySQL-backed persistence.</li>
+    <li>Designed SQL schemas and queries to store quiz questions and user responses.</li>
+    <li>Implemented backend logic for quiz flow, scoring and data retrieval.</li>
+  </ul>
+</div>
+
+<h2>Problem Solving</h2>
+<ul style="margin-top:0">
+  <li>Solved 100+ data structures and algorithms problems across LeetCode, Codeforces, CodeChef and HackerRank, including 95 on LeetCode.</li>
+  <li>Continuing independent practice in data structures, algorithms and C++ problem solving.</li>
+</ul>
+
+<h2>Technical Skills</h2>
+<div class="skills">
+  <p><b>Languages:</b> C++, Python, C, SQL, TypeScript, HTML/CSS; learning Rust</p>
+  <p><b>Frameworks &amp; Libraries:</b> FastAPI, Flask, React, Celery, NetworkX, Pandas, NumPy, Selenium</p>
+  <p><b>Databases:</b> PostgreSQL/PostGIS, Neo4j, Redis, MySQL</p>
+  <p><b>Developer Tools:</b> Git, Docker, GitHub Actions, Google Cloud Platform, VS Code</p>
+  <p><b>Areas of Interest:</b> Systems Programming, Computer Networks, Data Structures and Algorithms</p>
+</div>
+</body>
+</html>
