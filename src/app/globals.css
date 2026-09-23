@@ -1,75 +1,55 @@
 @import "tailwindcss";
 
-/* Light (fanout-style off-white) is the default. An inline script in layout.tsx
-   sets data-theme on <html> before paint; the media query only covers visitors
-   without JavaScript. */
+/* Warm paper light theme is the default, with a single burnt-orange accent.
+   An inline script in layout.tsx sets data-theme on <html> before paint; the
+   media query only covers visitors without JavaScript. */
 :root,
 :root[data-theme="light"] {
-  --bg: #f7f7f8;
+  --bg: #faf9f6;
   --surface: #ffffff;
-  --chip: #f0f0f2;
-  --fg: #272727;
-  --muted: #6e6e6e;
-  --faint: #929292;
-  --border: #dedee2;
-  --divider: #e8e8ea;
-  --ink: #1d1d1d;
-  --ink-fg: #ffffff;
-  --accent: #2ab673;
-  --card-blue: #2c6a9a;
-  --card-blue-fg: #ffffff;
-  --card-green: #7fe39b;
-  --card-green-fg: #1d1d1d;
-  --card-sand: #efe6d2;
-  --card-sand-fg: #1d1d1d;
-  --card-orange: #e8822a;
-  --card-orange-fg: #1d1d1d;
-  --card-pink: #f2b5ae;
-  --card-pink-fg: #1d1d1d;
-  --card-sky: #307cf6;
-  --card-sky-fg: #ffffff;
+  --chip: #f1efe9;
+  --fg: #1c1b19;
+  --muted: #6b6760;
+  --border: #e3dfd6;
+  --divider: #ebe8e1;
+  --ink: #1c1b19;
+  --ink-fg: #faf9f6;
+  --accent: #c2410c;
+  --accent-soft: #fbe7dc;
+  --ok: #15803d;
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --bg: #111113;
-  --surface: #1a1a1d;
-  --chip: #232327;
-  --fg: #ececec;
-  --muted: #a1a1a6;
-  --faint: #7a7a80;
-  --border: #2e2e33;
-  --divider: #26262a;
-  --ink: #ececec;
-  --ink-fg: #111113;
-  --accent: #3fcf8e;
-  --card-blue: #24557c;
-  --card-blue-fg: #ffffff;
-  --card-green: #3f9a5c;
-  --card-green-fg: #0f1a12;
-  --card-sand: #3a3428;
-  --card-sand-fg: #f1e9d8;
-  --card-orange: #b8631c;
-  --card-orange-fg: #ffffff;
-  --card-pink: #8f4f49;
-  --card-pink-fg: #ffffff;
-  --card-sky: #2359b8;
-  --card-sky-fg: #ffffff;
+  --bg: #121110;
+  --surface: #1a1917;
+  --chip: #24221f;
+  --fg: #ecebe7;
+  --muted: #a19d95;
+  --border: #2f2c28;
+  --divider: #262420;
+  --ink: #ecebe7;
+  --ink-fg: #121110;
+  --accent: #fb8a4c;
+  --accent-soft: #3a2418;
+  --ok: #4ade80;
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --bg: #111113;
-    --surface: #1a1a1d;
-    --chip: #232327;
-    --fg: #ececec;
-    --muted: #a1a1a6;
-    --faint: #7a7a80;
-    --border: #2e2e33;
-    --divider: #26262a;
-    --ink: #ececec;
-    --ink-fg: #111113;
+    --bg: #121110;
+    --surface: #1a1917;
+    --chip: #24221f;
+    --fg: #ecebe7;
+    --muted: #a19d95;
+    --border: #2f2c28;
+    --divider: #262420;
+    --ink: #ecebe7;
+    --ink-fg: #121110;
+    --accent: #fb8a4c;
+    --accent-soft: #3a2418;
+    --ok: #4ade80;
     color-scheme: dark;
   }
 }
@@ -80,15 +60,15 @@
   --color-chip: var(--chip);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
-  --color-faint: var(--faint);
   --color-border: var(--border);
   --color-divider: var(--divider);
   --color-ink: var(--ink);
   --color-ink-fg: var(--ink-fg);
   --color-accent: var(--accent);
-  --font-sans: var(--font-hanken);
+  --color-accent-soft: var(--accent-soft);
+  --color-ok: var(--ok);
+  --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
-  --font-pixel: var(--font-departure);
 }
 
 html {
@@ -102,37 +82,8 @@ body {
 }
 
 ::selection {
-  background: var(--ink);
+  background: var(--accent);
   color: var(--ink-fg);
-}
-
-/* Small uppercase monospace label above headings ("SELECTED WORK"). */
-.eyebrow {
-  font-family: var(--font-plex-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* Ruled lines behind the stacked-card artwork, like fanout's course cards. */
-.ruled {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    color-mix(in srgb, currentColor 22%, transparent) 0 1px,
-    transparent 1px 7px
-  );
-}
-
-/* Blinking block cursor in the terminal. */
-.cursor-block {
-  animation: blink 1s steps(1) infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
 }
 
 /* Theme toggle shows the theme you would switch to. */
@@ -144,8 +95,5 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .cursor-block {
-    animation: none;
   }
 }

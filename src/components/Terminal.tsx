@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { complete, run, welcome, type Line, type Session } from "@/lib/terminal";
+import { complete, preloaded, run, welcome, type Line, type Session } from "@/lib/terminal";
 
 type Entry = { id: number; input?: string; lines: Line[] };
 
@@ -9,12 +9,22 @@ const PROMPT = "abeer@portfolio:~$";
 
 const suggestions = ["help", "whoami", "ls", "cat redis", "cat ripple", "skills", "contact", "ping"];
 
+// Deterministic, so server and client render the same first frame.
+const initialEntries: Entry[] = [
+  { id: 0, lines: welcome },
+  ...preloaded.map((command, i) => ({
+    id: i + 1,
+    input: command,
+    lines: run(command, { history: [], store: new Map() }).lines,
+  })),
+];
+
 export function Terminal() {
-  const [entries, setEntries] = useState<Entry[]>([{ id: 0, lines: welcome }]);
+  const [entries, setEntries] = useState<Entry[]>(initialEntries);
   const [input, setInput] = useState("");
   const [cursor, setCursor] = useState<number | null>(null);
   const session = useRef<Session>({ history: [], store: new Map() });
-  const nextId = useRef(1);
+  const nextId = useRef(initialEntries.length);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -72,25 +82,23 @@ export function Terminal() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div id="terminal" className="flex flex-col gap-3">
       <div
-        className="overflow-hidden rounded-xl bg-[#161618] font-mono text-[0.8rem] leading-relaxed text-[#e6e6e6] shadow-2xl ring-1 ring-black/20"
+        className="overflow-hidden rounded-xl bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] shadow-xl ring-1 ring-black/25"
         onClick={() => inputRef.current?.focus()}
       >
         <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
-          <span className="size-3 rounded-full bg-[#ff5f57]" aria-hidden="true" />
-          <span className="size-3 rounded-full bg-[#febc2e]" aria-hidden="true" />
-          <span className="size-3 rounded-full bg-[#28c840]" aria-hidden="true" />
-          <span className="ml-3 text-xs text-white/45">abeer@portfolio — zsh</span>
+          <span className="text-xs text-white/45">abeer@portfolio: ~</span>
+          <span className="ml-auto text-[0.65rem] tracking-wider text-white/35 uppercase">interactive</span>
         </div>
 
-        <div ref={scrollRef} className="h-[22rem] overflow-y-auto px-4 py-3 sm:h-[26rem]">
+        <div ref={scrollRef} className="h-72 overflow-y-auto px-4 py-3 sm:h-80">
           <div role="log" aria-live="polite" aria-label="Terminal output">
             {entries.map((entry) => (
               <div key={entry.id} className="mb-2">
                 {entry.input !== undefined && (
                   <p className="break-all">
-                    <span className="text-[#3fcf8e]">{PROMPT}</span> {entry.input}
+                    <span className="text-[#fb8a4c]">{PROMPT}</span> {entry.input}
                   </p>
                 )}
                 {entry.lines.map((line, i) => (
@@ -101,7 +109,7 @@ export function Terminal() {
           </div>
 
           <label className="flex items-center gap-2">
-            <span className="shrink-0 text-[#3fcf8e]" aria-hidden="true">
+            <span className="shrink-0 text-[#fb8a4c]" aria-hidden="true">
               {PROMPT}
             </span>
             <span className="sr-only">Terminal command</span>
@@ -118,7 +126,7 @@ export function Terminal() {
               autoCorrect="off"
               spellCheck={false}
               enterKeyHint="go"
-              className="min-w-0 flex-1 bg-transparent text-[#e6e6e6] caret-[#3fcf8e] outline-none"
+              className="min-w-0 flex-1 bg-transparent text-[#ecebe7] caret-[#fb8a4c] outline-none"
             />
           </label>
         </div>
@@ -130,7 +138,7 @@ export function Terminal() {
             key={command}
             type="button"
             onClick={() => execute(command)}
-            className="rounded-md border border-border bg-surface px-2.5 py-1 font-mono text-xs text-muted hover:border-fg hover:text-fg"
+            className="rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-muted hover:border-accent hover:text-accent"
           >
             {command}
           </button>
@@ -160,7 +168,7 @@ function OutputLine({ line }: { line: Line }) {
     line.tone === "muted"
       ? "text-white/50"
       : line.tone === "accent"
-        ? "text-[#3fcf8e]"
+        ? "text-[#fb8a4c]"
         : line.tone === "error"
           ? "text-[#ff7b72]"
           : "";

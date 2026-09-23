@@ -8,8 +8,9 @@ export const profile = {
   handle: "abeer",
   siteUrl: "https://portfolio.abbykayo.com",
   role: "Systems-minded software engineer",
+  tagline: "I write systems software in C++ and Python.",
   pitch:
-    "ECE undergrad at Shiv Nadar University. Currently writing a Redis-compatible server in C++, after building a simulator for how city infrastructure fails.",
+    "ECE undergrad at Shiv Nadar University. Right now I'm building a Redis-compatible server from scratch; before that, Ripple, a simulator for how failures cascade through a city's infrastructure.",
   status: "Open to SWE internships",
   email: "am319@snu.edu.in",
   resume: "/resume.pdf",
@@ -27,8 +28,11 @@ export const profile = {
     dates: "Aug 2025 – May 2029",
     place: "Dadri, UP",
   },
-  problemSolving:
-    "100+ data structures and algorithms problems solved across LeetCode, Codeforces, CodeChef and HackerRank, including 75 on LeetCode.",
+  problemSolving: {
+    total: "100+",
+    leetcode: 95,
+    platforms: ["LeetCode", "Codeforces", "CodeChef", "HackerRank"],
+  },
   interests: ["Systems programming", "Computer networks", "Data structures & algorithms"],
   skills: {
     Languages: ["C++", "Python", "C", "SQL", "TypeScript", "HTML/CSS"],

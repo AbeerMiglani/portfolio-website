@@ -37,12 +37,16 @@ export function Footer() {
     <footer className="border-t border-divider">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[2fr_1fr_1fr_1fr]">
         <div>
-          <p className="font-pixel text-lg">{profile.handle}</p>
+          <p className="font-mono font-medium">
+            {profile.handle}
+            <span className="text-muted">@portfolio</span>
+            <span className="text-accent">:~$</span>
+          </p>
           <p className="mt-3 max-w-xs text-sm text-muted">{profile.role}. {profile.status}.</p>
         </div>
         {columns.map((column) => (
           <div key={column.title}>
-            <p className="eyebrow">{column.title}</p>
+            <p className="font-mono text-xs text-muted"># {column.title.toLowerCase()}</p>
             <ul className="mt-4 space-y-2 text-sm">
               {column.links.map((link) => (
                 <li key={link.label}>

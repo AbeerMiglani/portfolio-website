@@ -2,30 +2,25 @@ import type { ReactNode } from "react";
 
 type Props = {
   id: string;
-  eyebrow: string;
+  /** Shell command shown above the title, e.g. "ls ~/projects". */
+  command: string;
   children: ReactNode;
   action?: ReactNode;
 };
 
-// Small uppercase label over a large headline, the pattern fanout.sh uses for
-// every section. Wrap a word in <Pixel> for the pixel-font accent.
-export function SectionHeader({ id, eyebrow, children, action }: Props) {
+// Every section opens with the command that would "print" it, then a plain title.
+export function SectionHeader({ id, command, children, action }: Props) {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-divider pb-4">
       <div>
-        <p className="eyebrow">{eyebrow}</p>
-        <h2
-          id={id}
-          className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-fg sm:text-4xl"
-        >
+        <p className="font-mono text-sm text-muted" aria-hidden="true">
+          <span className="text-accent">$</span> {command}
+        </p>
+        <h2 id={id} className="mt-2 text-3xl font-semibold tracking-tight text-fg">
           {children}
         </h2>
       </div>
       {action}
     </div>
   );
-}
-
-export function Pixel({ children }: { children: ReactNode }) {
-  return <span className="font-pixel font-normal tracking-normal">{children}</span>;
 }

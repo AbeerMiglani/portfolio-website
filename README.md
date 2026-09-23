@@ -14,7 +14,7 @@ The interactive terminal (`src/lib/terminal.ts`) reads from the same files, so i
 
 `public/resume.pdf` is the public copy of the résumé. It deliberately leaves out the phone number; keep the full version for applications.
 
-Fonts: Departure Mono (pixel accent) and Hanken Grotesk are vendored in `src/fonts/` under the SIL Open Font License.
+The site uses IBM Plex Sans and IBM Plex Mono (loaded with `next/font`). TTF copies in `src/fonts/` (SIL Open Font License) are only used to render the link-preview image.
 
 ## Development
 
