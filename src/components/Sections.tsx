@@ -1,66 +1,44 @@
 import type { ReactNode } from "react";
-import { experience } from "@/content/experience";
+import { earlier } from "@/content/earlier";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
 import { SectionHeader } from "./SectionHeader";
 import { ArrowIcon } from "./ArrowIcon";
 
-export function Experience() {
+// Pre-university work, kept to one line each under Projects.
+export function Earlier() {
   return (
-    <section className="border-y border-divider bg-band">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <SectionHeader id="experience" command="cat experience.log">
-          Experience
-        </SectionHeader>
-
-        <ol className="space-y-4">
-          {experience.map((role) => (
-            <li
-              key={role.org}
-              className="grid gap-6 rounded-xl border border-border bg-surface p-6 sm:p-8 md:grid-cols-[1fr_2fr]"
-            >
-              <div>
-                <p className="font-mono text-xs text-muted">
-                  {role.start}
-                  {role.end !== role.start && ` – ${role.end}`} · {role.place}
-                </p>
-                <h3 className="mt-2 text-xl font-semibold tracking-tight">
-                  {role.orgUrl ? (
-                    <a href={role.orgUrl} className="hover:text-accent">
-                      {role.org}
-                    </a>
-                  ) : (
-                    role.org
-                  )}
-                </h3>
-                <p className="mt-1 text-sm text-muted">{role.role}</p>
-              </div>
-              <div className="flex flex-col">
-                <ul className="space-y-2.5">
-                  {role.bullets.map((bullet) => (
-                    <li key={bullet} className="flex gap-2.5">
-                      <span aria-hidden="true" className="font-mono text-accent">
-                        ›
-                      </span>
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-                {role.repo && (
-                  <a
-                    href={role.repo}
-                    className="group/link mt-5 inline-flex items-center gap-1.5 self-start font-mono text-sm text-muted underline decoration-border underline-offset-4 hover:text-fg hover:decoration-accent"
-                  >
-                    {role.repo.replace("https://", "")}
-                    <ArrowIcon className="transition-transform motion-safe:group-hover/link:translate-x-0.5 motion-safe:group-hover/link:-translate-y-0.5" />
-                  </a>
-                )}
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
+    <div className="mt-10 border-t border-divider pt-6">
+      <h3 className="font-mono text-xs text-muted"># earlier</h3>
+      <ul className="mt-3 space-y-2 text-sm">
+        {earlier.map((item) => (
+          <li key={item.org} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="font-mono text-xs text-muted">{item.when}</span>
+            <span>
+              <span className="font-medium">{item.what}</span> at{" "}
+              {item.orgUrl ? (
+                <a href={item.orgUrl} className="underline decoration-border underline-offset-4 hover:decoration-accent">
+                  {item.org}
+                </a>
+              ) : (
+                item.org
+              )}
+              . <span className="text-muted">{item.summary}</span>
+            </span>
+            {item.repo && (
+              <a
+                href={item.repo}
+                className="group/link inline-flex items-center gap-1 font-mono text-xs text-muted hover:text-fg"
+              >
+                source
+                <span className="sr-only"> for the {item.org} project</span>
+                <ArrowIcon className="transition-transform motion-safe:group-hover/link:translate-x-0.5 motion-safe:group-hover/link:-translate-y-0.5" />
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -74,96 +52,89 @@ export function About() {
   ];
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <SectionHeader id="about" command={`man ${profile.handle}`}>
-        About
-      </SectionHeader>
+    <section className="border-y border-divider bg-band">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <SectionHeader id="about" command={`man ${profile.handle}`}>
+          About
+        </SectionHeader>
 
-      <article className="rounded-xl border border-border bg-surface p-6 sm:p-10">
-        <div className="flex justify-between font-mono text-xs text-muted" aria-hidden="true">
-          <span>{manTitle}</span>
-          <span className="hidden sm:inline">Portfolio Manual</span>
-          <span>{manTitle}</span>
-        </div>
+        <article className="rounded-xl border border-border bg-surface p-6 sm:p-10">
+          <div className="flex justify-between font-mono text-xs text-muted" aria-hidden="true">
+            <span>{manTitle}</span>
+            <span className="hidden sm:inline">Portfolio Manual</span>
+            <span>{manTitle}</span>
+          </div>
 
-        <div className="mt-8 space-y-8">
-          <ManSection title="Name">
-            <p>
-              <span className="font-mono font-medium">{profile.handle}</span> — {profile.role.toLowerCase()}
-            </p>
-          </ManSection>
+          <div className="mt-8 space-y-8">
+            <ManSection title="Name">
+              <p>
+                <span className="font-mono font-medium">{profile.handle}</span> — {profile.role.toLowerCase()}
+              </p>
+            </ManSection>
 
-          <ManSection title="Synopsis">
-            <p className="font-mono text-sm">
-              <span className="font-medium">{profile.handle}</span> [--cpp] [--python] [--learning rust]
-              [--open-to internships]
-            </p>
-          </ManSection>
+            <ManSection title="Synopsis">
+              <p className="font-mono text-sm">
+                <span className="font-medium">{profile.handle}</span> [--cpp] [--c] [--learning rust]
+                [--open-to internships]
+              </p>
+            </ManSection>
 
-          <ManSection title="Description">
-            <div className="max-w-3xl space-y-3 leading-relaxed">
-              {profile.about.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
-          </ManSection>
+            <ManSection title="Description">
+              <div className="max-w-3xl space-y-3 leading-relaxed">
+                {profile.about.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </ManSection>
 
-          <ManSection title="Education">
-            <p className="font-medium">{education.school}</p>
-            <p className="text-muted">
-              {education.degree} · {education.dates} · {education.place}
-            </p>
-          </ManSection>
+            <ManSection title="Education">
+              <p className="font-medium">{education.school}</p>
+              <p className="text-muted">
+                {education.degree} · {education.dates} · {education.place}
+              </p>
+              <p className="mt-2 text-sm text-muted">
+                Outside coursework: {problemSolving.total} DSA problems, {problemSolving.leetcode} of them on LeetCode.
+              </p>
+            </ManSection>
 
-          <ManSection title="Problem solving">
-            <p>
-              {problemSolving.total} data structures and algorithms problems across{" "}
-              {problemSolving.platforms.join(", ")}, including{" "}
-              <span className="font-medium">{problemSolving.leetcode} on LeetCode</span>.
-            </p>
-          </ManSection>
+            <ManSection title="Skills">
+              <dl className="grid gap-x-10 gap-y-4 sm:grid-cols-2">
+                {Object.entries(profile.skills).map(([group, items]) => (
+                  <div key={group}>
+                    <dt className="font-mono text-xs text-muted">--{group.toLowerCase().replace(/[^a-z]+/g, "-")}</dt>
+                    <dd className="mt-1.5 flex flex-wrap gap-1.5">
+                      {items.map((item) => (
+                        <span key={item} className="rounded bg-chip px-2 py-0.5 text-sm">
+                          {item}
+                        </span>
+                      ))}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </ManSection>
 
-          <ManSection title="Skills">
-            <dl className="grid gap-x-10 gap-y-4 sm:grid-cols-2">
-              {Object.entries(profile.skills).map(([group, items]) => (
-                <div key={group}>
-                  <dt className="font-mono text-xs text-muted">--{group.toLowerCase().replace(/[^a-z]+/g, "-")}</dt>
-                  <dd className="mt-1.5 flex flex-wrap gap-1.5">
-                    {items.map((item) => (
-                      <span key={item} className="rounded bg-chip px-2 py-0.5 text-sm">
-                        {item}
-                      </span>
-                    ))}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </ManSection>
+            <ManSection title="See also">
+              <p className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-sm">
+                {seeAlso.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="underline decoration-border underline-offset-4 hover:decoration-accent"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </p>
+            </ManSection>
+          </div>
 
-          <ManSection title="Interests">
-            <p>{profile.interests.join(", ")}.</p>
-          </ManSection>
-
-          <ManSection title="See also">
-            <p className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-sm">
-              {seeAlso.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="underline decoration-border underline-offset-4 hover:decoration-accent"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </p>
-          </ManSection>
-        </div>
-
-        <div className="mt-10 flex justify-between font-mono text-xs text-muted" aria-hidden="true">
-          <span>{profile.siteUrl.replace("https://", "")}</span>
-          <span>{manTitle}</span>
-        </div>
-      </article>
+          <div className="mt-10 flex justify-between font-mono text-xs text-muted" aria-hidden="true">
+            <span>{profile.siteUrl.replace("https://", "")}</span>
+            <span>{manTitle}</span>
+          </div>
+        </article>
+      </div>
     </section>
   );
 }

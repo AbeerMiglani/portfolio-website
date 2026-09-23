@@ -84,12 +84,12 @@ export function Terminal() {
   return (
     <div id="terminal" className="flex flex-col gap-3">
       <div
-        className="overflow-hidden rounded-xl bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] shadow-xl ring-1 ring-black/25"
+        className="overflow-hidden rounded-xl bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent"
         onClick={() => inputRef.current?.focus()}
       >
         <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
-          <span className="text-xs text-white/45">abeer@portfolio: ~</span>
-          <span className="ml-auto text-[0.65rem] tracking-wider text-white/35 uppercase">interactive</span>
+          <span className="text-xs text-white/60">abeer@portfolio: ~</span>
+          <span className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase">interactive</span>
         </div>
 
         <div ref={scrollRef} className="h-72 overflow-y-auto px-4 py-3 sm:h-80">
@@ -138,7 +138,7 @@ export function Terminal() {
             key={command}
             type="button"
             onClick={() => execute(command)}
-            className="rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-muted hover:border-accent hover:text-accent"
+            className="rounded-md border border-border bg-surface px-2.5 py-1 font-mono text-xs text-muted hover:border-accent hover:text-accent"
           >
             {command}
           </button>

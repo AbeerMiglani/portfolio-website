@@ -43,6 +43,17 @@ export function Hero() {
               </a>
             ))}
           </div>
+
+          <p className="mt-8 font-mono text-xs text-muted">
+            <span aria-hidden="true" className="text-accent">
+              #{" "}
+            </span>
+            Try <code className="text-fg">cat redis</code> or <code className="text-fg">help</code> in the{" "}
+            <a href="#terminal" className="underline decoration-border underline-offset-4 hover:text-fg">
+              terminal
+            </a>
+            .
+          </p>
         </div>
 
         <Terminal />

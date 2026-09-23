@@ -1,7 +1,7 @@
 import { profile } from "@/content/profile";
 import { ThemeToggle } from "./ThemeToggle";
 
-const sections = ["projects", "experience", "about", "contact"];
+const sections = ["projects", "about", "contact"];
 
 export function TopBar() {
   return (

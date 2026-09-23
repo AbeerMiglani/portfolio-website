@@ -8,7 +8,7 @@ All the text lives in `src/content/`, so you don't need to touch components to u
 
 - `profile.ts`: name, pitch, availability status, email, links, education, about text and skills
 - `projects.ts`: project cards. Set `featured: true` on the one to highlight (it gets the wide card and roadmap).
-- `experience.ts`: roles, newest first
+- `earlier.ts`: pre-university work, shown as one-line entries under Projects
 
 The interactive terminal (`src/lib/terminal.ts`) reads from the same files, so it stays in sync.
 

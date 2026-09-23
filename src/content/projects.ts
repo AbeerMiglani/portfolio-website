@@ -11,6 +11,8 @@ export type Project = {
   eyebrow: string;
   hook: string;
   bullets: string[];
+  /** Optional "what I learned" note, shown under the bullets. */
+  learned?: string;
   tags: string[];
   meta: string;
   dates: string;
@@ -23,7 +25,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "redis",
-    title: "Redis-compatible server",
+    title: "Redis-style server",
     shortName: "redis-cpp",
     eyebrow: "Systems · ongoing",
     hook: "An in-memory key-value server in C++, built from first principles to understand how Redis really works.",
@@ -32,9 +34,11 @@ export const projects: Project[] = [
       "Length-prefixed binary protocol (4-byte header + payload) to frame messages over a TCP byte stream.",
       "read_full / write_all loops so partial reads and writes never corrupt a message, with a 4 KB size guard.",
     ],
+    learned:
+      "TCP delivers a byte stream, not messages: one read() can return half a request or two of them, so the protocol has to carry its own boundaries. The server still blocks on one client at a time; the event loop milestone swaps that for non-blocking sockets and poll(), so one thread can serve many connections.",
     tags: ["c++", "sockets", "networking"],
     meta: "C++ · POSIX sockets",
-    dates: "Ongoing",
+    dates: "Jul 2026 – present",
     repo: "https://github.com/AbeerMiglani/redis-cpp",
     featured: true,
     roadmap: [
@@ -54,30 +58,16 @@ export const projects: Project[] = [
     slug: "ripple",
     title: "Ripple",
     shortName: "ripple",
-    eyebrow: "Manipal Hackathon 2026",
+    eyebrow: "Manipal Hackathon 2026 · sole developer",
     hook: "Simulates how one infrastructure failure cascades through a city's power, water, transit and telecom networks.",
     bullets: [
-      "Sole developer on the team: Motter–Lai overload cascade on an in-memory NetworkX graph, streamed wave by wave over WebSockets.",
-      "Recommendation engine that verifies every fix by re-running the cascade, ranked by failures prevented and hospitals kept online.",
       "Rust (PyO3) extension for the all-pairs shortest-path hotspot, called 20+ times per recommendation request.",
+      "Motter–Lai overload cascade on an in-memory graph, streamed to the map wave by wave over WebSockets.",
+      "Recommendation engine that verifies every fix by re-running the cascade, ranked by failures prevented and hospitals kept online.",
     ],
-    tags: ["python", "fastapi", "neo4j", "rust", "react"],
-    meta: "FastAPI · Neo4j · PostGIS · Celery · deck.gl",
+    tags: ["rust", "python", "websockets", "graphs"],
+    meta: "Rust · Python · WebSockets",
     dates: "Sep 2026",
     repo: "https://github.com/AbeerMiglani/ripple",
-  },
-  {
-    slug: "quiz",
-    title: "Terminal quiz system",
-    shortName: "quiz",
-    eyebrow: "Python · MySQL",
-    hook: "A command-line quiz app with MySQL-backed persistence for questions, responses and scores.",
-    bullets: [
-      "Designed the SQL schema and queries for quiz questions and user responses.",
-      "Implemented quiz flow, scoring and result retrieval in Python.",
-    ],
-    tags: ["python", "mysql", "sql"],
-    meta: "Python · MySQL · SQL",
-    dates: "Jan – Feb 2025",
   },
 ];
