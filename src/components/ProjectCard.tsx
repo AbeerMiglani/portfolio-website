@@ -4,7 +4,7 @@ import { ProjectArt } from "./ProjectArt";
 export function ProjectCard({ project }: { project: Project }) {
   if (project.featured) {
     return (
-      <article className="grid grid-cols-1 gap-8 rounded-xl border border-border bg-surface p-5 sm:p-8 md:grid-cols-2">
+      <article className="group grid grid-cols-1 gap-8 rounded-xl border border-border bg-surface p-5 sm:p-8 md:grid-cols-2 transition duration-200 hover:border-accent/50 hover:shadow-lg motion-safe:hover:-translate-y-0.5">
         <div className="flex min-w-0 flex-col gap-6">
           <ProjectArt slug={project.slug} />
           {project.roadmap && <Roadmap project={project} />}
@@ -17,7 +17,7 @@ export function ProjectCard({ project }: { project: Project }) {
   }
 
   return (
-    <article className="flex flex-col rounded-xl border border-border bg-surface p-6 sm:p-7">
+    <article className="group flex flex-col rounded-xl border border-border bg-surface p-6 sm:p-7 transition duration-200 hover:border-accent/50 hover:shadow-lg motion-safe:hover:-translate-y-0.5">
       <ProjectArt slug={project.slug} />
       <div className="mt-6 flex flex-1 flex-col">
         <CardBody project={project} />
@@ -56,7 +56,9 @@ function CardBody({ project, large = false }: { project: Project; large?: boolea
           >
             {project.repo.replace("https://", "")}
             <span className="sr-only"> (source for {project.title})</span>
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              ↗
+            </span>
           </a>
         </div>
       )}
