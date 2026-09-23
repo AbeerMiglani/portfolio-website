@@ -26,6 +26,7 @@ export const profile = {
     school: "Shiv Nadar Institution of Eminence",
     degree: "B.Tech, Electrical and Computer Engineering",
     dates: "Aug 2025 – May 2029",
+    graduation: "2029",
     place: "Dadri, UP",
   },
   problemSolving: {

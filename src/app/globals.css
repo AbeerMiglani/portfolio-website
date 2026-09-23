@@ -17,6 +17,7 @@
   --accent: #c2410c;
   --accent-soft: #fbe7dc;
   --ok: #15803d;
+  --band: #f3f1ec;
   --panel: #1c1b19;
   --panel-fg: #faf9f6;
   --panel-border: #1c1b19;
@@ -36,6 +37,7 @@
   --accent: #fb8a4c;
   --accent-soft: #3a2418;
   --ok: #4ade80;
+  --band: #171614;
   --panel: #261b14;
   --panel-fg: #ecebe7;
   --panel-border: #4a2e1d;
@@ -56,6 +58,7 @@
     --accent: #fb8a4c;
     --accent-soft: #3a2418;
     --ok: #4ade80;
+    --band: #171614;
     --panel: #261b14;
     --panel-fg: #ecebe7;
     --panel-border: #4a2e1d;
@@ -76,6 +79,7 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-ok: var(--ok);
+  --color-band: var(--band);
   --color-panel: var(--panel);
   --color-panel-fg: var(--panel-fg);
   --color-panel-border: var(--panel-border);

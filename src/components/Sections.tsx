@@ -6,56 +6,58 @@ import { SectionHeader } from "./SectionHeader";
 
 export function Experience() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <SectionHeader id="experience" command="cat experience.log">
-        Experience
-      </SectionHeader>
+    <section className="border-y border-divider bg-band">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <SectionHeader id="experience" command="cat experience.log">
+          Experience
+        </SectionHeader>
 
-      <ol className="space-y-4">
-        {experience.map((role) => (
-          <li
-            key={role.org}
-            className="grid gap-6 rounded-xl border border-border bg-surface p-6 sm:p-8 md:grid-cols-[1fr_2fr]"
-          >
-            <div>
-              <p className="font-mono text-xs text-muted">
-                {role.start}
-                {role.end !== role.start && ` – ${role.end}`} · {role.place}
-              </p>
-              <h3 className="mt-2 text-xl font-semibold tracking-tight">
-                {role.orgUrl ? (
-                  <a href={role.orgUrl} className="hover:text-accent">
-                    {role.org}
+        <ol className="space-y-4">
+          {experience.map((role) => (
+            <li
+              key={role.org}
+              className="grid gap-6 rounded-xl border border-border bg-surface p-6 sm:p-8 md:grid-cols-[1fr_2fr]"
+            >
+              <div>
+                <p className="font-mono text-xs text-muted">
+                  {role.start}
+                  {role.end !== role.start && ` – ${role.end}`} · {role.place}
+                </p>
+                <h3 className="mt-2 text-xl font-semibold tracking-tight">
+                  {role.orgUrl ? (
+                    <a href={role.orgUrl} className="hover:text-accent">
+                      {role.org}
+                    </a>
+                  ) : (
+                    role.org
+                  )}
+                </h3>
+                <p className="mt-1 text-sm text-muted">{role.role}</p>
+              </div>
+              <div className="flex flex-col">
+                <ul className="space-y-2.5">
+                  {role.bullets.map((bullet) => (
+                    <li key={bullet} className="flex gap-2.5">
+                      <span aria-hidden="true" className="font-mono text-accent">
+                        ›
+                      </span>
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+                {role.repo && (
+                  <a
+                    href={role.repo}
+                    className="mt-5 self-start font-mono text-sm text-muted underline decoration-border underline-offset-4 hover:text-fg hover:decoration-accent"
+                  >
+                    {role.repo.replace("https://", "")} ↗
                   </a>
-                ) : (
-                  role.org
                 )}
-              </h3>
-              <p className="mt-1 text-sm text-muted">{role.role}</p>
-            </div>
-            <div className="flex flex-col">
-              <ul className="space-y-2.5">
-                {role.bullets.map((bullet) => (
-                  <li key={bullet} className="flex gap-2.5">
-                    <span aria-hidden="true" className="font-mono text-accent">
-                      ›
-                    </span>
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-              {role.repo && (
-                <a
-                  href={role.repo}
-                  className="mt-5 self-start font-mono text-sm text-muted underline decoration-border underline-offset-4 hover:text-fg hover:decoration-accent"
-                >
-                  {role.repo.replace("https://", "")} ↗
-                </a>
-              )}
-            </div>
-          </li>
-        ))}
-      </ol>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   );
 }

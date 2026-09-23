@@ -1,3 +1,4 @@
+import { FactsStrip } from "@/components/FactsStrip";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -14,6 +15,7 @@ export default function Home() {
       <TopBar />
       <main>
         <Hero />
+        <FactsStrip />
 
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeader id="projects" command="ls ~/projects">
