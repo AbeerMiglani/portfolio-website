@@ -17,6 +17,9 @@
   --accent: #c2410c;
   --accent-soft: #fbe7dc;
   --ok: #15803d;
+  --panel: #1c1b19;
+  --panel-fg: #faf9f6;
+  --panel-border: #1c1b19;
   color-scheme: light;
 }
 
@@ -33,6 +36,9 @@
   --accent: #fb8a4c;
   --accent-soft: #3a2418;
   --ok: #4ade80;
+  --panel: #261b14;
+  --panel-fg: #ecebe7;
+  --panel-border: #4a2e1d;
   color-scheme: dark;
 }
 
@@ -50,6 +56,9 @@
     --accent: #fb8a4c;
     --accent-soft: #3a2418;
     --ok: #4ade80;
+    --panel: #261b14;
+    --panel-fg: #ecebe7;
+    --panel-border: #4a2e1d;
     color-scheme: dark;
   }
 }
@@ -67,6 +76,9 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-ok: var(--ok);
+  --color-panel: var(--panel);
+  --color-panel-fg: var(--panel-fg);
+  --color-panel-border: var(--panel-border);
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 }

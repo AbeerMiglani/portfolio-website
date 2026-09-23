@@ -176,7 +176,7 @@ function ManSection({ title, children }: { title: string; children: ReactNode })
 export function Contact() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <div className="rounded-xl bg-ink p-8 text-ink-fg sm:p-12">
+      <div className="rounded-xl border border-panel-border bg-panel p-8 text-panel-fg sm:p-12">
         <p className="font-mono text-sm opacity-70" aria-hidden="true">
           <span className="text-accent">$</span> mail {profile.email}
         </p>
