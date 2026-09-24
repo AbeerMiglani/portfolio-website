@@ -116,6 +116,7 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 - **Anchors:** the section `id`s (`projects`, `about`, `contact`, `terminal`) are nav anchors, so don't rename them. There is no Experience section until there's a real internship to show; pre-university work goes in `earlier.ts`.
 - **About page:** laid out as a man page. `ABEER(1)` in the header corners and the footer is the standard man-page header and footer convention, so it's intentional.
 - **Section backgrounds:** only About sits on the full-width `--band`, to break up the page. Adding bands everywhere looks busy.
+- **Vertical rhythm:** sections pad themselves with `py-16`, so the hero only needs `pb-4` at the bottom. That leaves about 80px between the hero and Projects. If you add or remove a block between two sections, measure the gap again so it doesn't stack up.
 - **Contact panel:** uses the `panel` tokens, never `ink`. `ink` inverts to near-white in dark mode.
 - **Card hover:** `group` plus `transition hover:border-accent/50 hover:shadow-lg motion-safe:hover:-translate-y-0.5`. Tailwind v4 uses the CSS `translate` property, not `transform`.
 
