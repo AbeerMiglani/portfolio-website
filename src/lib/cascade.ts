@@ -1,10 +1,11 @@
-// A 9-node toy version of Ripple's Motter–Lai overload cascade. Pure
+// A 9-node illustration of a cascading failure, for the Ripple card. Pure
 // functions; the UI lives in CascadeDemo.tsx.
 //
-// A node's load is its betweenness centrality (how many shortest paths run
-// through it) and its capacity is (1 + ALPHA) times its starting load. When a
-// node fails, loads are recomputed on what's left; every node now over
-// capacity fails together as the next wave, until nothing else is overloaded.
+// Deliberately simpler than Ripple's Motter–Lai model (which re-routes
+// shortest paths, so failures can land on nodes far from the first one): here
+// every node starts with a load of 1, and a failed node hands its load to its
+// working neighbours in equal shares. Any node pushed past its capacity fails
+// in the next wave, so a cascade always travels along the drawn links.
 
 export type Kind = "P" | "W" | "C" | "T" | "H";
 
@@ -35,7 +36,9 @@ export const edges: [number, number][] = [
   [4, 5], [4, 7], [5, 6], [5, 7], [6, 8], [7, 8],
 ];
 
-export const ALPHA = 0.2;
+/** Capacity per node; every node starts with a load of 1. Tuned so most
+ * starting points give a readable chain of 2–4 waves. */
+export const capacity = [2.5, 1.9, 1.2, 1.5, 1.2, 2.5, 2.5, 1.2, 2.5];
 
 /** "Power station 1", "Hospital", … numbered only when a kind repeats. */
 export function nodeName(i: number): string {
@@ -45,80 +48,25 @@ export function nodeName(i: number): string {
   return same.length > 1 ? `${name} ${same.findIndex(([, j]) => j === i) + 1}` : name;
 }
 
-/** Brandes' betweenness centrality on the subgraph of alive nodes (undirected). */
-function betweenness(alive: boolean[]): number[] {
-  const n = nodes.length;
-  const adj: number[][] = Array.from({ length: n }, () => []);
-  for (const [a, b] of edges) {
-    if (alive[a] && alive[b]) {
-      adj[a].push(b);
-      adj[b].push(a);
-    }
-  }
-  const load = new Array<number>(n).fill(0);
-  for (let s = 0; s < n; s++) {
-    if (!alive[s]) continue;
-    const order: number[] = [];
-    const preds: number[][] = Array.from({ length: n }, () => []);
-    const paths = new Array<number>(n).fill(0);
-    const dist = new Array<number>(n).fill(-1);
-    paths[s] = 1;
-    dist[s] = 0;
-    const queue = [s];
-    while (queue.length) {
-      const v = queue.shift()!;
-      order.push(v);
-      for (const w of adj[v]) {
-        if (dist[w] < 0) {
-          dist[w] = dist[v] + 1;
-          queue.push(w);
-        }
-        if (dist[w] === dist[v] + 1) {
-          paths[w] += paths[v];
-          preds[w].push(v);
-        }
-      }
-    }
-    const dependency = new Array<number>(n).fill(0);
-    while (order.length) {
-      const w = order.pop()!;
-      for (const v of preds[w]) dependency[v] += (paths[v] / paths[w]) * (1 + dependency[w]);
-      if (w !== s) load[w] += dependency[w];
-    }
-  }
-  return load.map((l) => l / 2);
-}
+const neighbours: number[][] = nodes.map((_, i) =>
+  edges.flatMap(([a, b]) => (a === i ? [b] : b === i ? [a] : [])),
+);
 
-export type Cascade = {
-  /** waves[0] is [start]; waves[k] fail together because of the loads in loads[k - 1]. */
-  waves: number[][];
-  /** Load on every node after waves 0..k have been removed (failed nodes carry 0). */
-  loads: number[][];
-  capacity: number[];
-};
-
-/** Normal load and capacity with every node up. */
-export function baseline(): { load: number[]; capacity: number[] } {
-  const load = betweenness(nodes.map(() => true));
-  return { load, capacity: load.map((l) => (1 + ALPHA) * l) };
-}
-
-/** Knock out `start` and record each wave and the loads that caused it. */
-export function simulate(start: number): Cascade {
-  const { capacity } = baseline();
+/** Waves of failures after knocking out `start`: waves[0] is [start]. */
+export function simulate(start: number): number[][] {
+  const load = nodes.map(() => 1);
   const alive = nodes.map(() => true);
-  alive[start] = false;
-  const waves = [[start]];
-  const loads: number[][] = [];
-  for (;;) {
-    const load = betweenness(alive);
-    loads.push(load);
-    const failing = nodes.map((_, i) => i).filter((i) => alive[i] && load[i] > capacity[i] + 1e-9);
-    if (!failing.length) return { waves, loads, capacity };
-    for (const i of failing) alive[i] = false;
-    waves.push(failing);
+  const waves: number[][] = [];
+  let wave = [start];
+  while (wave.length) {
+    waves.push(wave);
+    for (const i of wave) alive[i] = false;
+    for (const i of wave) {
+      const live = neighbours[i].filter((j) => alive[j]);
+      for (const j of live) load[j] += load[i] / live.length;
+      load[i] = 0;
+    }
+    wave = nodes.map((_, j) => j).filter((j) => alive[j] && load[j] > capacity[j] + 1e-9);
   }
+  return waves;
 }
-
-/** Load as a share of capacity (0 when a node carries no through-traffic). */
-export const ratio = (load: number, capacity: number) => (capacity > 0 ? load / capacity : 0);
