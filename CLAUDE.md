@@ -32,6 +32,21 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 - **Preview deployments need a Vercel login**, so the `curl` user-agent rewrite can only be tested locally (`npm run start`) or on production after merging.
 - **Element screenshots** sometimes render a word (e.g. "comms" in the Ripple legend) blue. That's a screenshot artifact; the computed colour is the normal muted grey.
 
+## Performance
+
+Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs against `npm run start`.
+
+- **Scores:** desktop 100 in every category. Mobile scores 97 for performance (FCP ≈ 0.8 s, TBT ≈ 90 ms, CLS 0) and 100 for accessibility, best practices and SEO.
+- **Mobile LCP (≈ 2.4 s) is a simulation artifact.** The LCP element is the hero pitch paragraph, which is plain text. The browser's observed LCP equals FCP (about 140 ms unthrottled). Lighthouse's simulator counts every script that finished before the observed paint, and on localhost that means the whole React bundle. Don't chase it with markup changes.
+- **Page weight:** about 250 KB total. Of that, roughly 150 KB gzipped is React and Next.js itself; the site's own client code is under 25 KB gzipped. HTML is 14 KB with Brotli and CSS is 7 KB gzipped.
+- **Production:** Vercel serves pages with Brotli from the CDN (`x-vercel-cache: HIT`). Hashed assets under `/_next/static/immutable/` get `max-age=31536000, immutable`, and TTFB is about 250 ms.
+- **Fonts:** only the weights that are used are loaded: Sans 400/500/600 and Mono 400/500. Don't add weights, such as `font-bold`, without adding them in `layout.tsx`, or browsers will synthesize bold. The three above-the-fold faces are preloaded by `next/font`.
+- **Tried and rejected, with measurements:**
+  - `experimental.inlineCss`: LCP unchanged, FCP about 170 ms worse because the HTML grew.
+  - `<Suspense>` around each client component for progressive hydration: FCP about 150 ms worse, and no reliable TBT gain.
+
+  Measure against a fresh baseline before retrying either.
+
 ## Git and pull requests
 
 - Do not add Claude attribution anywhere: no `Co-Authored-By: Claude` or `Claude-Session:` trailers in commit messages, and no "Generated with Claude Code" line or session link in pull request descriptions or comments.
