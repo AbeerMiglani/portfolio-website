@@ -89,17 +89,36 @@ function betweenness(alive: boolean[]): number[] {
   return load.map((l) => l / 2);
 }
 
-/** Waves of failures after knocking out `start`: waves[0] is [start]. */
-export function cascade(start: number): number[][] {
+export type Cascade = {
+  /** waves[0] is [start]; waves[k] fail together because of the loads in loads[k - 1]. */
+  waves: number[][];
+  /** Load on every node after waves 0..k have been removed (failed nodes carry 0). */
+  loads: number[][];
+  capacity: number[];
+};
+
+/** Normal load and capacity with every node up. */
+export function baseline(): { load: number[]; capacity: number[] } {
+  const load = betweenness(nodes.map(() => true));
+  return { load, capacity: load.map((l) => (1 + ALPHA) * l) };
+}
+
+/** Knock out `start` and record each wave and the loads that caused it. */
+export function simulate(start: number): Cascade {
+  const { capacity } = baseline();
   const alive = nodes.map(() => true);
-  const capacity = betweenness(alive).map((load) => (1 + ALPHA) * load);
   alive[start] = false;
   const waves = [[start]];
+  const loads: number[][] = [];
   for (;;) {
     const load = betweenness(alive);
+    loads.push(load);
     const failing = nodes.map((_, i) => i).filter((i) => alive[i] && load[i] > capacity[i] + 1e-9);
-    if (!failing.length) return waves;
+    if (!failing.length) return { waves, loads, capacity };
     for (const i of failing) alive[i] = false;
     waves.push(failing);
   }
 }
+
+/** Load as a share of capacity (0 when a node carries no through-traffic). */
+export const ratio = (load: number, capacity: number) => (capacity > 0 ? load / capacity : 0);
