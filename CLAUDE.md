@@ -12,6 +12,7 @@ npm run dev     # http://localhost:3000
 npm run lint
 npm run build   # every route should be ○ (static)
 npm run resume  # re-render public/resume.pdf from resume/resume.html
+curl -s localhost:3000/  # after `npm run start`: the terminal résumé (browsers still get HTML)
 ```
 
 There are no unit tests. Before pushing, verify changes by running `lint` and `build`, then load the page in Playwright:
@@ -44,8 +45,10 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 | `src/content/profile.ts` | Name, tagline, pitch, status, `learning`, email, links, education, about text, `problemSolving` stats, skills |
 | `src/content/projects.ts` | Project cards, including `featured`, the optional `roadmap` milestones, the optional `learned` note and `shortName` (used as `~/name` and by `cat`) |
 | `src/content/earlier.ts` | Pre-university work (the LOHUM summer training), shown as one-line entries under Projects and by the terminal's `earlier` |
-| `src/lib/terminal.ts` | Terminal command table: pure functions that return `Line[]` plus optional effects (`clear`, `open`, `theme`) |
-| `src/components/Terminal.tsx` | Terminal UI (client component): history, Tab completion, Ctrl+L, suggestion chips |
+| `src/lib/terminal.ts` | Terminal command table: pure functions that return `Line[]`, optional effects (`clear`, `open`, `theme`, `tty`) and an optional `pending` promise whose lines are appended when it resolves (used by `git log`) |
+| `src/components/Terminal.tsx` | Terminal UI (client component): history, Tab completion, Ctrl+L, suggestion chips, full-screen `tty` mode (Esc or `exit` to leave) |
+| `src/lib/plaintext.ts` | The site as a 78-column text résumé, built from `src/content`. Served at `/resume.txt` (plain) and `/resume.ansi` (coloured), and printed by the terminal's `curl` |
+| `next.config.ts` | Rewrites `/` to `/resume.ansi` when the user agent is `curl`, `wget`, HTTPie or `xh`, so `curl https://portfolio.abbykayo.com` prints the résumé. Both responses stay static |
 | `src/components/Hero.tsx` | Name, tagline, pitch, status, CTAs, and the terminal |
 | `src/components/ProjectCard.tsx` | Featured (wide, with roadmap) and secondary (full width, art beside text, smaller type) card layouts |
 | `src/components/ProjectArt.tsx` | Picks each project's artwork by `slug` |
@@ -81,6 +84,8 @@ Change a number in one place and every view updates:
 - For aliases, use the `aliases` map.
 - Commands in `preloaded` run at render time on both server and client, so their output must be deterministic (no dates, no randomness).
 - A bare `ping` answering "Chishit Rib" is an intentional inside joke. Keep it.
+- `git log [project]` fetches commits from GitHub's public API in the visitor's browser (60 requests an hour per IP) and shows **dates and counts only, never commit messages**. It only reads; don't add anything that writes to Abeer's other repos.
+- Hidden easter eggs: `top`, `neofetch`, `vim` (and `:q`), `rm -rf /` (GNU's real failsafe message), `curl <site>`, `git push`. Keep them short and derived from content where they state facts.
 
 ## Design system
 
@@ -143,6 +148,7 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 - **Skills:** only list skills backed by the résumés or repos. For example, "Linux" was deliberately left out.
 - **Excluded projects:** AI Scam Protect, AI Voice Detector and the HCL GUVI variant are deliberately left off the site and résumé. The Terminal quiz is off the site but stays on the résumé.
 - **Skills:** Google Cloud was removed because no project uses it. Docker and GitHub Actions stay (Ripple uses both).
+- **Plain-text résumé:** `src/lib/plaintext.ts` builds it from `src/content`, so it follows the site, not `resume/resume.html`. Keep lines at 78 columns or less (check with `awk '{ if (length > m) m = length } END { print m }'`).
 - **Phone number:** it must never be committed. `public/resume.pdf` is the web version without it.
 
 ## Résumé
