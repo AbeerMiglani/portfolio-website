@@ -15,7 +15,7 @@ const initialEntries: Entry[] = [
   ...preloaded.map((command, i) => ({
     id: i + 1,
     input: command,
-    lines: run(command, { history: [], store: new Map() }).lines,
+    lines: run(command, { history: [], store: new Map(), tty: false }).lines,
   })),
 ];
 
@@ -23,14 +23,36 @@ export function Terminal() {
   const [entries, setEntries] = useState<Entry[]>(initialEntries);
   const [input, setInput] = useState("");
   const [cursor, setCursor] = useState<number | null>(null);
-  const session = useRef<Session>({ history: [], store: new Map() });
+  const [tty, setTty] = useState(false);
+  const session = useRef<Session>({ history: [], store: new Map(), tty: false });
   const nextId = useRef(initialEntries.length);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [entries]);
+  }, [entries, tty]);
+
+  // Full-screen mode: lock page scroll and let Esc leave from anywhere.
+  useEffect(() => {
+    if (!tty) return;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    inputRef.current?.focus();
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") setFullScreen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [tty]);
+
+  function setFullScreen(on: boolean) {
+    session.current.tty = on;
+    setTty(on);
+  }
 
   function execute(command: string) {
     const trimmed = command.trim();
@@ -42,6 +64,7 @@ export function Terminal() {
     for (const effect of result.effects ?? []) {
       if (effect.type === "clear") cleared = true;
       if (effect.type === "open") window.open(effect.href, "_blank", "noopener,noreferrer");
+      if (effect.type === "tty") setFullScreen(effect.on);
       if (effect.type === "theme") {
         document.documentElement.dataset.theme = effect.theme;
         try {
@@ -53,6 +76,9 @@ export function Terminal() {
     }
 
     setEntries((prev) => (cleared ? [] : [...prev, entry]));
+    result.pending?.then((more) =>
+      setEntries((prev) => prev.map((e) => (e.id === entry.id ? { ...e, lines: [...e.lines, ...more] } : e))),
+    );
     setInput("");
     setCursor(null);
   }
@@ -84,15 +110,31 @@ export function Terminal() {
   return (
     <div id="terminal" className="flex flex-col gap-3">
       <div
-        className="overflow-hidden rounded-xl bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent"
+        className={`overflow-hidden bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] ${
+          tty
+            ? "fixed inset-0 z-50 flex flex-col sm:text-sm"
+            : "rounded-xl shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent"
+        }`}
+        aria-label={tty ? "Terminal, full screen. Press Escape to leave." : undefined}
+        role={tty ? "region" : undefined}
         onClick={() => inputRef.current?.focus()}
       >
         <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
           <span className="text-xs text-white/60">abeer@portfolio: ~</span>
-          <span className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase">interactive</span>
+          {tty ? (
+            <button
+              type="button"
+              onClick={() => setFullScreen(false)}
+              className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase hover:text-white"
+            >
+              esc · exit
+            </button>
+          ) : (
+            <span className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase">interactive</span>
+          )}
         </div>
 
-        <div ref={scrollRef} className="h-72 overflow-y-auto px-4 py-3 sm:h-80">
+        <div ref={scrollRef} className={`overflow-y-auto px-4 py-3 ${tty ? "min-h-0 flex-1 sm:px-8" : "h-72 sm:h-80"}`}>
           <div role="log" aria-live="polite" aria-label="Terminal output">
             {entries.map((entry) => (
               <div key={entry.id} className="mb-2">

@@ -1,6 +1,7 @@
 import { earlier } from "@/content/earlier";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
+import { resumeText } from "@/lib/plaintext";
 
 export type Line =
   | { kind: "text"; text: string; tone?: "muted" | "accent" | "error" }
@@ -10,14 +11,18 @@ export type Line =
 export type Effect =
   | { type: "clear" }
   | { type: "open"; href: string }
-  | { type: "theme"; theme: "light" | "dark" };
+  | { type: "theme"; theme: "light" | "dark" }
+  | { type: "tty"; on: boolean };
 
-export type Result = { lines: Line[]; effects?: Effect[] };
+/** `pending` output is appended to the same entry when it resolves (used by `git log`). */
+export type Result = { lines: Line[]; effects?: Effect[]; pending?: Promise<Line[]> };
 
 /** Per-visitor state that commands can read and change. */
 export type Session = {
   history: string[];
   store: Map<string, string>;
+  /** True while the terminal is full screen (the `tty` command). */
+  tty: boolean;
 };
 
 const text = (value: string, tone?: "muted" | "accent" | "error"): Line => ({
@@ -53,6 +58,7 @@ const commands: Record<string, Command> = {
           .map(([name, cmd]) => text(`  ${(cmd.usage ?? name).padEnd(22)} ${cmd.summary}`)),
         blank,
         text("Tip: Tab completes, ↑/↓ walks history, Ctrl+L clears.", "muted"),
+        text(`This site also answers \`curl ${profile.siteUrl}\` in a real terminal.`, "muted"),
       ],
     }),
   },
@@ -237,6 +243,28 @@ const commands: Record<string, Command> = {
     hidden: true,
     run: (_args, session) => ({ lines: session.history.map((cmd, i) => text(`${String(i + 1).padStart(4)}  ${cmd}`)) }),
   },
+  git: {
+    summary: "commit activity for a project",
+    usage: "git log [project]",
+    run: (args) => {
+      if (args[0] === "push") return { lines: [text("remote: Permission to AbeerMiglani/portfolio-website.git denied to visitor.", "error")] };
+      if (args[0] !== "log") return { lines: [text("usage: git log [redis|ripple]", "error")] };
+      const project = args[1] ? findProject(args[1]) : projects.find((p) => p.featured);
+      if (!project?.repo) return { lines: [text(`git: ${args[1]}: no repository (try \`ls\`)`, "error")] };
+      const repo = project.repo.replace("https://github.com/", "");
+      return { lines: [text(`fetching ${repo} from GitHub…`, "muted")], pending: commitActivity(repo, project.repo) };
+    },
+  },
+  tty: {
+    summary: "full-screen terminal",
+    run: (_args, session) =>
+      session.tty
+        ? { lines: [text("/dev/tty1")] }
+        : {
+            lines: [text("/dev/tty1", "accent"), text("Full screen. Type `exit` or press Esc to leave.", "muted")],
+            effects: [{ type: "tty", on: true }],
+          },
+  },
   clear: {
     summary: "clear the screen",
     run: () => ({ lines: [], effects: [{ type: "clear" }] }),
@@ -252,7 +280,95 @@ const commands: Record<string, Command> = {
   exit: {
     summary: "",
     hidden: true,
-    run: () => ({ lines: [text("There's no escape. Try `contact` instead.", "muted")] }),
+    run: (_args, session) =>
+      session.tty
+        ? { lines: [text("logout", "muted")], effects: [{ type: "tty", on: false }] }
+        : { lines: [text("There's no escape. Try `contact` instead.", "muted")] },
+  },
+  top: {
+    summary: "",
+    hidden: true,
+    run: () => {
+      const featured = projects.find((p) => p.featured);
+      const next = featured?.roadmap?.find((m) => !m.done)?.label ?? "–";
+      const rows: [string, string, string, string][] = [
+        [featured?.shortName ?? "project", "R", "71.3", `next milestone: ${next}`],
+        [profile.learning.join(",").toLowerCase(), "R", "18.9", "learning"],
+        ["internships", "S", " 0.0", profile.status.replace(/^Open/, "open")],
+        ["sleep", "S", " 9.8", "occasionally"],
+      ];
+      return {
+        lines: [
+          text("  PID COMMAND      S  %CPU  NOTE", "muted"),
+          ...rows.map(([cmd, state, cpu, note], i) => text(`${String(i + 1).padStart(5)} ${cmd.padEnd(12)} ${state}  ${cpu}  ${note}`)),
+        ],
+      };
+    },
+  },
+  neofetch: {
+    summary: "",
+    hidden: true,
+    run: () => {
+      const featured = projects.find((p) => p.featured);
+      const done = featured?.roadmap?.filter((m) => m.done).length ?? 0;
+      const info: [string, string][] = [
+        ["os", "portfolio (Next.js 16, static)"],
+        ["host", profile.education.school],
+        ["uptime", `B.Tech ECE, class of ${profile.education.graduation}`],
+        ["shell", "this one (try `help`)"],
+        ["langs", profile.skills.Languages.slice(0, 4).join(", ")],
+        ["building", `${featured?.title ?? "–"} (${done}/${featured?.roadmap?.length ?? 0})`],
+      ];
+      return {
+        lines: [
+          text(" ▄▀▀▄   abeer@portfolio", "accent"),
+          text(" █▄▄█   ---------------", "accent"),
+          text(" █  █", "accent"),
+          ...info.map(([key, value]) => text(`        ${key.padEnd(9)}${value}`)),
+        ],
+      };
+    },
+  },
+  vim: {
+    summary: "",
+    hidden: true,
+    run: () => ({ lines: [text("You're not getting me in there. (If you were: `:q`.)", "muted")] }),
+  },
+  ":q": {
+    summary: "",
+    hidden: true,
+    run: () => ({ lines: [text("Exited vim on the first try. Put that on your résumé.", "muted")] }),
+  },
+  rm: {
+    summary: "",
+    hidden: true,
+    run: (args) =>
+      args.some((a) => a.startsWith("-") && a.includes("r")) && args.includes("/")
+        ? {
+            lines: [
+              text("rm: it is dangerous to operate recursively on '/'", "error"),
+              text("rm: use --no-preserve-root to override this failsafe", "error"),
+            ],
+          }
+        : { lines: [text("rm: cannot remove: Read-only file system", "error")] },
+  },
+  curl: {
+    summary: "",
+    hidden: true,
+    run: (args) => {
+      const target = args.find((a) => !a.startsWith("-"));
+      if (!target) return { lines: [text("curl: try 'curl --help' or 'curl --manual' for more information", "error")] };
+      const host = profile.siteUrl.replace("https://", "");
+      if (!target.replace(/^https?:\/\//, "").startsWith(host)) {
+        return { lines: [text(`curl: (6) Could not resolve host: ${target.replace(/^https?:\/\//, "").split("/")[0]}`, "error")] };
+      }
+      return {
+        lines: [
+          ...resumeText({ color: false }).split("\n").map((l) => (l ? text(l) : blank)),
+          text("That's what a real terminal gets from this URL, in colour.", "muted"),
+        ],
+      };
+    },
   },
 };
 
@@ -268,10 +384,59 @@ const aliases: Record<string, string> = {
   "?": "help",
   github: "contact",
   linkedin: "contact",
+  vi: "vim",
+  nano: "vim",
+  emacs: "vim",
+  ":wq": ":q",
+  ":q!": ":q",
+  htop: "top",
+  wget: "curl",
 };
 
 function emptySession(): Session {
-  return { history: [], store: new Map() };
+  return { history: [], store: new Map(), tty: false };
+}
+
+function findProject(name: string) {
+  const clean = name.replace(/\/$/, "").replace(/\.md$/, "");
+  return projects.find((p) => p.slug === clean || p.shortName === clean);
+}
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Commit counts per month from GitHub's public API. Dates and counts only, not messages. */
+async function commitActivity(repo: string, url: string): Promise<Line[]> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}/commits?per_page=100`, {
+      headers: { Accept: "application/vnd.github+json" },
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    const commits: { commit: { author: { date: string } } }[] = await res.json();
+    if (!commits.length) return [text("no commits yet", "muted")];
+    const dates = commits.map((c) => new Date(c.commit.author.date));
+    const newest = new Date(Math.max(...dates.map(Number)));
+    const oldest = new Date(Math.min(...dates.map(Number)));
+    const counts = new Map<string, number>();
+    for (const d of dates) counts.set(`${d.getFullYear()}-${d.getMonth()}`, (counts.get(`${d.getFullYear()}-${d.getMonth()}`) ?? 0) + 1);
+    const months: [string, number][] = [];
+    const now = new Date();
+    for (let y = oldest.getFullYear(), m = oldest.getMonth(); y < now.getFullYear() || (y === now.getFullYear() && m <= now.getMonth()); m === 11 ? (y++, (m = 0)) : m++) {
+      months.push([`${MONTHS[m]} ${y}`, counts.get(`${y}-${m}`) ?? 0]);
+    }
+    const max = Math.max(...months.map(([, n]) => n));
+    const days = Math.floor((Date.now() - newest.getTime()) / 86_400_000);
+    const ago = days <= 0 ? "today" : days === 1 ? "yesterday" : `${days} days ago`;
+    return [
+      text(`${repo.split("/")[1]} · ${commits.length === 100 ? "100+" : commits.length} commits · latest ${ago}`, "accent"),
+      ...months.map(([label, n]) => text(`  ${label}  ${n ? "█".repeat(Math.max(1, Math.round((n / max) * 20))) : "·"} ${n}`)),
+      link(`history → ${url.replace("https://", "")}/commits`, `${url}/commits`),
+    ];
+  } catch {
+    return [
+      text("git: couldn't reach GitHub right now (it allows 60 requests an hour per visitor).", "error"),
+      link(`history → ${url.replace("https://", "")}/commits`, `${url}/commits`),
+    ];
+  }
 }
 
 export function run(input: string, session: Session): Result {

@@ -63,6 +63,12 @@ export function Footer() {
           © {new Date().getFullYear()} {profile.name}
         </p>
         <p>
+          <span aria-hidden="true" className="text-accent">
+            ${" "}
+          </span>
+          curl {profile.siteUrl}
+        </p>
+        <p>
           build{" "}
           {sha && repo ? (
             <a href={`${repo}/commit/${sha}`} className="hover:text-fg">
