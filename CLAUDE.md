@@ -48,7 +48,9 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 | `src/components/Terminal.tsx` | Terminal UI (client component): history, Tab completion, Ctrl+L, suggestion chips |
 | `src/components/Hero.tsx` | Name, tagline, pitch, status, CTAs, and the terminal |
 | `src/components/ProjectCard.tsx` | Featured (wide, with roadmap) and secondary (full width, art beside text, smaller type) card layouts |
-| `src/components/ProjectArt.tsx` | One illustration per project, chosen by `slug` |
+| `src/components/ProjectArt.tsx` | Picks each project's artwork by `slug` |
+| `src/components/FrameDemo.tsx`, `src/lib/framing.ts` | Redis card: the frame's bytes, plus a replay of the server reading two requests with and without framing |
+| `src/components/CascadeDemo.tsx`, `src/lib/cascade.ts` | Ripple card: click a node to knock it out and watch the Motter–Lai cascade spread in waves |
 | `src/components/Sections.tsx` | Earlier (under Projects), About (the `man abeer` page, on the band), Contact (the panel) |
 | `src/components/SectionHeader.tsx` | `$ command` line above a plain section title |
 | `src/components/TopBar.tsx`, `Footer.tsx`, `ThemeToggle.tsx` | Chrome |
@@ -70,7 +72,7 @@ Change a number in one place and every view updates:
 **Adding a project:**
 
 1. Add an entry to `projects.ts` with a unique `slug` and `shortName`.
-2. Add a matching case in `ProjectArt.tsx`. Draw what the project actually does; don't reuse a generic graphic.
+2. Add a matching case in `ProjectArt.tsx`. Draw what the project actually does; don't reuse a generic graphic. A small interactive demo is best, but it must render a complete picture on the server (for no-JS visitors), announce results with `aria-live`, and show the end state immediately under reduced motion.
 3. `ls`, `cat <slug>` and the footer pick the new project up automatically.
 
 **Adding a terminal command:** add an entry to `commands` in `src/lib/terminal.ts`.
@@ -130,6 +132,8 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 ## Accuracy rules (the site and résumé must match the repos)
 
 - **Redis:** `redis-cpp` implements a length-prefixed binary protocol (a 4-byte length in host byte order, so little-endian on x86/ARM, then the payload) with `read_full`/`write_all` loops and a 4 KB guard. It does not implement RESP and has no key-value store yet, so call it a "Redis-style server", never "Redis-compatible", until it speaks RESP. It serves one client at a time with blocking calls; "Concurrent I/O models" in the roadmap is the book's chapter on the options, not an implementation. Started Jul 2026.
+- **Framing demo:** it mirrors the real code, so keep it that way. The client sends `hello1` and `hello2` (from `redis_client.cpp`); the length prefix is little-endian; `read_full` asks `read()` for exactly the bytes still needed; the unframed mode is the old `do_something()` (`read(fd, buf, 63)`). Lengths are counted in UTF-8 bytes, which is why a split `é` prints as `�`.
+- **Cascade demo:** a 9-node toy version of Ripple's model (load = betweenness, capacity = (1 + α) × starting load, α = 0.2). The edge set was chosen so most starting nodes give multi-wave cascades; if you change nodes or edges, re-check that the default (Power station 1) still shows several waves. Don't present it as Ripple's real data.
 - **Positioning:** the headline is C++ only. Python stays in the skills list, but don't lead with it.
 - **Ripple:** link to `github.com/AbeerMiglani/ripple`, not `SatishSystemsInc`. `SatishSystemsInc` is the hackathon record and must stay untouched.
   - Describe Ripple as "Manipal Hackathon 2026".
