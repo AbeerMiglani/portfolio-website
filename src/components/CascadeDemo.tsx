@@ -103,25 +103,31 @@ export function CascadeDemo() {
               : wave !== undefined
                 ? "border-accent bg-accent-soft text-fg"
                 : "border-border bg-surface text-fg";
+          // The wave badge sits beside the button, not inside it, so the
+          // button's visible text (its letter) stays part of its accessible name.
           return (
-            <button
+            <div
               key={i}
-              type="button"
-              onClick={() => knockOut(i)}
-              aria-label={`${nodeName(i)}, ${wave === undefined ? "working" : wave === 0 ? "knocked out" : `failed in wave ${wave}`}`}
-              className={`absolute grid aspect-square w-[8.5%] min-w-6 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-items-center rounded-full border-[1.75px] font-mono text-[11px] font-medium transition-colors duration-300 hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${state}`}
+              className="absolute aspect-square w-[8.5%] min-w-6 -translate-x-1/2 -translate-y-1/2"
               style={{ left: `${(node.x / VIEW.w) * 100}%`, top: `${(node.y / VIEW.h) * 100}%` }}
             >
-              <span aria-hidden="true">{node.kind}</span>
+              <button
+                type="button"
+                onClick={() => knockOut(i)}
+                aria-label={`${nodeName(i)}, ${wave === undefined ? "working" : wave === 0 ? "knocked out" : `failed in wave ${wave}`}`}
+                className={`grid size-full cursor-pointer place-items-center rounded-full border-[1.75px] font-mono text-[11px] font-medium transition-colors duration-300 hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${state}`}
+              >
+                <span aria-hidden="true">{node.kind}</span>
+              </button>
               {wave !== undefined && wave > 0 && (
                 <span
                   aria-hidden="true"
-                  className="absolute -top-1.5 -right-1.5 grid size-4 place-items-center rounded-full bg-accent text-[9px] leading-none font-semibold text-ink-fg"
+                  className="pointer-events-none absolute -top-1.5 -right-1.5 grid size-4 place-items-center rounded-full bg-accent font-mono text-[9px] leading-none font-semibold text-ink-fg"
                 >
                   {wave}
                 </span>
               )}
-            </button>
+            </div>
           );
         })}
       </div>
