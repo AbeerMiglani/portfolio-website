@@ -60,13 +60,18 @@ export function FrameDemo() {
       setShown(all.length);
       return;
     }
-    setShown(1);
-    timer.current = setInterval(() => {
-      setShown((n) => {
-        if (n + 1 >= all.length) stop();
-        return Math.min(n + 1, all.length);
-      });
+    // Each interval counts in its own closure and clears only itself, so a
+    // late tick from an earlier replay can't stop a newer one.
+    let n = 1;
+    setShown(n);
+    const id = setInterval(() => {
+      setShown(++n);
+      if (n >= all.length) {
+        clearInterval(id);
+        if (timer.current === id) timer.current = null;
+      }
     }, STEP_MS);
+    timer.current = id;
   }
 
   function edit(value: string) {

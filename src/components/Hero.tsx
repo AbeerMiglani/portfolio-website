@@ -5,8 +5,8 @@ import { Terminal } from "./Terminal";
 export function Hero() {
   return (
     <section id="top" className="mx-auto max-w-6xl px-4 pt-14 pb-4 sm:px-6 sm:pt-20">
-      <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
-        <div>
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
+        <div className="min-w-0">
           <p className="font-mono text-sm text-muted">
             <span className="text-accent">$</span> whoami
           </p>

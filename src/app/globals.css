@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* Scan only src/ for class names, so class-like words in CLAUDE.md or the
+   README don't ship as unused CSS. */
+@import "tailwindcss" source("../");
 
 /* Warm paper light theme is the default, with a single burnt-orange accent.
    An inline script in layout.tsx sets data-theme on <html> before paint; the

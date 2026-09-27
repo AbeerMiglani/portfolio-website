@@ -7,6 +7,8 @@ const WAVE_MS = 650;
 const VIEW = { w: 330, h: 178 };
 const DEFAULT_START = 6; // Water plant 2: a four-wave chain that ends at the hospital
 const HOSPITAL = nodes.findIndex((n) => n.kind === "H");
+const NAMES = nodes.map((_, i) => nodeName(i));
+const CASCADES = nodes.map((_, i) => simulate(i));
 
 function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -17,10 +19,11 @@ function prefersReducedMotion() {
 // the failure travelled along light up (see src/lib/cascade.ts).
 export function CascadeDemo() {
   const [start, setStart] = useState<number | null>(DEFAULT_START);
-  const [shown, setShown] = useState(() => simulate(DEFAULT_START).length);
+  const [shown, setShown] = useState(CASCADES[DEFAULT_START].length);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const group = useRef<HTMLDivElement>(null);
 
-  const waves = start === null ? [] : simulate(start);
+  const waves = start === null ? [] : CASCADES[start];
   const waveOf = new Map<number, number>();
   waves.slice(0, shown).forEach((wave, w) => wave.forEach((i) => waveOf.set(i, w)));
   const done = shown >= waves.length;
@@ -34,41 +37,49 @@ export function CascadeDemo() {
 
   function knockOut(i: number) {
     stop();
-    const total = simulate(i).length;
+    const total = CASCADES[i].length;
     setStart(i);
-    if (prefersReducedMotion()) {
+    if (total === 1 || prefersReducedMotion()) {
       setShown(total);
       return;
     }
-    setShown(1);
-    timer.current = setInterval(() => {
-      setShown((n) => {
-        if (n + 1 >= total) stop();
-        return Math.min(n + 1, total);
-      });
+    // The count lives in the closure and each interval clears only itself, so
+    // a late tick from an earlier cascade can't stop a newer one.
+    let n = 1;
+    setShown(n);
+    const id = setInterval(() => {
+      setShown(++n);
+      if (n >= total) {
+        clearInterval(id);
+        if (timer.current === id) timer.current = null;
+      }
     }, WAVE_MS);
+    timer.current = id;
   }
 
   function reset() {
     stop();
     setStart(null);
     setShown(0);
+    // The reset button unmounts, so move focus to the first node rather than losing it.
+    group.current?.querySelector("button")?.focus();
   }
 
   const status =
     start === null
       ? "Click a node to knock it out. Its load moves to its neighbours."
       : !done
-        ? `${nodeName(start)} down…`
+        ? `${NAMES[start]} down…`
         : waves.length === 1
-          ? `${nodeName(start)} down. Its neighbours absorbed the load.`
-          : `${nodeName(start)} down → ${waves.length - 1} wave${waves.length > 2 ? "s" : ""}, ${waveOf.size} of ${nodes.length} down.${
+          ? `${NAMES[start]} down. Its neighbours absorbed the load.`
+          : `${NAMES[start]} down → ${waves.length - 1} wave${waves.length > 2 ? "s" : ""}, ${waveOf.size} of ${nodes.length} down.${
               waveOf.has(HOSPITAL) && start !== HOSPITAL ? ` Hospital lost in wave ${waveOf.get(HOSPITAL)}.` : ""
             }`;
 
   return (
     <div className="rounded-lg bg-chip/60 p-4">
       <div
+        ref={group}
         role="group"
         aria-label="Cascade simulator: knock out a node"
         className="relative"
@@ -99,35 +110,33 @@ export function CascadeDemo() {
           const wave = waveOf.get(i);
           const state =
             wave === 0
-              ? "border-accent bg-accent text-ink-fg"
+              ? "border-accent bg-accent text-ink-fg forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]"
               : wave !== undefined
                 ? "border-accent bg-accent-soft text-fg"
                 : "border-border bg-surface text-fg";
-          // The wave badge sits beside the button, not inside it, so the
-          // button's visible text (its letter) stays part of its accessible name.
+          // Named with sr-only text rather than aria-label, so the visible
+          // letter and wave number never have to match the name.
           return (
-            <div
+            <button
               key={i}
-              className="absolute aspect-square w-[8.5%] min-w-6 -translate-x-1/2 -translate-y-1/2"
+              type="button"
+              onClick={() => knockOut(i)}
+              className={`absolute grid aspect-square w-[8.5%] min-w-6 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-items-center rounded-full border-[1.75px] font-mono text-[11px] font-medium transition-colors duration-300 hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${state}`}
               style={{ left: `${(node.x / VIEW.w) * 100}%`, top: `${(node.y / VIEW.h) * 100}%` }}
             >
-              <button
-                type="button"
-                onClick={() => knockOut(i)}
-                aria-label={`${nodeName(i)}, ${wave === undefined ? "working" : wave === 0 ? "knocked out" : `failed in wave ${wave}`}`}
-                className={`grid size-full cursor-pointer place-items-center rounded-full border-[1.75px] font-mono text-[11px] font-medium transition-colors duration-300 hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${state}`}
-              >
-                <span aria-hidden="true">{node.kind}</span>
-              </button>
+              <span aria-hidden="true">{node.kind}</span>
+              <span className="sr-only">
+                {NAMES[i]}, {wave === undefined ? "working" : wave === 0 ? "knocked out" : `failed in wave ${wave}`}
+              </span>
               {wave !== undefined && wave > 0 && (
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -top-1.5 -right-1.5 grid size-4 place-items-center rounded-full bg-accent font-mono text-[9px] leading-none font-semibold text-ink-fg"
+                  className="absolute -top-1.5 -right-1.5 grid size-4 place-items-center rounded-full bg-accent text-[9px] leading-none text-ink-fg forced-colors:border"
                 >
                   {wave}
                 </span>
               )}
-            </div>
+            </button>
           );
         })}
       </div>
