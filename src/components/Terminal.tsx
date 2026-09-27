@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { complete, preloaded, run, welcome, type Line, type Session } from "@/lib/terminal";
+import { applyTheme } from "@/lib/theme";
 
 type Entry = { id: number; input?: string; lines: Line[] };
 
@@ -65,14 +66,7 @@ export function Terminal() {
       if (effect.type === "clear") cleared = true;
       if (effect.type === "open") window.open(effect.href, "_blank", "noopener,noreferrer");
       if (effect.type === "tty") setFullScreen(effect.on);
-      if (effect.type === "theme") {
-        document.documentElement.dataset.theme = effect.theme;
-        try {
-          localStorage.setItem("theme", effect.theme);
-        } catch {
-          // Storage can be blocked; the theme still applies for this visit.
-        }
-      }
+      if (effect.type === "theme") applyTheme(effect.theme);
     }
 
     setEntries((prev) => (cleared ? [] : [...prev, entry]));
@@ -88,9 +82,14 @@ export function Terminal() {
     if (event.key === "Enter") {
       event.preventDefault();
       execute(input);
-    } else if (event.key === "Tab") {
-      event.preventDefault();
-      setInput(complete(input));
+    } else if (event.key === "Tab" && !event.shiftKey) {
+      // Only hold on to Tab when it completes something; otherwise it moves
+      // focus as usual, so keyboard users can always leave the terminal.
+      const completed = complete(input);
+      if (completed !== input) {
+        event.preventDefault();
+        setInput(completed);
+      }
     } else if (event.key === "ArrowUp" && history.length) {
       event.preventDefault();
       const next = cursor === null ? history.length - 1 : Math.max(0, cursor - 1);
@@ -108,7 +107,7 @@ export function Terminal() {
   }
 
   return (
-    <div id="terminal" className="flex flex-col gap-3">
+    <div id="terminal" className="flex min-w-0 flex-col gap-3">
       <div
         className={`overflow-hidden bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] ${
           tty

@@ -1,15 +1,10 @@
 "use client";
 
+import { applyTheme } from "@/lib/theme";
+
 export function ThemeToggle() {
   function toggle() {
-    const root = document.documentElement;
-    const next = root.dataset.theme === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem("theme", next);
-    } catch {
-      // Storage can be blocked (private mode); the toggle still works for this visit.
-    }
+    applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   }
 
   return (

@@ -18,11 +18,11 @@ curl -s localhost:3000/  # after `npm run start`: the terminal résumé (browser
 There are no unit tests. Before pushing, verify changes by running `lint` and `build`, then load the page in Playwright:
 
 - Chromium is at `/opt/pw-browsers`, and the global module is `/opt/node22/lib/node_modules/playwright`.
-- Check widths of 390px and 1280px, in both light and dark themes.
+- Check widths of 320px, 390px and 1280px, in both light and dark themes.
 - Confirm there's no horizontal overflow: `document.documentElement.scrollWidth - innerWidth` should be 0.
 - Confirm there are no console errors.
 - Exercise anything interactive you touched: the framing demo (`send`, `send without framing`), the cascade (click a node, `reset`, the contained node Transit hub 1), and terminal commands. Also check reduced motion (`reducedMotion: "reduce"`), keyboard use, and a load with JavaScript disabled.
-- Run axe-core (`npm i --no-save axe-core` in the scratchpad, inject `axe.min.js`) in both themes and expect zero violations. Contrast is the usual failure: small text on the dark terminal needs at least `text-white/55`, and the light `--accent-soft` was set to `#fdefe7` so accent text on it reaches 4.5:1.
+- Run axe-core (`npm i --no-save axe-core` in the scratchpad, inject `axe.min.js`) in both themes and expect zero violations. Run it with `axe.run(document, { rules: { 'label-content-name-mismatch': { enabled: true } } })`: that rule is experimental, so a default run skips it, and Lighthouse gives it zero weight. Contrast is the usual failure: small text on the dark terminal needs at least `text-white/55`, and the light `--accent-soft` was set to `#fdefe7` so accent text on it reaches 4.5:1.
 
 **Cloud-environment gotchas when verifying:**
 
@@ -40,7 +40,8 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 - **Mobile LCP (≈ 2.4 s) is a simulation artifact.** The LCP element is the hero pitch paragraph, which is plain text. The browser's observed LCP equals FCP (about 140 ms unthrottled). Lighthouse's simulator counts every script that finished before the observed paint, and on localhost that means the whole React bundle. Don't chase it with markup changes.
 - **Page weight:** about 250 KB total. Of that, roughly 150 KB gzipped is React and Next.js itself; the site's own client code is under 25 KB gzipped. HTML is 14 KB with Brotli and CSS is 7 KB gzipped.
 - **Production:** Vercel serves pages with Brotli from the CDN (`x-vercel-cache: HIT`). Hashed assets under `/_next/static/immutable/` get `max-age=31536000, immutable`, and TTFB is about 250 ms.
-- **Fonts:** only the weights that are used are loaded: Sans 400/500/600 and Mono 400/500. Don't add weights, such as `font-bold`, without adding them in `layout.tsx`, or browsers will synthesize bold. The three above-the-fold faces are preloaded by `next/font`.
+- **Fonts:** see the comments in `layout.tsx` for which weights load. IBM Plex Sans is a variable font (`weight: "variable"`), so every Sans weight from 100 to 700 is real and costs nothing extra. IBM Plex Mono is static: each listed weight is a separate preloaded file (about 10 KB), and any heavier Mono weight is drawn as faux bold. So keep Mono text at medium or lighter, or add the weight in `layout.tsx` knowing it adds a preload. `next/font` preloads every configured file, not just the ones above the fold; today that's three (Sans latin, Mono 400, Mono 500).
+- **Tailwind scanning:** `globals.css` imports Tailwind with `source("../")`, so only `src/` is scanned for class names. Without it, class-like words in this file or the README shipped as unused CSS.
 - **Tried and rejected, with measurements:**
   - `experimental.inlineCss`: LCP unchanged, FCP about 170 ms worse because the HTML grew.
   - `<Suspense>` around each client component for progressive hydration: FCP about 150 ms worse, and no reliable TBT gain.
@@ -144,7 +145,8 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 
 - Theme is `data-theme` on `<html>`, set before paint by the inline script in `layout.tsx`.
 - The visitor's choice is stored in `localStorage` under `theme`. With no stored choice, it follows the system setting, defaulting to light.
-- `ThemeToggle` and the terminal's `theme` command both write it.
+- `ThemeToggle` and the terminal's `theme` command both go through `applyTheme` in `src/lib/theme.ts`, which also recolours the `theme-color` meta tags so the phone's toolbar follows the page. The colours live in `themeColors` there and must match `--bg`.
+- If reading storage throws (blocked site data), the pre-paint script still follows the system setting.
 
 **Patterns to reuse:**
 
@@ -159,15 +161,18 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 ## Conventions and gotchas
 
 - **Decorative elements:** artwork, prompts and bullets get `aria-hidden="true"`. Give screen readers the plain label with `sr-only` text.
+- **Controls with visible text** (like the cascade nodes' letter and wave number): name them with `sr-only` text inside the button, not `aria-label`. An `aria-label` has to contain the visible text (axe's `label-content-name-mismatch`), which a letter plus a number never does.
+- **Keyboard:** never trap Tab. The terminal only keeps Tab when it completes something; Shift+Tab and a Tab with nothing to complete move focus as usual. A control that disappears when used (like the cascade's `reset`) must move focus somewhere sensible.
+- **Timers in demos:** keep `setState` updaters pure. Each interval counts in its own closure and clears only its own id, so a late tick can't stop a newer run.
 - **Reduced motion:** respect it with `motion-safe:` or the `prefers-reduced-motion` block.
-- **Grids on phones:** a grid whose items contain wide content can overflow at 390px. Use `grid-cols-1` (which gives `minmax(0,1fr)`) plus `min-w-0` on the children.
+- **Grids on phones:** a grid whose items contain wide content can overflow at 320–390px (the hero did, because of the terminal). Use `grid-cols-1` (which gives `minmax(0,1fr)`) plus `min-w-0` on the children.
 - **Next.js 16 changes:** read `node_modules/next/dist/docs/` before using unfamiliar APIs (see `AGENTS.md`).
 
 ## Accuracy rules (the site and résumé must match the repos)
 
 - **Redis:** `redis-cpp` implements a length-prefixed binary protocol (a 4-byte length in host byte order, so little-endian on x86/ARM, then the payload) with `read_full`/`write_all` loops and a 4 KB guard. It does not implement RESP and has no key-value store yet, so call it a "Redis-style server", never "Redis-compatible", until it speaks RESP. It serves one client at a time with blocking calls; "Concurrent I/O models" in the roadmap is the book's chapter on the options, not an implementation. Started Jul 2026.
 - **Framing demo:** it mirrors the real code, so keep it that way. The client sends `hello1` and `hello2` (from `redis_client.cpp`); the length prefix is little-endian; `read_full` asks `read()` for exactly the bytes still needed; the unframed mode is the old `do_something()` (`read(fd, buf, 63)`). Lengths are counted in UTF-8 bytes, which is why a split `é` prints as `�`.
-- **Cascade demo:** a 9-node *simplified illustration*, not Ripple's model. Every node starts with a load of 1; a failed node hands its load to its working neighbours in equal shares, and any node past its capacity (`capacity` in `src/lib/cascade.ts`) fails in the next wave. Failures therefore always travel along drawn links, which the demo shows by lighting up the links between consecutive waves and putting a wave number on each failed node. An earlier Motter–Lai version failed nodes far from the click and read as random, even with load meters added, and Abeer found the meters cluttered. So keep this model and keep the card minimal: badges, path links, one status line and one key line. The capacities were tuned so most starts give a 2–4-wave chain, Transit hub 1 is contained, and the default (Water plant 2) ends at the hospital. Re-check those properties if you change nodes, edges or capacities.
+- **Cascade demo:** a 9-node *simplified illustration*, not Ripple's model. Every node starts with a load of 1; a failed node hands its load to its working neighbours in equal shares, and any node past its capacity (`capacity` in `src/lib/cascade.ts`) fails in the next wave. Failures therefore always travel along drawn links, which the demo shows by lighting up the links between consecutive waves and putting a wave number on each failed node. An earlier Motter–Lai version failed nodes far from the click and read as random, even with load meters added, and Abeer found the meters cluttered. So keep this model and keep the card minimal: badges, path links, one status line and one key line. The capacities were tuned so most starts give a 2–4-wave chain, Transit hub 1 is contained, and the default (Water plant 2) ends at the hospital. Re-check those properties if you change nodes, edges or capacities. The knocked-out node uses the system `Highlight` colour in forced-colours (high-contrast) mode, since it has no badge to set it apart.
 - **Positioning:** the headline is C++ only. Python stays in the skills list, but don't lead with it.
 - **Ripple:** link to `github.com/AbeerMiglani/ripple`, not `SatishSystemsInc`. `SatishSystemsInc` is the hackathon record and must stay untouched.
   - Describe Ripple as "Manipal Hackathon 2026".

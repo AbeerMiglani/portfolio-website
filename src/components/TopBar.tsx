@@ -8,14 +8,14 @@ export function TopBar() {
     <header className="sticky top-0 z-20 border-b border-divider bg-bg/85 backdrop-blur">
       <nav
         aria-label="Main"
-        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 font-mono text-sm sm:px-6"
+        className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 font-mono text-sm sm:gap-4 sm:px-6"
       >
         <a href="#top" className="shrink-0 font-medium text-fg">
           {profile.handle}
           <span className="text-muted">@portfolio</span>
           <span className="text-accent">:~$</span>
         </a>
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-3 sm:gap-5">
           <ul className="hidden gap-5 text-muted md:flex">
             {sections.map((id) => (
               <li key={id}>
