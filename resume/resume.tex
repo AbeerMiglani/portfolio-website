@@ -1,0 +1,151 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+\pdfgentounicode=1
+
+% Measured results. Every number was produced by running the code in the repos.
+\newcommand{\metric}[1]{\textbf{#1}}
+
+% Repository link: a small framed "GitHub" button at the end of a heading line.
+% \upshape keeps it upright inside italic lines; the full URL stays in the link.
+\newcommand{\repo}[1]{\href{https://github.com/AbeerMiglani/#1}{{\setlength{\fboxsep}{1.5pt}\fbox{\upshape\footnotesize GitHub}}}}
+
+% Small bullet, as in the original Jake's Resume template
+\newcommand{\smallbullet}{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \textbf{#1} \hfill #2 \\
+    \textit{\small #3} \hfill \textit{\small #4}
+  \vspace{-5pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+  \item
+    \small #1 \hfill #2
+  \vspace{-5pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.2in, label={\smallbullet}]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+\newcommand{\resumeTopItemListStart}{\begin{itemize}[leftmargin=0.35in, label={\smallbullet}]}
+
+\begin{document}
+
+%-----------HEADER-----------
+\begin{center}
+    \textbf{\Huge \scshape Abeer Miglani} \\ \vspace{3pt}
+    \small \href{mailto:am319@snu.edu.in}{\underline{am319@snu.edu.in}} \quad
+    \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}} \quad
+    \href{https://linkedin.com/in/abeermiglani}{\underline{linkedin.com/in/abeermiglani}} \quad
+    \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}
+\end{center}
+
+%-----------SUMMARY-----------
+\section{Summary}
+\small{Second-year Electrical and Computer Engineering student seeking a Software Engineering internship. Builds systems software in C++, C, and Python, with hands-on work in network protocols, graph algorithms, and Rust performance extensions. Also open to Embedded Systems and Junior Developer roles.}
+
+%-----------EDUCATION-----------
+\section{Education}
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {Shiv Nadar Institution of Eminence}{Dadri, UP}
+      {Bachelor of Technology in Electrical and Computer Engineering}{Aug. 2025 -- May 2029}
+\resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {Summer Trainee}{Jun. 2023}
+      {LOHUM Cleantech Pvt. Ltd. \repo{metal-price-scraper}}{Kasna, UP}
+      \resumeItemListStart
+        \resumeItem{Automated price collection for \metric{9} lithium, nickel, and battery material products with Python and Selenium.}
+        \resumeItem{Handled dynamically loaded pages with XPath selectors and explicit waits, and cleaned the data with Pandas.}
+        \resumeItem{Generated an HTML dashboard from the scraped data to view and share prices in one place.}
+      \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Projects}
+\resumeSubHeadingListStart
+    \resumeProjectHeading
+      {\textbf{Ripple, Cascading Failure Simulator} - \emph{Rust, Python, React} \repo{ripple}}{Sep. 2026}
+      \resumeItemListStart
+        \resumeItem{Built solo at Manipal Hackathon 2026 to simulate failure spread across a synthetic \metric{120-asset} city network.}
+        \resumeItem{Made all-pairs shortest path \metric{25x} faster, and \metric{33x} on 2,000-node graphs, with a parallel Rust extension on PyO3.}
+        \resumeItem{Cut worst-case recommendation latency from \metric{1.5 s to 190 ms}; each request runs up to 50 all-pairs passes.}
+        \resumeItem{Built a Motter-Lai cascade engine and a recommender whose top verified fix prevents up to \metric{91\%} of failures.}
+        \resumeItem{Added \metric{300} pytest tests and GitHub Actions CI that checks the Rust and Python results match.}
+      \resumeItemListEnd
+
+    \resumeProjectHeading
+      {\textbf{Redis-Style Server} - \emph{C++, POSIX Sockets, TCP} \repo{redis-cpp}}{Jul. 2026 -- Present}
+      \resumeItemListStart
+        \resumeItem{Building a Redis-style in-memory server from first principles in C++ on raw POSIX sockets.}
+        \resumeItem{Designed a length-prefixed binary protocol that survives fragmented TCP reads, tested with \metric{1,000} split requests.}
+        \resumeItem{Benchmarked \metric{25K requests per second} at \metric{38 $\mu$s} median and \metric{82 $\mu$s} p99 latency over 100K loopback round trips.}
+      \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: C++, C, Python, SQL, TypeScript, Rust, HTML, CSS} \\
+     \textbf{Frameworks and Libraries}{: FastAPI, Flask, React, Celery, NetworkX, PyO3, Rayon, Pandas, NumPy, Selenium} \\
+     \textbf{Databases}{: PostgreSQL, PostGIS, Neo4j, Redis, MySQL} \\
+     \textbf{Developer Tools}{: Git, Docker, Docker Compose, GitHub Actions, pytest, VS Code} \\
+     \textbf{Core Areas}{: Systems Programming, Computer Networks, Data Structures, Algorithms}
+    }}
+\end{itemize}
+
+%-----------PROBLEM SOLVING-----------
+\section{Problem Solving}
+\resumeTopItemListStart
+    \resumeItem{Solved 140+ data structures and algorithms problems on LeetCode, Codeforces, CodeChef, and HackerRank.}
+    \resumeItem{Solved 3 of 4 problems in an intra-college competitive programming contest.}
+\resumeItemListEnd
+
+\end{document}
