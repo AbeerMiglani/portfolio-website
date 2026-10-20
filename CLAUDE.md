@@ -201,7 +201,7 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 ## Résumé
 
 - **Where to edit:** `resume/resume.tex` is Abeer's own LaTeX résumé, tuned for applicant tracking systems (ATS). Keep its wording, structure and section order as Abeer wrote it, and change only what's asked. Then run `npm run resume` to rebuild `public/resume.pdf`.
-- **Repo links:** project and experience headings link to their repos with the `\repo{name}` macro, a small framed "GitHub" button. It's upright even in italic lines, and the full URL stays in the PDF link. The header keeps the full `github.com/AbeerMiglani` profile link.
+- **Repo links:** project and experience headings link to their repos with the `\repo{name}` macro: an underlined, unboxed "GitHub" on the right of the heading line, followed by `|` and the date (write `{\repo{name}Jun. 2023}` in the date argument). The full URL stays in the PDF link. The header keeps the full `github.com/AbeerMiglani` profile link.
 - **Toolchain:** the script needs `pdflatex` (TeX Live on Linux, MacTeX on macOS). In the cloud environment, install it with `apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-english`. Vercel doesn't build the résumé; the committed PDF is what's served.
 - **Full copy with phone:** `RESUME_PHONE="…" npm run resume` also writes `resume/out/Abeer_Miglani_Resume.pdf`, with the phone number inserted at the start of the contact line. `resume/out/` is gitignored. Never put the number in the `.tex`, a commit or a PR.
 - **One page:** the script fails if a PDF isn't exactly one page. Tighten wording or spacing rather than shrinking the font further.

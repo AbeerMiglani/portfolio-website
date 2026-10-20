@@ -39,9 +39,9 @@
 % Measured results. Every number was produced by running the code in the repos.
 \newcommand{\metric}[1]{\textbf{#1}}
 
-% Repository link: a small framed "GitHub" button at the end of a heading line.
-% \upshape keeps it upright inside italic lines; the full URL stays in the link.
-\newcommand{\repo}[1]{\href{https://github.com/AbeerMiglani/#1}{{\setlength{\fboxsep}{1.5pt}\fbox{\upshape\footnotesize GitHub}}}}
+% Repository link: an underlined "GitHub" placed on the right of a heading line,
+% just before the date. The full URL stays in the link.
+\newcommand{\repo}[1]{\href{https://github.com/AbeerMiglani/#1}{\underline{GitHub}}\enspace$|$\enspace}
 
 % Small bullet, as in the original Jake's Resume template
 \newcommand{\smallbullet}{$\vcenter{\hbox{\tiny$\bullet$}}$}
@@ -55,13 +55,13 @@
 \newcommand{\resumeSubheading}[4]{
   \vspace{-2pt}\item
     \textbf{#1} \hfill #2 \\
-    \textit{\small #3} \hfill \textit{\small #4}
+    \textit{\small #3} \hfill \textit{\small #4}%
   \vspace{-5pt}
 }
 
 \newcommand{\resumeProjectHeading}[2]{
   \item
-    \small #1 \hfill #2
+    \small #1 \hfill #2%
   \vspace{-5pt}
 }
 
@@ -90,16 +90,16 @@
 \section{Education}
 \resumeSubHeadingListStart
     \resumeSubheading
-      {Shiv Nadar Institution of Eminence}{Dadri, UP}
-      {Bachelor of Technology in Electrical and Computer Engineering}{August 2025 -- May 2029}
+      {Shiv Nadar Institution of Eminence}{Aug. 2025 -- May 2029}
+      {Bachelor of Technology in Electrical and Computer Engineering}{Dadri, UP}
 \resumeSubHeadingListEnd
 
 %-----------EXPERIENCE-----------
 \section{Experience}
 \resumeSubHeadingListStart
     \resumeSubheading
-      {Summer Trainee}{Jun. 2023}
-      {LOHUM Cleantech Pvt. Ltd. \repo{metal-price-scraper}}{Kasna, UP}
+      {Summer Trainee}{\repo{metal-price-scraper}Jun. 2023}
+      {LOHUM Cleantech Pvt. Ltd.}{Kasna, UP}
       \resumeItemListStart
         \resumeItem{Automated price collection for \metric{9} lithium, nickel, and battery material products with Python and Selenium.}
         \resumeItem{Handled dynamically loaded pages with XPath selectors and explicit waits, and cleaned the data with Pandas.}
@@ -111,7 +111,7 @@
 \section{Projects}
 \resumeSubHeadingListStart
     \resumeProjectHeading
-      {\textbf{Ripple, Cascading Failure Simulator} - \emph{Rust, Python, React} \repo{ripple}}{Sep. 2026}
+      {\textbf{Ripple, Cascading Failure Simulator} - \emph{Rust, Python, React}}{\repo{ripple}Sep. 2026}
       \resumeItemListStart
         \resumeItem{Built solo at Manipal Hackathon 2026 to simulate failure spread across a synthetic \metric{120-asset} city network.}
         \resumeItem{Made all-pairs shortest path \metric{25x} faster, and \metric{33x} on 2,000-node graphs, with a parallel Rust extension on PyO3.}
@@ -121,7 +121,7 @@
       \resumeItemListEnd
 
     \resumeProjectHeading
-      {\textbf{Redis-Style Server} - \emph{C++, POSIX Sockets, TCP} \repo{redis-cpp}}{Jul. 2026 -- Present}
+      {\textbf{Redis-Style Server} - \emph{C++, POSIX Sockets, TCP}}{\repo{redis-cpp}Jul. 2026 -- Present}
       \resumeItemListStart
         \resumeItem{Building a Redis-style in-memory server from first principles in C++ on raw POSIX sockets.}
         \resumeItem{Designed a length-prefixed binary protocol that survives fragmented TCP reads, tested with \metric{1,000} split requests.}
