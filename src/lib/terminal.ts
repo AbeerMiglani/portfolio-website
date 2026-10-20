@@ -70,7 +70,7 @@ const commands: Record<string, Command> = {
         text(profile.tagline),
         text(`${profile.education.degree}, ${profile.education.school}`, "muted"),
         text(
-          `dsa: ${profile.problemSolving.total} problems solved (${profile.problemSolving.leetcode} on LeetCode)`,
+          `dsa: ${profile.problemSolving.total} problems solved`,
           "muted",
         ),
         text(`status: ${profile.status}`, "muted"),
