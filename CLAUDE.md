@@ -98,7 +98,7 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 
 Change a number in one place and every view updates:
 
-- **LeetCode and DSA counts** (`profile.problemSolving`) appear in the About page's Education entry and the terminal's `whoami`. They're deliberately kept low-key; don't promote them back to a headline stat.
+- **DSA count** (`profile.problemSolving.total`, matching the résumé's "140+") appears in the About page's Education entry and the terminal's `whoami`. Show only the overall total, not a per-platform figure such as LeetCode alone. It's deliberately kept low-key; don't promote it back to a headline stat.
 - **The featured project's `roadmap`** feeds the roadmap on the Redis card and the terminal's `now` and `cat redis`. To record progress, flip `done: false` to `true`.
 - **Dates** use one format everywhere: `Mon YYYY`, a range as `Jul 2026 – present` (en dash with spaces). The résumé uses its own `Jul. 2026 – Present` style.
 
@@ -193,7 +193,7 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 
 ## Ideas not done yet
 
-- **Redis benchmarks:** the event loop landed in Oct 2026. The résumé already quotes earlier numbers (25K requests per second, 38 µs median and 82 µs p99 latency over 100K loopback round trips). Once Abeer confirms them against the event-loop build, consider putting them on the Redis card, and ask before adding them.
+- **Redis benchmarks:** the card and the résumé quote the same numbers (25K requests per second, 38 µs median and 82 µs p99 latency over 100K loopback round trips). When Abeer re-benchmarks, for example with many concurrent clients on the event loop, update both together, and keep the conditions (loopback, number of round trips) next to the numbers.
 - **Write-up:** a short post on one thing learned (framing, epoll vs threads, why `read_full` exists), once Abeer writes it.
 - **Name line:** an "also Abby" line explaining the `abbykayo` domain was considered and left out; ask before adding it.
 - **Abeer's to-dos:** pin `redis-cpp` and `ripple` on the GitHub profile, and check the link preview in LinkedIn's Post Inspector.

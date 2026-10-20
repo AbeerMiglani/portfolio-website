@@ -31,8 +31,7 @@ export const profile = {
     place: "Dadri, UP",
   },
   problemSolving: {
-    total: "100+",
-    leetcode: 95,
+    total: "140+",
     platforms: ["LeetCode", "Codeforces", "CodeChef", "HackerRank"],
   },
   skills: {

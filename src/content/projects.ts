@@ -34,6 +34,7 @@ export const projects: Project[] = [
       "Length-prefixed binary protocol (4-byte header + payload) to frame messages over a TCP byte stream.",
       "read_full / write_all loops so partial reads and writes never corrupt a message, with a 4 KB size guard.",
       "Event loop over non-blocking sockets, so one thread serves many clients at once.",
+      "Benchmarked 25K requests per second, with 38 µs median and 82 µs p99 latency, over 100K loopback round trips.",
     ],
     learned:
       "TCP delivers a byte stream, not messages: one read() can return half a request or two of them, so the protocol has to carry its own boundaries. The event loop changed the shape of the server: instead of blocking on one client at a time, one thread watches every socket and serves whichever is ready, so a slow client no longer holds up the rest.",

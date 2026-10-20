@@ -93,7 +93,7 @@ export function About() {
                 {education.degree} · {education.dates} · {education.place}
               </p>
               <p className="mt-2 text-sm text-muted">
-                Outside coursework: {problemSolving.total} DSA problems, {problemSolving.leetcode} of them on LeetCode.
+                Outside coursework: {problemSolving.total} DSA problems on {problemSolving.platforms.join(", ")}.
               </p>
             </ManSection>
 
