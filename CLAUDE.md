@@ -25,7 +25,7 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 - Confirm there are no console errors.
 - Exercise anything interactive you touched: Ripple's "try it" tabs (simulation and API, click and arrow keys), the cascade (click a node, `reset`, the contained node Transit hub 1), the API playground (all three presets), the Redis framing demo (`send`, `send without framing`), the code-panel tabs (click and arrow keys), the sidebar (desktop) and `menu` (phones), the collapsible responses, and console commands (including `curl /api/profile.json`). Also check reduced motion (`reducedMotion: "reduce"`), keyboard use (Tab must leave the console), and a load with JavaScript disabled.
 - Check the JSON API: `curl -s localhost:3100/api/profile.json | python3 -m json.tool` for `/api`, `/api/profile.json` and `/api/projects.json`, and that `access-control-allow-origin: *` is set.
-- Run axe-core (`npm i --no-save axe-core` in the scratchpad, inject `axe.min.js`) in both themes and expect zero violations. Run it with `axe.run(document, { rules: { 'label-content-name-mismatch': { enabled: true } } })`: that rule is experimental, so a default run skips it, and Lighthouse gives it zero weight. Contrast is the usual failure: small text on the dark terminal needs at least `text-white/55`, and the light `--accent-soft` was set to `#fdefe7` so accent text on it reaches 4.5:1.
+- Run axe-core (`npm i --no-save axe-core` in the scratchpad, inject `axe.min.js`) in both themes and expect zero violations. Run it with `axe.run(document, { rules: { 'label-content-name-mismatch': { enabled: true } } })`: that rule is experimental, so a default run skips it, and Lighthouse gives it zero weight. Contrast is the usual failure: small text on the dark terminal needs at least `text-white/55`, and accent text on the light `--accent-soft` (`#e3f3f7`) must keep 4.5:1.
 
 **Cloud-environment gotchas when verifying:**
 
@@ -157,7 +157,7 @@ The page reads like API documentation, which suits the backend pitch and stays e
 
 **Palette and type:**
 
-- Cool paper light theme (`#f7f8fa`) and a near-black dark theme (`#0d1117`), with one teal accent (`#0a6f8b` light, `#4fc3dc` dark). Stick to one accent.
+- Warm paper light theme (`#f8f7f5`) and a graphite dark theme (`#0f0e0c`), with one teal accent (`#0a6f8b` light, `#4fc3dc` dark). Abeer picked this blend over all-teal, indigo, emerald, violet and amber (Oct 2026): the warm neutrals come from the amber option, the accent stays teal so it never blends into the amber POST badges. Stick to one accent.
 - Method colours (GET green, POST amber, WS violet) are only for method badges and status codes, never for decoration.
 - Code panels (`--panel`) are dark in both themes. Inside them, theme colours can be too dark, so use the fixed bright ones: `MethodBadge onDark`, the `.json-*` classes in `globals.css`, `#4fc3dc` for the console prompt and tab underline, `#4ade80`/`#fbbf24`/`#f87171` for 2xx/4xx/5xx.
 - IBM Plex Sans for text and IBM Plex Mono for paths, code and labels, both loaded with `next/font`. Plex Sans italic isn't loaded, so don't use `italic`.

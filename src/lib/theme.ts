@@ -1,7 +1,7 @@
 export type Theme = "light" | "dark";
 
 /** Browser toolbar colours; they match --bg in globals.css. */
-export const themeColors: Record<Theme, string> = { light: "#f7f8fa", dark: "#0d1117" };
+export const themeColors: Record<Theme, string> = { light: "#f8f7f5", dark: "#0f0e0c" };
 
 /** Applies and remembers the visitor's choice. Used by ThemeToggle and the terminal's `theme`. */
 export function applyTheme(theme: Theme) {

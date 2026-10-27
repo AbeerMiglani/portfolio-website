@@ -2,28 +2,28 @@
    README don't ship as unused CSS. */
 @import "tailwindcss" source("../");
 
-/* API-docs look: cool paper light theme with one teal accent, dark code
-   panels in both themes, and small method colours (GET, POST, WS) used only on
-   endpoint badges. An inline script in layout.tsx sets data-theme on <html>
+/* API-docs look: warm paper light theme and graphite dark theme with one teal
+   accent, dark code panels in both themes, and small method colours (GET,
+   POST, WS) used only on endpoint badges. An inline script in layout.tsx sets data-theme on <html>
    before paint; the media query only covers visitors without JavaScript. */
 :root,
 :root[data-theme="light"] {
-  --bg: #f7f8fa;
+  --bg: #f8f7f5;
   --surface: #ffffff;
-  --chip: #eef1f5;
-  --fg: #14171c;
-  --muted: #56606d;
-  --border: #dde2e9;
-  --divider: #e7eaef;
-  --ink: #14171c;
-  --ink-fg: #f7f8fa;
+  --chip: #efedea;
+  --fg: #191714;
+  --muted: #5f5a53;
+  --border: #e3dfd9;
+  --divider: #ebe8e3;
+  --ink: #191714;
+  --ink-fg: #f8f7f5;
   --accent: #0a6f8b;
   --accent-soft: #e3f3f7;
   --ok: #15803d;
-  --band: #f0f2f5;
-  --panel: #0f141a;
+  --band: #f2f0ec;
+  --panel: #16130f;
   --panel-fg: #e6edf3;
-  --panel-border: #0f141a;
+  --panel-border: #16130f;
   --get: #166534;
   --post: #9a3412;
   --ws: #6d28d9;
@@ -31,22 +31,22 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #0d1117;
-  --surface: #131922;
-  --chip: #1b2330;
-  --fg: #e6edf3;
-  --muted: #9aa6b2;
-  --border: #2a3340;
-  --divider: #1f2733;
-  --ink: #e6edf3;
-  --ink-fg: #0d1117;
+  --bg: #0f0e0c;
+  --surface: #171512;
+  --chip: #211e1a;
+  --fg: #efebe4;
+  --muted: #a8a196;
+  --border: #322e28;
+  --divider: #24211c;
+  --ink: #efebe4;
+  --ink-fg: #0f0e0c;
   --accent: #4fc3dc;
   --accent-soft: #10303a;
   --ok: #4ade80;
-  --band: #10161e;
-  --panel: #0a0e13;
+  --band: #13110f;
+  --panel: #0a0907;
   --panel-fg: #e6edf3;
-  --panel-border: #2a3340;
+  --panel-border: #322e28;
   --get: #4ade80;
   --post: #fbbf24;
   --ws: #c4b5fd;
@@ -55,22 +55,22 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --bg: #0d1117;
-    --surface: #131922;
-    --chip: #1b2330;
-    --fg: #e6edf3;
-    --muted: #9aa6b2;
-    --border: #2a3340;
-    --divider: #1f2733;
-    --ink: #e6edf3;
-    --ink-fg: #0d1117;
+    --bg: #0f0e0c;
+    --surface: #171512;
+    --chip: #211e1a;
+    --fg: #efebe4;
+    --muted: #a8a196;
+    --border: #322e28;
+    --divider: #24211c;
+    --ink: #efebe4;
+    --ink-fg: #0f0e0c;
     --accent: #4fc3dc;
     --accent-soft: #10303a;
     --ok: #4ade80;
-    --band: #10161e;
-    --panel: #0a0e13;
+    --band: #13110f;
+    --panel: #0a0907;
     --panel-fg: #e6edf3;
-    --panel-border: #2a3340;
+    --panel-border: #322e28;
     --get: #4ade80;
     --post: #fbbf24;
     --ws: #c4b5fd;

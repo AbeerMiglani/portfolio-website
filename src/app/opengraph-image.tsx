@@ -26,21 +26,21 @@ export default async function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          background: "#f7f8fa",
-          color: "#14171c",
+          background: "#f8f7f5",
+          color: "#191714",
           fontFamily: "Plex Sans",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", fontFamily: "Plex Mono", fontSize: 28 }}>
           <span>{profile.handle}</span>
-          <span style={{ color: "#56606d", margin: "0 10px" }}>/</span>
+          <span style={{ color: "#5f5a53", margin: "0 10px" }}>/</span>
           <span style={{ color: "#0a6f8b" }}>api</span>
           <span
             style={{
               marginLeft: 16,
               fontSize: 18,
-              color: "#56606d",
-              border: "2px solid #dde2e9",
+              color: "#5f5a53",
+              border: "2px solid #e3dfd9",
               borderRadius: 6,
               padding: "2px 10px",
             }}
@@ -49,7 +49,7 @@ export default async function Image() {
           </span>
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", alignItems: "center", fontFamily: "Plex Mono", fontSize: 30, color: "#56606d" }}>
+          <div style={{ display: "flex", alignItems: "center", fontFamily: "Plex Mono", fontSize: 30, color: "#5f5a53" }}>
             <span
               style={{
                 color: "#15803d",
@@ -62,12 +62,12 @@ export default async function Image() {
             >
               GET
             </span>
-            <span style={{ color: "#14171c" }}>/</span>
+            <span style={{ color: "#191714" }}>/</span>
             <span style={{ marginLeft: 18, color: "#15803d" }}>200</span>
             <span style={{ marginLeft: 10 }}>OK</span>
           </div>
           <div style={{ fontSize: 96, letterSpacing: -2, marginTop: 16 }}>{profile.name}</div>
-          <div style={{ fontSize: 40, color: "#3a414b", marginTop: 8 }}>{profile.tagline}</div>
+          <div style={{ fontSize: 40, color: "#3f3b35", marginTop: 8 }}>{profile.tagline}</div>
         </div>
         <div
           style={{
@@ -75,8 +75,8 @@ export default async function Image() {
             justifyContent: "space-between",
             fontFamily: "Plex Mono",
             fontSize: 24,
-            color: "#56606d",
-            borderTop: "2px solid #dde2e9",
+            color: "#5f5a53",
+            borderTop: "2px solid #e3dfd9",
             paddingTop: 24,
           }}
         >
