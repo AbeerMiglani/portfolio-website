@@ -24,11 +24,33 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "ripple",
+    title: "Ripple",
+    shortName: "ripple",
+    eyebrow: "Manipal Hackathon 2026 · sole developer",
+    hook: "A FastAPI service that simulates how one infrastructure failure cascades through a city's power, water, transit and telecom networks, and recommends fixes it verifies by re-running the simulation.",
+    bullets: [
+      "POST /api/simulations writes a pending run to PostgreSQL, then queues it on a Celery worker. If the queue is down, the run is marked failed and the API returns 503, so no client polls a job that will never run.",
+      "Workers acknowledge tasks late, have time limits, and retry up to 3 times with exponential backoff, but only on transient Postgres or Redis errors.",
+      "Cascade waves stream to the browser over WebSockets through Redis pub/sub, with a fallback check of the stored run so a fast job or a late subscriber never leaves a client hanging.",
+      "Role-based API keys (viewer, operator, admin) and a fixed-window Redis rate limiter, 60 requests a minute, that fails closed in production.",
+      "Recommendations are cached in Redis for an hour, and a Rust (PyO3) extension for all-pairs shortest paths cut worst-case latency from 1.5 s to 190 ms.",
+      "Alembic migrations, 300 pytest tests and GitHub Actions CI.",
+    ],
+    learned:
+      "Redis pub/sub doesn't replay messages: a client that subscribes a moment after the worker publishes never hears the result. Checking the durable row in PostgreSQL whenever the channel goes quiet made the WebSocket correct, not just usually right.",
+    tags: ["python", "fastapi", "celery", "postgresql", "redis"],
+    meta: "Python · FastAPI · Celery · PostgreSQL · Redis",
+    dates: "Sep 2026",
+    repo: "https://github.com/AbeerMiglani/ripple",
+    featured: true,
+  },
+  {
     slug: "redis",
     title: "Redis-style server",
     shortName: "redis-cpp",
-    eyebrow: "Systems · ongoing",
-    hook: "An in-memory key-value server in C++, built from first principles to understand how Redis really works.",
+    eyebrow: "Networking · ongoing",
+    hook: "A Redis-style TCP server in C++, built from first principles to understand the networking underneath backend services.",
     bullets: [
       "TCP server and client written directly against POSIX sockets.",
       "Length-prefixed binary protocol (4-byte header + payload) to frame messages over a TCP byte stream.",
@@ -42,7 +64,6 @@ export const projects: Project[] = [
     meta: "C++ · POSIX sockets",
     dates: "Jul 2026 – present",
     repo: "https://github.com/AbeerMiglani/redis-cpp",
-    featured: true,
     roadmap: [
       { label: "Socket programming", done: true },
       { label: "TCP server + client", done: true },
@@ -56,20 +77,7 @@ export const projects: Project[] = [
       { label: "Thread pool", done: false },
     ],
   },
-  {
-    slug: "ripple",
-    title: "Ripple",
-    shortName: "ripple",
-    eyebrow: "Manipal Hackathon 2026 · sole developer",
-    hook: "Simulates how one infrastructure failure cascades through a city's power, water, transit and telecom networks.",
-    bullets: [
-      "Rust (PyO3) extension for the all-pairs shortest-path hotspot, called 20+ times per recommendation request.",
-      "Motter–Lai overload cascade on an in-memory graph, streamed to the map wave by wave over WebSockets.",
-      "Recommendation engine that verifies every fix by re-running the cascade, ranked by failures prevented and hospitals kept online.",
-    ],
-    tags: ["rust", "python", "websockets", "graphs"],
-    meta: "Rust · Python · WebSockets",
-    dates: "Sep 2026",
-    repo: "https://github.com/AbeerMiglani/ripple",
-  },
 ];
+
+/** The project still in progress (the one with a roadmap): shown by `now`, `top` and the text résumé. */
+export const inProgress = projects.find((p) => p.roadmap);

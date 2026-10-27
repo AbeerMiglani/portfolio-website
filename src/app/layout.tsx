@@ -19,7 +19,7 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
-const title = `${profile.name} · Software Engineer`;
+const title = `${profile.name} · Backend Engineer`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(profile.siteUrl),
