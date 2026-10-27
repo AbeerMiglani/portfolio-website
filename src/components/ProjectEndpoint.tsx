@@ -2,15 +2,22 @@ import type { Project } from "@/content/projects";
 import { pretty, projectJson } from "@/lib/api";
 import { ApiPlayground } from "./ApiPlayground";
 import { ArrowIcon } from "./ArrowIcon";
+import { CascadeDemo } from "./CascadeDemo";
+import { DemoTabs, type DemoTab } from "./DemoTabs";
 import { EndpointSection, Response } from "./Endpoint";
 import { FrameDemo } from "./FrameDemo";
 
-// One demo per project, each showing what the project does. Both render a
-// complete picture on the server, so they make sense without JavaScript.
-function Demo({ slug }: { slug: string }) {
-  if (slug === "ripple") return <ApiPlayground />;
-  if (slug === "redis") return <FrameDemo />;
-  return null;
+// The demos for each project, each showing what the project does. They all
+// render a complete picture on the server, so they make sense without
+// JavaScript. Ripple has two: the cascade itself, then its API.
+function demos(slug: string): DemoTab[] {
+  if (slug === "ripple")
+    return [
+      { label: "simulation", content: <CascadeDemo /> },
+      { label: "API", content: <ApiPlayground /> },
+    ];
+  if (slug === "redis") return [{ label: "framing", content: <FrameDemo /> }];
+  return [];
 }
 
 export function ProjectEndpoint({ project }: { project: Project }) {
@@ -25,10 +32,7 @@ export function ProjectEndpoint({ project }: { project: Project }) {
       level={3}
       aside={
         <>
-          <div className="rounded-lg border border-border bg-surface p-1">
-            <p className="px-3 pt-2 pb-1 font-mono text-[0.65rem] tracking-wider text-muted uppercase">try it</p>
-            <Demo slug={project.slug} />
-          </div>
+          <DemoTabs tabs={demos(project.slug)} />
           <Response source={pretty(projectJson(project))} path={`/api/projects.json → ${project.shortName}`} />
         </>
       }
