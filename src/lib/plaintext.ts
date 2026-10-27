@@ -73,7 +73,8 @@ export function resumeText({ color }: { color: boolean }): string {
     ...profile.links.map((l) => `${l.label.padEnd(10)}${l.href}`),
     `${"Résumé".padEnd(10)}${profile.siteUrl}${profile.resume}`,
     "",
-    s("dim", `The full site at ${host} has a terminal you can type into.`),
+    s("dim", `The full site at ${host} has a console you can type into,`),
+    s("dim", `and the same data as JSON: curl ${profile.siteUrl}/api`),
     "",
   );
   return out.join("\n");

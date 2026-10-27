@@ -7,12 +7,12 @@ export const profile = {
   name: "Abeer Miglani",
   handle: "abeer",
   siteUrl: "https://portfolio.abbykayo.com",
-  role: "Systems-minded software engineer",
-  tagline: "I write systems software in C++.",
+  role: "Backend engineer",
+  tagline: "I build backend services.",
   pitch:
-    "ECE undergrad at Shiv Nadar University. Right now I'm building a Redis-style server from scratch in C++; before that, Ripple, a simulator for how failures cascade through a city's infrastructure.",
+    "ECE undergrad at Shiv Nadar University. I build backend services: most recently Ripple, an async simulation API with FastAPI, Celery, PostgreSQL and Redis. I'm learning Go, and I wrote a Redis-style TCP server in C++ to understand what sits under the API.",
   status: "Open to SWE internships",
-  learning: ["Rust"],
+  learning: ["Go"],
   email: "am319@snu.edu.in",
   resume: "/resume.pdf",
   links: [
@@ -20,8 +20,8 @@ export const profile = {
     { label: "LinkedIn", href: "https://www.linkedin.com/in/abeermiglani/" },
   ] satisfies Link[],
   about: [
-    "I'm a second-year Electrical and Computer Engineering student at Shiv Nadar Institution of Eminence, and most of what I build leans towards systems: sockets, protocols, graphs and the data structures underneath them.",
-    "Right now I'm building a Redis-style server in C++ from first principles, and learning Rust, which I've already used to speed up the hottest path in Ripple.",
+    "I'm a second-year Electrical and Computer Engineering student at Shiv Nadar Institution of Eminence. I build backend services: APIs, background jobs, caches and the databases behind them.",
+    "Ripple is the most complete so far: a FastAPI service that queues simulations on Celery workers, streams results over WebSockets and keeps its hot paths in Redis. I'm learning Go next, and I built a Redis-style server in C++ to understand the networking underneath.",
   ],
   education: {
     school: "Shiv Nadar Institution of Eminence",
@@ -35,9 +35,9 @@ export const profile = {
     platforms: ["LeetCode", "Codeforces", "CodeChef", "HackerRank"],
   },
   skills: {
-    Languages: ["C++", "C", "Rust (learning)", "Python", "SQL", "TypeScript", "HTML/CSS"],
-    "Frameworks & libraries": ["FastAPI", "Flask", "React", "Celery", "NetworkX", "Pandas", "Selenium"],
-    Databases: ["PostgreSQL + PostGIS", "Neo4j", "Redis", "MySQL"],
-    Tools: ["Git", "Docker", "GitHub Actions", "VS Code"],
+    Languages: ["Python", "Go (learning)", "C++", "C", "SQL", "TypeScript"],
+    Backend: ["FastAPI", "Celery", "REST APIs", "WebSockets", "Pydantic", "SQLAlchemy"],
+    Data: ["PostgreSQL + PostGIS", "Redis", "Neo4j", "MySQL"],
+    Tools: ["Docker", "Docker Compose", "GitHub Actions", "Alembic", "pytest", "Git"],
   } satisfies Record<string, string[]>,
 };

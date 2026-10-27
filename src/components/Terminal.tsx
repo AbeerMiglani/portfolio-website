@@ -8,7 +8,7 @@ type Entry = { id: number; input?: string; lines: Line[] };
 
 const PROMPT = "abeer@portfolio:~$";
 
-const suggestions = ["help", "whoami", "ls", "cat redis", "cat ripple", "skills", "contact", "ping"];
+const suggestions = ["help", "now", "cat ripple", "curl /api/profile.json", "ls", "skills", "contact", "ping"];
 
 // Deterministic, so server and client render the same first frame.
 const initialEntries: Entry[] = [
@@ -109,7 +109,7 @@ export function Terminal() {
   return (
     <div id="terminal" className="flex min-w-0 flex-col gap-3">
       <div
-        className={`overflow-hidden bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] ${
+        className={`overflow-hidden bg-panel font-mono text-[0.8rem] leading-relaxed text-panel-fg ${
           tty
             ? "fixed inset-0 z-50 flex flex-col sm:text-sm"
             : "rounded-xl shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent"
@@ -139,7 +139,7 @@ export function Terminal() {
               <div key={entry.id} className="mb-2">
                 {entry.input !== undefined && (
                   <p className="break-all">
-                    <span className="text-[#fb8a4c]">{PROMPT}</span> {entry.input}
+                    <span className="text-[#4fc3dc]">{PROMPT}</span> {entry.input}
                   </p>
                 )}
                 {entry.lines.map((line, i) => (
@@ -150,7 +150,7 @@ export function Terminal() {
           </div>
 
           <label className="flex items-center gap-2">
-            <span className="shrink-0 text-[#fb8a4c]" aria-hidden="true">
+            <span className="shrink-0 text-[#4fc3dc]" aria-hidden="true">
               {PROMPT}
             </span>
             <span className="sr-only">Terminal command</span>
@@ -167,7 +167,7 @@ export function Terminal() {
               autoCorrect="off"
               spellCheck={false}
               enterKeyHint="go"
-              className="min-w-0 flex-1 bg-transparent text-[#ecebe7] caret-[#fb8a4c] outline-none"
+              className="min-w-0 flex-1 bg-transparent text-panel-fg caret-[#4fc3dc] outline-none"
             />
           </label>
         </div>
@@ -209,7 +209,7 @@ function OutputLine({ line }: { line: Line }) {
     line.tone === "muted"
       ? "text-white/50"
       : line.tone === "accent"
-        ? "text-[#fb8a4c]"
+        ? "text-[#4fc3dc]"
         : line.tone === "error"
           ? "text-[#ff7b72]"
           : "";
