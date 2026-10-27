@@ -119,7 +119,7 @@ export function Terminal() {
         className={`overflow-hidden bg-term-bg font-mono text-[0.8rem] leading-relaxed text-term-fg ${
           tty
             ? "fixed inset-0 z-50 flex flex-col sm:text-sm"
-            : "rounded-xl shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent"
+            : "rounded-xl shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-muted"
         }`}
         aria-label={tty ? "Terminal, full screen. Press Escape to leave." : undefined}
         role={tty ? "region" : undefined}
