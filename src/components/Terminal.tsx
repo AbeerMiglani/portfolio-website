@@ -107,7 +107,7 @@ export function Terminal() {
   }
 
   return (
-    <div id="terminal" className="flex min-w-0 flex-col gap-3">
+    <div className="flex min-w-0 flex-col gap-3">
       <div
         className={`overflow-hidden bg-panel font-mono text-[0.8rem] leading-relaxed text-panel-fg ${
           tty

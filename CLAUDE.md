@@ -144,7 +144,7 @@ The page reads like API documentation, which suits the backend pitch and stays e
 - A 15rem sticky sidebar of endpoints on desktop (`lg` and up); on phones a sticky top bar with the theme toggle and a `menu` (`<details>`, so it works without JavaScript).
 - The main column is a stack of endpoint sections. Each has a method badge, a mono path, a plain title, prose on the left and an aside on the right at `xl` (stacked below the prose on narrower screens).
 - The aside holds code: request examples (`CodePanel`), a demo ("try it"), and a collapsible `Response` with the real JSON. Keep it to those.
-- Section ids are nav anchors: `top`, `projects`, `project-<shortName>`, `experience`, `skills`, `about`, `terminal` (the console's element), `contact`. Don't rename them.
+- Section ids are nav anchors: `top`, `projects`, `project-<shortName>`, `experience`, `skills`, `about`, `terminal` (the console), `contact`. Don't rename them. Each sits on the section's endpoint line (the method badge and path), not the heading, so a jump lands with that line just under the top (1.5rem on desktop, below the top bar on phones, via `scroll-padding-top`). Headings are `<id>-title` and label their section.
 
 **Colour tokens** live in `src/app/globals.css`: `--bg`, `--surface`, `--chip`, `--fg`, `--muted`, `--border`, `--divider`, `--ink`, `--ink-fg`, `--accent`, `--accent-soft`, `--ok`, `--band`, `--panel`, `--panel-fg`, `--panel-border`, plus the method colours `--get`, `--post`, `--ws`. Use them as Tailwind classes (`bg-surface`, `text-accent`, `text-get` and so on).
 

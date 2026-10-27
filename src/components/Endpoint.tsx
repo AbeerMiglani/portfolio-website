@@ -45,19 +45,21 @@ type SectionProps = {
 
 // Every section is documented like an API endpoint: method, path, a plain
 // title, prose on the left and code on the right (stacked on narrow screens).
+// The nav anchor (id) sits on the endpoint line, so a jump shows it above the
+// title; the heading is `${id}-title`.
 export function EndpointSection({ id, method, path, title, kicker, children, aside, level = 2 }: SectionProps) {
   const Heading = level === 2 ? "h2" : "h3";
   return (
-    <section aria-labelledby={id} className="border-b border-divider px-4 py-14 sm:px-8 lg:px-12">
+    <section aria-labelledby={`${id}-title`} className="border-b border-divider px-4 py-14 sm:px-8 lg:px-12">
       <div className={`grid grid-cols-1 gap-10 ${aside ? "xl:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] xl:gap-14" : ""}`}>
         <div className="min-w-0">
-          <p className="flex flex-wrap items-center gap-2 font-mono text-sm text-muted">
+          <p id={id} className="flex flex-wrap items-center gap-2 font-mono text-sm text-muted">
             <MethodBadge method={method} />
             <span className="text-fg">{path}</span>
             {kicker && <span className="text-xs">· {kicker}</span>}
           </p>
           <Heading
-            id={id}
+            id={`${id}-title`}
             className={`mt-3 font-semibold tracking-tight text-fg ${level === 2 ? "text-3xl" : "text-2xl sm:text-3xl"}`}
           >
             {title}
