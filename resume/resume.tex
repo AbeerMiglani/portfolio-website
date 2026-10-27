@@ -84,7 +84,7 @@
 
 %-----------SUMMARY-----------
 \section{Summary}
-\small{Second-year Electrical and Computer Engineering student seeking a Software Engineering internship. Builds systems software in C++, C, and Python, with hands-on work on network protocols, graph algorithms, and Rust performance extensions. Also open to Embedded Systems and Junior Developer roles.}
+\small{Second-year Electrical and Computer Engineering student seeking a Software Engineering internship. Builds backend services in Python with FastAPI, Celery, PostgreSQL, and Redis, with hands-on work on async job queues, caching, and network protocols. Currently learning Go. Also open to Junior Developer roles.}
 
 %-----------EDUCATION-----------
 \section{Education}
@@ -111,11 +111,12 @@
 \section{Projects}
 \resumeSubHeadingListStart
     \resumeProjectHeading
-      {\textbf{Ripple, Cascading Failure Simulator} - \emph{Rust, Python, React}}{\repo{ripple}Sep. 2026}
+      {\textbf{Ripple, Cascading Failure Simulator} - \emph{Python, FastAPI, Celery, PostgreSQL, Redis}}{\repo{ripple}Sep. 2026}
       \resumeItemListStart
         \resumeItem{Built solo at Manipal Hackathon 2026 to simulate failure spread across a synthetic \metric{120-asset} city network.}
-        \resumeItem{Made all-pairs shortest path \metric{25x} faster, and \metric{33x} on 2,000-node graphs, with a parallel Rust extension on PyO3.}
-        \resumeItem{Cut worst-case recommendation latency from \metric{1.5 s to 190 ms}; each request runs up to 50 all-pairs passes.}
+        \resumeItem{Built a FastAPI service that queues simulations on Celery workers with retries and streams results over WebSockets.}
+        \resumeItem{Secured the API with role-based API keys and a Redis rate limiter, and cached recommendations in Redis.}
+        \resumeItem{Cut worst-case recommendation latency from \metric{1.5 s to 190 ms} with a \metric{25x} faster parallel Rust extension on PyO3.}
         \resumeItem{Built a Motter-Lai cascade engine and a recommender whose top verified fix prevents up to \metric{91\%} of failures.}
         \resumeItem{Added \metric{300} pytest tests and GitHub Actions CI that checks the Rust and Python results match.}
       \resumeItemListEnd
@@ -133,11 +134,11 @@
 \section{Technical Skills}
 \begin{itemize}[leftmargin=0.15in, label={}]
     \small{\item{
-     \textbf{Languages}{: C++, C, Python, SQL, TypeScript, Rust, HTML, CSS} \\
-     \textbf{Frameworks and Libraries}{: FastAPI, Flask, React, Celery, NetworkX, PyO3, Rayon, Pandas, NumPy, Selenium} \\
+     \textbf{Languages}{: Python, Go (learning), C++, C, SQL, TypeScript, Rust, HTML, CSS} \\
+     \textbf{Frameworks and Libraries}{: FastAPI, Celery, SQLAlchemy, Pydantic, Flask, NetworkX, PyO3, Pandas, Selenium} \\
      \textbf{Databases}{: PostgreSQL, PostGIS, Neo4j, Redis, MySQL} \\
-     \textbf{Developer Tools}{: Git, Docker, Docker Compose, GitHub Actions, pytest, VS Code} \\
-     \textbf{Core Areas}{: Systems Programming, Computer Networks, Data Structures, Algorithms}
+     \textbf{Developer Tools}{: Git, Docker, Docker Compose, GitHub Actions, Alembic, pytest, VS Code} \\
+     \textbf{Core Areas}{: Backend Development, REST APIs, Databases, Computer Networks, Data Structures, Algorithms}
     }}
 \end{itemize}
 
