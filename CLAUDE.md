@@ -4,6 +4,8 @@
 
 Abeer Miglani's personal site, live at https://portfolio.abbykayo.com. It's a single static page built with Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS v4, and deployed on Vercel. The audience is recruiters and engineers hiring for SWE internships, so it should stay fast, easy to skim and accurate.
 
+This is the **backend edition** (Oct 2026): Abeer pivoted from systems (C++/Rust) to backend (Go), and the site reads like API documentation. The earlier systems edition is archived; see **Editions** below.
+
 ## Commands
 
 ```bash
@@ -21,7 +23,8 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 - Check widths of 320px, 390px and 1280px, in both light and dark themes.
 - Confirm there's no horizontal overflow: `document.documentElement.scrollWidth - innerWidth` should be 0.
 - Confirm there are no console errors.
-- Exercise anything interactive you touched: the framing demo (`send`, `send without framing`), the cascade (click a node, `reset`, the contained node Transit hub 1), and terminal commands. Also check reduced motion (`reducedMotion: "reduce"`), keyboard use, and a load with JavaScript disabled.
+- Exercise anything interactive you touched: the Ripple API playground (all three presets), the Redis framing demo (`send`, `send without framing`), the code-panel tabs (click and arrow keys), the sidebar (desktop) and `menu` (phones), the collapsible responses, and console commands (including `curl /api/profile.json`). Also check reduced motion (`reducedMotion: "reduce"`), keyboard use (Tab must leave the console), and a load with JavaScript disabled.
+- Check the JSON API: `curl -s localhost:3100/api/profile.json | python3 -m json.tool` for `/api`, `/api/profile.json` and `/api/projects.json`, and that `access-control-allow-origin: *` is set.
 - Run axe-core (`npm i --no-save axe-core` in the scratchpad, inject `axe.min.js`) in both themes and expect zero violations. Run it with `axe.run(document, { rules: { 'label-content-name-mismatch': { enabled: true } } })`: that rule is experimental, so a default run skips it, and Lighthouse gives it zero weight. Contrast is the usual failure: small text on the dark terminal needs at least `text-white/55`, and the light `--accent-soft` was set to `#fdefe7` so accent text on it reaches 4.5:1.
 
 **Cloud-environment gotchas when verifying:**
@@ -34,11 +37,11 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 
 ## Performance
 
-Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs against `npm run start`.
+Audited with Lighthouse 12; take the median of three mobile runs against `npm run start`. Chromium for Lighthouse is at `/opt/pw-browsers/chromium` (pass it as `CHROME_PATH`).
 
-- **Scores:** desktop 100 in every category. Mobile scores 97 for performance (FCP ≈ 0.8 s, TBT ≈ 90 ms, CLS 0) and 100 for accessibility, best practices and SEO.
-- **Mobile LCP (≈ 2.4 s) is a simulation artifact.** The LCP element is the hero pitch paragraph, which is plain text. The browser's observed LCP equals FCP (about 140 ms unthrottled). Lighthouse's simulator counts every script that finished before the observed paint, and on localhost that means the whole React bundle. Don't chase it with markup changes.
-- **Page weight:** about 250 KB total. Of that, roughly 150 KB gzipped is React and Next.js itself; the site's own client code is under 25 KB gzipped. HTML is 14 KB with Brotli and CSS is 7 KB gzipped.
+- **Scores (backend edition, Oct 2026):** mobile 95 for performance (FCP ≈ 0.9 s, TBT ≈ 150 ms, CLS 0) and 100 for accessibility, best practices and SEO. The systems edition measured 97 in the same run (desktop was 100 in every category).
+- **Mobile LCP (≈ 2.6 s, was ≈ 2.0 s) is a simulation artifact.** The LCP element is the hero pitch paragraph, which is plain text. The browser's observed LCP equals FCP (about 140 ms unthrottled). Lighthouse's simulator counts every script that finished before the observed paint, and on localhost that means the whole React bundle. Don't chase it with markup changes.
+- **Page weight:** about 266 KB total. Of that, roughly 150 KB gzipped is React and Next.js itself; the site's own client code is under 30 KB gzipped. HTML is about 25 KB gzipped (it was 15 KB): the JSON panels are rendered into the HTML and again into the inline RSC payload. If a panel doesn't earn its place, drop it rather than adding lazy loading. CSS is about 7 KB gzipped.
 - **Production:** Vercel serves pages with Brotli from the CDN (`x-vercel-cache: HIT`). Hashed assets under `/_next/static/immutable/` get `max-age=31536000, immutable`, and TTFB is about 250 ms.
 - **Fonts:** see the comments in `layout.tsx` for which weights load. IBM Plex Sans is a variable font (`weight: "variable"`), so every Sans weight from 100 to 700 is real and costs nothing extra. IBM Plex Mono is static: each listed weight is a separate preloaded file (about 10 KB), and any heavier Mono weight is drawn as faux bold. So keep Mono text at medium or lighter, or add the weight in `layout.tsx` knowing it adds a preload. `next/font` preloads every configured file, not just the ones above the fold; today that's three (Sans latin, Mono 400, Mono 500).
 - **Tailwind scanning:** `globals.css` imports Tailwind with `source("../")`, so only `src/` is scanned for class names. Without it, class-like words in this file or the README shipped as unused CSS.
@@ -47,6 +50,13 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
   - `<Suspense>` around each client component for progressive hydration: FCP about 150 ms worse, and no reliable TBT gain.
 
   Measure against a fresh baseline before retrying either.
+
+## Editions (switching back)
+
+- **Systems edition** (C++ headline, terminal look, the cascade demo): frozen on the branch `archive/systems` at commit `f77f019`. Vercel keeps a preview of that branch, and the last systems production deployment stays in Vercel's history (Instant Rollback works for a quick switch).
+- **Tag:** `systems-v1` should point at the same commit. The cloud session can't create tags (the git proxy refuses tag pushes and tag API writes), so Abeer creates it in GitHub's Releases page if it's missing.
+- **To switch back for good:** restart the working branch from the archive (`git fetch origin archive/systems && git checkout -B <branch> origin/archive/systems`), push it with `--force-with-lease`, open a PR into `main` and let Abeer merge. The archive's own CLAUDE.md, résumé and content come with it.
+- **Don't edit `archive/systems`** except to fix something Abeer asks for there; it's the record of that edition.
 
 ## Git and pull requests
 
@@ -69,23 +79,26 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 
 | Path | What it is |
 | --- | --- |
-| `src/content/profile.ts` | Name, tagline, pitch, status, `learning`, email, links, education, about text, `problemSolving` stats, skills |
-| `src/content/projects.ts` | Project cards, including `featured`, the optional `roadmap` milestones, the optional `learned` note and `shortName` (used as `~/name` and by `cat`) |
-| `src/content/earlier.ts` | Pre-university work (the LOHUM summer training), shown as one-line entries under Projects and by the terminal's `earlier` |
+| `src/content/profile.ts` | Name, role, tagline, pitch, status, `learning`, email, links, education, about text, `problemSolving` stats, skills |
+| `src/content/projects.ts` | Projects in page order (Ripple first, `featured`), the optional `roadmap`, the optional `learned` note and `shortName` (used in paths like `/projects/ripple` and by `cat`). `inProgress` is the project with a roadmap |
+| `src/content/earlier.ts` | Pre-university work (the LOHUM summer training), shown under `GET /experience` and by the terminal's `earlier` |
+| `src/lib/api.ts` | The content as JSON (`profileJson`, `projectsJson`, `apiIndex`), used by the `/api` routes and by every response panel on the page, so they can't drift |
+| `src/app/api/route.ts`, `api/profile.json/`, `api/projects.json/` | Static JSON endpoints (`force-static`, CORS `*`) |
 | `src/lib/terminal.ts` | Terminal command table: pure functions that return `Line[]`, optional effects (`clear`, `open`, `theme`, `tty`) and an optional `pending` promise whose lines are appended when it resolves (used by `git log`) |
-| `src/components/Terminal.tsx` | Terminal UI (client component): history, Tab completion, Ctrl+L, suggestion chips, full-screen `tty` mode (Esc or `exit` to leave) |
+| `src/components/Terminal.tsx` | Console UI (client component), shown under `WS /console`: history, Tab completion, Ctrl+L, suggestion chips, full-screen `tty` mode (Esc or `exit` to leave) |
 | `src/lib/plaintext.ts` | The site as a 78-column text résumé, built from `src/content`. Served at `/resume.txt` (plain) and `/resume.ansi` (coloured), and printed by the terminal's `curl` |
 | `next.config.ts` | Rewrites `/` to `/resume.ansi` when the user agent is `curl`, `wget`, HTTPie or `xh`, so `curl https://portfolio.abbykayo.com` prints the résumé. Both responses stay static |
-| `src/components/Hero.tsx` | Name, tagline, pitch, status, CTAs, the "Try `cat redis` or `help`" hint, and the terminal |
-| `src/components/ProjectCard.tsx` | Featured (wide, with roadmap) and secondary (full width, art beside text, smaller type) card layouts |
-| `src/components/ProjectArt.tsx` | Picks each project's artwork by `slug` |
+| `src/components/Sidebar.tsx` | The endpoint nav: sticky sidebar on desktop, top bar plus `menu` on phones; marks the section in view with `aria-current` |
+| `src/components/Intro.tsx` | `GET /`: name, tagline, pitch, status, CTAs, request examples (curl, Go, Python) and the real `/api/profile.json` response |
+| `src/components/ProjectEndpoint.tsx` | `GET /projects/<name>`: prose, stack, roadmap and repo on the left; the demo ("try it") and the JSON response on the right |
+| `src/components/Endpoint.tsx` | `EndpointSection` (method, path, title, prose and aside), `MethodBadge`, and `Response` (a collapsible `<details>` with the JSON) |
+| `src/components/CodePanel.tsx`, `Json.tsx` | Dark code panel with accessible tabs; JSON syntax colouring |
 | `src/components/FrameDemo.tsx`, `src/lib/framing.ts` | Redis card: the frame's bytes, plus a replay of the server reading two requests with and without framing |
-| `src/components/CascadeDemo.tsx`, `src/lib/cascade.ts` | Ripple card: click a node to knock it out and watch its load spread to neighbours in waves (a simplified illustration, not Motter–Lai) |
-| `src/components/Sections.tsx` | Earlier (under Projects), About (the `man abeer` page, on the band), Contact (the panel) |
-| `src/components/SectionHeader.tsx` | `$ command` line above a plain section title |
-| `src/components/TopBar.tsx`, `Footer.tsx`, `ThemeToggle.tsx` | Chrome. The footer's bottom bar carries the `$ curl https://portfolio.abbykayo.com` hint and the build SHA |
+| `src/components/ApiPlayground.tsx`, `src/lib/playground.ts` | Ripple's demo: replays of real exchanges with Ripple's API (run a simulation, auth and rate limits, cached recommendations). No network calls |
+| `src/components/Sections.tsx` | `GET /projects` (index), `/experience`, `/skills`, `/about`, `WS /console`, `POST /contact` |
+| `src/components/Footer.tsx`, `ThemeToggle.tsx` | Status-page footer ("200 OK · all systems operational", the `curl` hint, `/api` links, build SHA) and the theme toggle |
 | `src/components/ArrowIcon.tsx` | The ↗ used on outbound links, drawn as SVG because IBM Plex has no `↗` glyph (the character fell back to a mismatched font). Don't type `↗` in markup |
-| `src/app/page.tsx` | Page order: Hero, Projects (plus Earlier), About, Contact |
+| `src/app/page.tsx` | Layout (sidebar + main) and page order: `GET /`, `/projects` and each project, `/experience`, `/skills`, `/about`, `/console`, `/contact` |
 | `src/app/robots.ts`, `sitemap.ts` | Static SEO routes |
 | `src/app/layout.tsx` | Fonts, metadata, and the pre-paint theme script |
 | `src/app/globals.css` | Design tokens (see below) |
@@ -99,14 +112,16 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 Change a number in one place and every view updates:
 
 - **DSA count** (`profile.problemSolving.total`, matching the résumé's "140+") appears in the About page's Education entry and the terminal's `whoami`. Show only the overall total, not a per-platform figure such as LeetCode alone. It's deliberately kept low-key; don't promote it back to a headline stat.
-- **The featured project's `roadmap`** feeds the roadmap on the Redis card and the terminal's `now` and `cat redis`. To record progress, flip `done: false` to `true`.
+- **The in-progress project's `roadmap`** (`inProgress`, today the Redis server) feeds its roadmap on the page, the JSON API and the terminal's `now`, `top`, `neofetch` and `cat redis`. To record progress, flip `done: false` to `true`.
+- **JSON:** `src/lib/api.ts` builds both the `/api` endpoints and the page's response panels. Add fields there, never by hand in a component.
 - **Dates** use one format everywhere: `Mon YYYY`, a range as `Jul 2026 – present` (en dash with spaces). The résumé uses its own `Jul. 2026 – Present` style.
 
 **Adding a project:**
 
 1. Add an entry to `projects.ts` with a unique `slug` and `shortName`.
-2. Add a matching case in `ProjectArt.tsx`. Draw what the project actually does; don't reuse a generic graphic. A small interactive demo is best, but it must render a complete picture on the server (for no-JS visitors), announce results with `aria-live`, and show the end state immediately under reduced motion.
-3. `ls`, `cat <slug>` and the footer pick the new project up automatically.
+2. Add a matching case in `Demo` in `ProjectEndpoint.tsx`. Show what the project actually does; don't reuse a generic graphic. A small interactive demo is best, but it must render a complete picture on the server (for no-JS visitors), announce results with `aria-live`, and show the end state immediately under reduced motion.
+3. The sidebar, the `/projects` index, the JSON API, `ls` and `cat <slug>` pick the new project up automatically.
+4. Once Abeer has a Go project, it should lead (`featured`, first in the array), and the "learning Go" wording should be revisited.
 
 **Adding a terminal command:** add an entry to `commands` in `src/lib/terminal.ts`.
 
@@ -115,19 +130,21 @@ Change a number in one place and every view updates:
 - Commands in `preloaded` run at render time on both server and client, so their output must be deterministic (no dates, no randomness).
 - A bare `ping` answering "Chishit Rib" is an intentional inside joke. Keep it.
 - `git log [project]` fetches commits from GitHub's public API in the visitor's browser (60 requests an hour per IP) and shows **dates and counts only, never commit messages**. It only reads; don't add anything that writes to Abeer's other repos.
-- Hidden easter eggs: `top`, `neofetch`, `vim` (and `:q`), `rm -rf /` (GNU's real failsafe message), `curl <site>`, `git push`. Keep them short and derived from content where they state facts.
+- `curl /api/…` (or the full URL) prints the same JSON as the real endpoints; `curl <site>` prints the text résumé.
+- Hidden easter eggs: `top`, `neofetch`, `vim` (and `:q`), `rm -rf /` (GNU's real failsafe message), `git push`, `go version` (honest: no Go repo yet). Keep them short and derived from content where they state facts.
 
 ## Design system
 
-The goal is a clean, light page whose identity comes from terminal motifs. It was deliberately moved away from an earlier fanout.sh-inspired look, so don't reintroduce fanout's signature pieces:
+The page reads like API documentation, which suits the backend pitch and stays easy for recruiters to skim. Don't bring back the systems edition's pieces (the `$ whoami` hero, the man-page About, the burnt-orange palette) or the older fanout-inspired ones (pixel-font accent word, tilted note cards, pastel stacked cards, numbered tiles, a badge next to the logo).
 
-- the pixel-font accent word
-- tilted floating note cards
-- pastel stacked-card artwork
-- numbered 01–04 tiles
-- a badge next to the logo
+**Layout:**
 
-**Colour tokens** live in `src/app/globals.css`: `--bg`, `--surface`, `--chip`, `--fg`, `--muted`, `--border`, `--divider`, `--ink`, `--ink-fg`, `--accent`, `--accent-soft`, `--ok`, `--band`, `--panel`, `--panel-fg`, `--panel-border`. Use them as Tailwind classes (`bg-surface`, `text-accent`, `border-panel-border` and so on).
+- A 15rem sticky sidebar of endpoints on desktop (`lg` and up); on phones a sticky top bar with the theme toggle and a `menu` (`<details>`, so it works without JavaScript).
+- The main column is a stack of endpoint sections. Each has a method badge, a mono path, a plain title, prose on the left and an aside on the right at `xl` (stacked below the prose on narrower screens).
+- The aside holds code: request examples (`CodePanel`), a demo ("try it"), and a collapsible `Response` with the real JSON. Keep it to those.
+- Section ids are nav anchors: `top`, `projects`, `project-<shortName>`, `experience`, `skills`, `about`, `terminal` (the console's element), `contact`. Don't rename them.
+
+**Colour tokens** live in `src/app/globals.css`: `--bg`, `--surface`, `--chip`, `--fg`, `--muted`, `--border`, `--divider`, `--ink`, `--ink-fg`, `--accent`, `--accent-soft`, `--ok`, `--band`, `--panel`, `--panel-fg`, `--panel-border`, plus the method colours `--get`, `--post`, `--ws`. Use them as Tailwind classes (`bg-surface`, `text-accent`, `text-get` and so on).
 
 **To add a token,** set it in all four places:
 
@@ -138,8 +155,10 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 
 **Palette and type:**
 
-- Warm paper light theme with one burnt-orange accent (`#c2410c` light, `#fb8a4c` dark). Stick to one accent.
-- IBM Plex Sans for text and IBM Plex Mono for code-style details, both loaded with `next/font`.
+- Cool paper light theme (`#f7f8fa`) and a near-black dark theme (`#0d1117`), with one teal accent (`#0a6f8b` light, `#4fc3dc` dark). Stick to one accent.
+- Method colours (GET green, POST amber, WS violet) are only for method badges and status codes, never for decoration.
+- Code panels (`--panel`) are dark in both themes. Inside them, theme colours can be too dark, so use the fixed bright ones: `MethodBadge onDark`, the `.json-*` classes in `globals.css`, `#4fc3dc` for the console prompt and tab underline, `#4ade80`/`#fbbf24`/`#f87171` for 2xx/4xx/5xx.
+- IBM Plex Sans for text and IBM Plex Mono for paths, code and labels, both loaded with `next/font`. Plex Sans italic isn't loaded, so don't use `italic`.
 
 **Theme switching:**
 
@@ -150,34 +169,33 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 
 **Patterns to reuse:**
 
-- **Section headings:** every section opens with `SectionHeader` (`$ ls ~/projects`, `$ man abeer`) and a plain title.
-- **Anchors:** the section `id`s (`projects`, `about`, `contact`, `terminal`) are nav anchors, so don't rename them. There is no Experience section until there's a real internship to show; pre-university work goes in `earlier.ts`.
-- **About page:** laid out as a man page. `ABEER(1)` in the header corners and the footer is the standard man-page header and footer convention, so it's intentional.
-- **Section backgrounds:** only About sits on the full-width `--band`, to break up the page. Adding bands everywhere looks busy.
-- **Vertical rhythm:** sections pad themselves with `py-16`, so the hero only needs `pb-4` at the bottom. That leaves about 80px between the hero and Projects. If you add or remove a block between two sections, measure the gap again so it doesn't stack up.
-- **Contact panel:** uses the `panel` tokens, never `ink`. `ink` inverts to near-white in dark mode.
-- **Card hover:** `group` plus `transition hover:border-accent/50 hover:shadow-lg motion-safe:hover:-translate-y-0.5`. Tailwind v4 uses the CSS `translate` property, not `transform`.
+- **New section:** wrap it in `EndpointSection` with an honest method and path; give it a `Response` only if `src/lib/api.ts` really serves that data.
+- **Backgrounds:** only the sidebar and the `GET /projects` index sit on `--band`. Sections are separated by `--divider` rules.
+- **Code panel tabs:** `CodePanel` follows the WAI-ARIA tabs pattern (arrow keys, Home/End). The first tab is what no-JS visitors see.
+- **Links with arrows:** use `ArrowIcon`, never a typed `↗`.
 
 ## Conventions and gotchas
 
 - **Decorative elements:** artwork, prompts and bullets get `aria-hidden="true"`. Give screen readers the plain label with `sr-only` text.
-- **Controls with visible text** (like the cascade nodes' letter and wave number): name them with `sr-only` text inside the button, not `aria-label`. An `aria-label` has to contain the visible text (axe's `label-content-name-mismatch`), which a letter plus a number never does.
-- **Keyboard:** never trap Tab. The terminal only keeps Tab when it completes something; Shift+Tab and a Tab with nothing to complete move focus as usual. A control that disappears when used (like the cascade's `reset`) must move focus somewhere sensible.
+- **Controls with visible text** (for example, a button showing a short glyph or a number): name them with `sr-only` text inside the button, not `aria-label`. An `aria-label` has to contain the visible text (axe's `label-content-name-mismatch`), which short glyphs rarely do.
+- **Keyboard:** never trap Tab. The terminal only keeps Tab when it completes something; Shift+Tab and a Tab with nothing to complete move focus as usual. A control that disappears when used must move focus somewhere sensible.
 - **Timers in demos:** keep `setState` updaters pure. Each interval counts in its own closure and clears only its own id, so a late tick can't stop a newer run.
 - **Reduced motion:** respect it with `motion-safe:` or the `prefers-reduced-motion` block.
-- **Grids on phones:** a grid whose items contain wide content can overflow at 320–390px (the hero did, because of the terminal). Use `grid-cols-1` (which gives `minmax(0,1fr)`) plus `min-w-0` on the children.
+- **Grids on phones:** a grid whose items contain wide content can overflow at 320–390px (code panels and the console are the usual cause). Use `grid-cols-1` (which gives `minmax(0,1fr)`) plus `min-w-0` on the children, and `overflow-x-auto` on `<pre>`. Long JSON lines wrap with `[overflow-wrap:anywhere]`, not `break-all`.
 - **Next.js 16 changes:** read `node_modules/next/dist/docs/` before using unfamiliar APIs (see `AGENTS.md`).
 
 ## Accuracy rules (the site and résumé must match the repos)
 
 - **Redis:** `redis-cpp` implements a length-prefixed binary protocol (a 4-byte length in host byte order, so little-endian on x86/ARM, then the payload) with `read_full`/`write_all` loops and a 4 KB guard. It does not implement RESP and has no key-value store yet, so call it a "Redis-style server", never "Redis-compatible", until it speaks RESP. Since Oct 2026 it has an event loop over non-blocking sockets, so one thread serves many clients (the site doesn't name poll() or epoll(); check the code before it does). "Concurrent I/O models" in the roadmap is the book's chapter on the options, not an implementation. Started Jul 2026.
 - **Framing demo:** it mirrors the real code, so keep it that way. The client sends `hello1` and `hello2` (from `redis_client.cpp`); the length prefix is little-endian; `read_full` asks `read()` for exactly the bytes still needed; the unframed mode is the old `do_something()` (`read(fd, buf, 63)`). Lengths are counted in UTF-8 bytes, which is why a split `é` prints as `�`.
-- **Cascade demo:** a 9-node *simplified illustration*, not Ripple's model. Every node starts with a load of 1; a failed node hands its load to its working neighbours in equal shares, and any node past its capacity (`capacity` in `src/lib/cascade.ts`) fails in the next wave. Failures therefore always travel along drawn links, which the demo shows by lighting up the links between consecutive waves and putting a wave number on each failed node. An earlier Motter–Lai version failed nodes far from the click and read as random, even with load meters added, and Abeer found the meters cluttered. So keep this model and keep the card minimal: badges, path links, one status line and one key line. The capacities were tuned so most starts give a 2–4-wave chain, Transit hub 1 is contained, and the default (Water plant 2) ends at the hospital. Re-check those properties if you change nodes, edges or capacities. The knocked-out node uses the system `Highlight` colour in forced-colours (high-contrast) mode, since it has no badge to set it apart.
-- **Positioning:** the headline is C++ only. Python stays in the skills list, but don't lead with it.
+- **(Systems edition only) Cascade demo:** archived on `archive/systems`, with its own rules in that branch's CLAUDE.md. Don't bring it back into this edition.
+- **Positioning:** backend. The headline is "I build backend services." Python (Ripple) is the backend evidence; Go is only ever "learning Go" or "Go (learning)" until a Go repo exists. The C++ Redis server is framed as the networking underneath, not as the headline.
+- **Ripple's backend claims** are checked against its code: `api/simulations.py` (POST returns 200 with `status: "pending"`, then `run_simulation_task.delay`; a dispatch failure marks the run failed and returns 503), `celery_app.py` (`acks_late`, time limits) and `simulation/runner.py` (3 retries, exponential backoff capped at 30 s, only for transient Postgres/Redis errors), `api/ws.py` (Redis pub/sub with a fallback check of the stored run), `security.py` (viewer/operator/admin keys, 60 requests a minute fixed window, 429 with `Retry-After: 60`, fails closed in production), `services/recommendation_cache.py` (1 h TTL). The 1.5 s → 190 ms, 25x and 300-test figures come from Abeer's résumé. Re-check before changing any of them.
+- **API playground:** `src/lib/playground.ts` must only use paths, status codes, headers and messages that exist in Ripple's code (the list is in the file's header comment). IDs are shortened with "…" and result values are labelled as sample data; never invent timings or headers such as `X-Cache`.
 - **Ripple:** link to `github.com/AbeerMiglani/ripple`, not `SatishSystemsInc`. `SatishSystemsInc` is the hackathon record and must stay untouched.
   - Describe Ripple as "Manipal Hackathon 2026".
   - The "sole developer" wording is Abeer's choice, so keep it.
-  - Lead with its systems parts (the Rust PyO3 extension, WebSocket streaming); the web stack (FastAPI, Neo4j, Celery) stays out of the card's tech line.
+  - Lead with its backend parts (FastAPI, Celery, PostgreSQL, Redis); the Rust extension is a supporting detail.
 - **LOHUM:** it was summer training in Grade 11 (Jun 2023), not a job. Don't give it a job title on the site; the résumé lists it under Experience as "Summer Trainee" at LOHUM Cleantech.
 - **Skills:** only list skills backed by the résumés or repos. For example, "Linux" was deliberately left out.
 - **Excluded projects:** AI Scam Protect, AI Voice Detector and the HCL GUVI variant are deliberately left off the site and résumé. The Terminal quiz is off both the site and the current résumé.
@@ -200,9 +218,9 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 
 ## Résumé
 
-- **Where to edit:** `resume/resume.tex` is Abeer's own LaTeX résumé, tuned for applicant tracking systems (ATS). Keep its wording, structure and section order as Abeer wrote it, and change only what's asked. Then run `npm run resume` to rebuild `public/resume.pdf`.
+- **Where to edit:** `resume/resume.tex` is Abeer's own LaTeX résumé, tuned for applicant tracking systems (ATS). Since Oct 2026 it's the backend version (backend summary, Ripple's tech line and bullets, skills led by Python, Go (learning), FastAPI and Celery); the systems version lives on `archive/systems`. Keep its wording, structure and section order as Abeer wrote it, and change only what's asked. Then run `npm run resume` to rebuild `public/resume.pdf`.
 - **Repo links:** project and experience headings link to their repos with the `\repo{name}` macro: an underlined, unboxed "GitHub" on the right of the heading line, followed by `|` and the date (write `{\repo{name}Jun. 2023}` in the date argument). The full URL stays in the PDF link. The header keeps the full `github.com/AbeerMiglani` profile link.
 - **Toolchain:** the script needs `pdflatex` (TeX Live on Linux, MacTeX on macOS). In the cloud environment, install it with `apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-english`. Vercel doesn't build the résumé; the committed PDF is what's served.
 - **Full copy with phone:** `RESUME_PHONE="…" npm run resume` also writes `resume/out/Abeer_Miglani_Resume.pdf`, with the phone number inserted at the start of the contact line. `resume/out/` is gitignored. Never put the number in the `.tex`, a commit or a PR.
 - **One page:** the script fails if a PDF isn't exactly one page. Tighten wording or spacing rather than shrinking the font further.
-- **Keep it in sync with the site:** the résumé repeats facts from `src/content/` (LeetCode count, projects, links), so when one changes, update the other in the same PR.
+- **Keep it in sync with the site:** the résumé repeats facts from `src/content/` (the DSA count, projects, benchmark numbers, links), so when one changes, update the other in the same PR.
