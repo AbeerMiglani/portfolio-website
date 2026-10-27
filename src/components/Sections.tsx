@@ -13,12 +13,12 @@ const linkClass = "underline decoration-border underline-offset-4 hover:decorati
 // GET /projects : the group header above the project endpoints.
 export function ProjectsIndex() {
   return (
-    <section aria-labelledby="projects" className="border-b border-divider bg-band px-4 py-10 sm:px-8 lg:px-12">
-      <p className="flex items-center gap-2 font-mono text-sm text-muted">
+    <section aria-labelledby="projects-title" className="border-b border-divider bg-band px-4 py-10 sm:px-8 lg:px-12">
+      <p id="projects" className="flex items-center gap-2 font-mono text-sm text-muted">
         <MethodBadge method="GET" />
         <span className="text-fg">/projects</span>
       </p>
-      <h2 id="projects" className="mt-3 text-3xl font-semibold tracking-tight text-fg">
+      <h2 id="projects-title" className="mt-3 text-3xl font-semibold tracking-tight text-fg">
         Projects
       </h2>
       <ul className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -143,7 +143,7 @@ export function About() {
 export function Console() {
   return (
     <section aria-labelledby="terminal-title" className="border-b border-divider px-4 py-14 sm:px-8 lg:px-12">
-      <p className="flex items-center gap-2 font-mono text-sm text-muted">
+      <p id="terminal" className="flex items-center gap-2 font-mono text-sm text-muted">
         <MethodBadge method="WS" />
         <span className="text-fg">/console</span>
       </p>

@@ -6,7 +6,14 @@ import { applyTheme } from "@/lib/theme";
 
 type Entry = { id: number; input?: string; lines: Line[] };
 
-const PROMPT = "abeer@portfolio:~$";
+// Bash-style prompt: user@host, then the path. Reads as "abeer@portfolio:~$".
+function Prompt() {
+  return (
+    <>
+      <span className="font-medium text-term-prompt">abeer@portfolio</span>:<span className="font-medium text-term-path">~</span>$
+    </>
+  );
+}
 
 const suggestions = ["help", "now", "cat ripple", "curl /api/profile.json", "ls", "skills", "contact", "ping"];
 
@@ -107,9 +114,9 @@ export function Terminal() {
   }
 
   return (
-    <div id="terminal" className="flex min-w-0 flex-col gap-3">
+    <div className="flex min-w-0 flex-col gap-3">
       <div
-        className={`overflow-hidden bg-panel font-mono text-[0.8rem] leading-relaxed text-panel-fg ${
+        className={`overflow-hidden bg-term-bg font-mono text-[0.8rem] leading-relaxed text-term-fg ${
           tty
             ? "fixed inset-0 z-50 flex flex-col sm:text-sm"
             : "rounded-xl shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent"
@@ -118,18 +125,18 @@ export function Terminal() {
         role={tty ? "region" : undefined}
         onClick={() => inputRef.current?.focus()}
       >
-        <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
-          <span className="text-xs text-white/60">abeer@portfolio: ~</span>
+        <div className="flex items-center gap-2 border-b border-term-fg/10 px-4 py-2.5">
+          <span className="text-xs text-term-dim">abeer@portfolio: ~</span>
           {tty ? (
             <button
               type="button"
               onClick={() => setFullScreen(false)}
-              className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase hover:text-white"
+              className="ml-auto text-[0.65rem] tracking-wider text-term-dim uppercase hover:text-term-fg"
             >
               esc · exit
             </button>
           ) : (
-            <span className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase">interactive</span>
+            <span className="ml-auto text-[0.65rem] tracking-wider text-term-dim uppercase">interactive</span>
           )}
         </div>
 
@@ -139,7 +146,7 @@ export function Terminal() {
               <div key={entry.id} className="mb-2">
                 {entry.input !== undefined && (
                   <p className="break-all">
-                    <span className="text-[#4fc3dc]">{PROMPT}</span> {entry.input}
+                    <Prompt /> {entry.input}
                   </p>
                 )}
                 {entry.lines.map((line, i) => (
@@ -150,8 +157,8 @@ export function Terminal() {
           </div>
 
           <label className="flex items-center gap-2">
-            <span className="shrink-0 text-[#4fc3dc]" aria-hidden="true">
-              {PROMPT}
+            <span className="shrink-0" aria-hidden="true">
+              <Prompt />
             </span>
             <span className="sr-only">Terminal command</span>
             <input
@@ -167,7 +174,7 @@ export function Terminal() {
               autoCorrect="off"
               spellCheck={false}
               enterKeyHint="go"
-              className="min-w-0 flex-1 bg-transparent text-panel-fg caret-[#4fc3dc] outline-none"
+              className="min-w-0 flex-1 bg-transparent text-term-fg caret-term-fg outline-none"
             />
           </label>
         </div>
@@ -198,7 +205,7 @@ function OutputLine({ line }: { line: Line }) {
           href={line.href}
           target={line.href.startsWith("http") ? "_blank" : undefined}
           rel="noopener noreferrer"
-          className="text-[#7cc4ff] underline decoration-white/20 underline-offset-2 hover:decoration-[#7cc4ff]"
+          className="text-term-link underline decoration-term-link/40 underline-offset-2 hover:decoration-term-link"
         >
           {line.label}
         </a>
@@ -207,11 +214,11 @@ function OutputLine({ line }: { line: Line }) {
   }
   const tone =
     line.tone === "muted"
-      ? "text-white/50"
+      ? "text-term-dim"
       : line.tone === "accent"
-        ? "text-[#4fc3dc]"
+        ? "text-term-accent"
         : line.tone === "error"
-          ? "text-[#ff7b72]"
+          ? "text-term-error"
           : "";
   return <p className={`whitespace-pre-wrap ${tone}`}>{line.text}</p>;
 }

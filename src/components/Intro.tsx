@@ -35,17 +35,17 @@ print(me["name"], "·", me["status"])`,
 // GET / : who I am, with the same data as a real request to /api/profile.json.
 export function Intro() {
   return (
-    <section aria-labelledby="top" className="border-b border-divider px-4 pt-12 pb-14 sm:px-8 lg:px-12 lg:pt-16">
+    <section aria-labelledby="top-title" className="border-b border-divider px-4 pt-12 pb-14 sm:px-8 lg:px-12 lg:pt-16">
       <div className="grid grid-cols-1 gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] xl:gap-14">
         <div className="min-w-0">
-          <p className="flex items-center gap-2 font-mono text-sm text-muted">
+          <p id="top" className="flex items-center gap-2 font-mono text-sm text-muted">
             <MethodBadge method="GET" />
             <span className="text-fg">/</span>
             <span className="text-xs">
               · <span className="text-ok">200</span> OK
             </span>
           </p>
-          <h1 id="top" className="mt-4 text-5xl font-semibold tracking-tight text-fg sm:text-6xl">
+          <h1 id="top-title" className="mt-4 text-5xl font-semibold tracking-tight text-fg sm:text-6xl">
             {profile.name}
           </h1>
           <p className="mt-4 text-xl text-fg sm:text-2xl">{profile.tagline}</p>
