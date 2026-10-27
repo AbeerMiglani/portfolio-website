@@ -98,6 +98,16 @@
   --color-get: var(--get);
   --color-post: var(--post);
   --color-ws: var(--ws);
+  /* The console's own terminal theme (Gruvbox dark), the same in both site
+     themes: used as bg-term-bg, text-term-prompt and so on in Terminal.tsx. */
+  --color-term-bg: #1d2021;
+  --color-term-fg: #ebdbb2;
+  --color-term-dim: #a89984;
+  --color-term-prompt: #b8bb26;
+  --color-term-path: #83a598;
+  --color-term-accent: #fabd2f;
+  --color-term-error: #fb4934;
+  --color-term-link: #83a598;
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 }

@@ -159,7 +159,8 @@ The page reads like API documentation, which suits the backend pitch and stays e
 
 - Warm paper light theme (`#f8f7f5`) and a graphite dark theme (`#0f0e0c`), with one teal accent (`#0a6f8b` light, `#4fc3dc` dark). Abeer picked this blend over all-teal, indigo, emerald, violet and amber (Oct 2026): the warm neutrals come from the amber option, the accent stays teal so it never blends into the amber POST badges. Stick to one accent.
 - Method colours (GET green, POST amber, WS violet) are only for method badges and status codes, never for decoration.
-- Code panels (`--panel`) are dark in both themes. Inside them, theme colours can be too dark, so use the fixed bright ones: `MethodBadge onDark`, the `.json-*` classes in `globals.css`, `#4fc3dc` for the console prompt and tab underline, `#4ade80`/`#fbbf24`/`#f87171` for 2xx/4xx/5xx.
+- Code panels (`--panel`) are dark in both themes. Inside them, theme colours can be too dark, so use the fixed bright ones: `MethodBadge onDark`, the `.json-*` classes in `globals.css`, `#4fc3dc` for the tab underline and focus outlines, `#4ade80`/`#fbbf24`/`#f87171` for 2xx/4xx/5xx.
+- The console has its own terminal theme, Gruvbox dark (Abeer's pick, Oct 2026, because the cyan prompt didn't read as a terminal). Its fixed colours are the `--color-term-*` entries in `@theme inline` (`bg-term-bg`, `text-term-prompt` and so on), the same in both site themes. The prompt is bash-style: olive `abeer@portfolio`, blue `~`. Keep console colours to those classes, and keep the keyboard focus ring `ring-accent`.
 - IBM Plex Sans for text and IBM Plex Mono for paths, code and labels, both loaded with `next/font`. Plex Sans italic isn't loaded, so don't use `italic`.
 
 **Theme switching:**
