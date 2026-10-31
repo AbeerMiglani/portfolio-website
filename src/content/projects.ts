@@ -28,7 +28,7 @@ export const projects: Project[] = [
     title: "Redis-style server",
     shortName: "redis-cpp",
     eyebrow: "Systems · ongoing",
-    hook: "An in-memory key-value server in C++, built from first principles to understand how Redis really works.",
+    hook: "A Redis-style TCP server in C++, built from first principles to understand how Redis really works.",
     bullets: [
       "TCP server and client written directly against POSIX sockets.",
       "Length-prefixed binary protocol (4-byte header + payload) to frame messages over a TCP byte stream.",
