@@ -2,6 +2,10 @@
 
 Source for [portfolio.abbykayo.com](https://portfolio.abbykayo.com), built with Next.js (App Router), TypeScript and Tailwind CSS, and deployed on Vercel.
 
+## Editions
+
+This is the systems edition. The backend edition (API-docs design, JSON API) is saved on the `archive/backend` branch, and this edition's original snapshot on `archive/systems`. CLAUDE.md explains how to switch.
+
 ## Editing content
 
 All the text lives in `src/content/`, so you don't need to touch components to update the site:

@@ -4,6 +4,15 @@
 
 Abeer Miglani's personal site, live at https://portfolio.abbykayo.com. It's a single static page built with Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS v4, and deployed on Vercel. The audience is recruiters and engineers hiring for SWE internships, so it should stay fast, easy to skim and accurate.
 
+This is the **systems edition** (C++ headline, terminal look, man-page About). It was replaced by a backend edition in Oct 2026 and rolled back to on Oct 31, 2026; see **Editions** below.
+
+## Editions (switching)
+
+- **Backend edition** (Go/backend headline, API-docs look, JSON API at `/api`, Gruvbox console): frozen on the branch `archive/backend` at commit `12b0e71`. It carries its own CLAUDE.md, résumé and content. A `backend-v1` tag should point at the same commit; the cloud session can't create tags, so Abeer creates it in GitHub's Releases page.
+- **Systems edition** (this one): archived as `archive/systems` at `f77f019` (tag `systems-v1`). The live copy differs only in the résumé (Rust dropped from Languages) and these docs.
+- **To switch editions:** don't restart the branch from an archive and open a PR. Both archives are ancestors of `main`, so that PR would be empty. Instead, on the work branch (reset to `origin/main`), run `git read-tree -u --reset <archive>`, check `git diff --cached --stat <archive>` is empty, commit that as one change, then add any follow-up edits, push and open a PR into `main`. Archive the outgoing edition first (`create_branch` through the GitHub MCP works; tags don't).
+- **Don't edit an archive branch** except to fix something Abeer asks for there; each is the record of its edition.
+
 ## Commands
 
 ```bash
@@ -201,6 +210,7 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 ## Résumé
 
 - **Where to edit:** `resume/resume.tex` is Abeer's own LaTeX résumé, tuned for applicant tracking systems (ATS). Keep its wording, structure and section order as Abeer wrote it, and change only what's asked. Then run `npm run resume` to rebuild `public/resume.pdf`.
+- **Rust:** not listed under Languages (Abeer finds it a stretch, Oct 2026). Ripple's tech line and bullets still describe the Rust (PyO3) extension, and the site keeps "Rust (learning)".
 - **Repo links:** project and experience headings link to their repos with the `\repo{name}` macro: an underlined, unboxed "GitHub" on the right of the heading line, followed by `|` and the date (write `{\repo{name}Jun. 2023}` in the date argument). The full URL stays in the PDF link. The header keeps the full `github.com/AbeerMiglani` profile link.
 - **Toolchain:** the script needs `pdflatex` (TeX Live on Linux, MacTeX on macOS). In the cloud environment, install it with `apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-english`. Vercel doesn't build the résumé; the committed PDF is what's served.
 - **Full copy with phone:** `RESUME_PHONE="…" npm run resume` also writes `resume/out/Abeer_Miglani_Resume.pdf`, with the phone number inserted at the start of the contact line. `resume/out/` is gitignored. Never put the number in the `.tex`, a commit or a PR.
