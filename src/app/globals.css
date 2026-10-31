@@ -2,78 +2,68 @@
    README don't ship as unused CSS. */
 @import "tailwindcss" source("../");
 
-/* API-docs look: warm paper light theme and graphite dark theme with one teal
-   accent, dark code panels in both themes, and small method colours (GET,
-   POST, WS) used only on endpoint badges. An inline script in layout.tsx sets data-theme on <html>
-   before paint; the media query only covers visitors without JavaScript. */
+/* Warm paper light theme is the default, with a single burnt-orange accent.
+   An inline script in layout.tsx sets data-theme on <html> before paint; the
+   media query only covers visitors without JavaScript. */
 :root,
 :root[data-theme="light"] {
-  --bg: #f8f7f5;
+  --bg: #faf9f6;
   --surface: #ffffff;
-  --chip: #efedea;
-  --fg: #191714;
-  --muted: #5f5a53;
-  --border: #e3dfd9;
-  --divider: #ebe8e3;
-  --ink: #191714;
-  --ink-fg: #f8f7f5;
-  --accent: #0a6f8b;
-  --accent-soft: #e3f3f7;
+  --chip: #f1efe9;
+  --fg: #1c1b19;
+  --muted: #6b6760;
+  --border: #e3dfd6;
+  --divider: #ebe8e1;
+  --ink: #1c1b19;
+  --ink-fg: #faf9f6;
+  --accent: #c2410c;
+  --accent-soft: #fdefe7;
   --ok: #15803d;
-  --band: #f2f0ec;
-  --panel: #16130f;
-  --panel-fg: #e6edf3;
-  --panel-border: #16130f;
-  --get: #166534;
-  --post: #9a3412;
-  --ws: #6d28d9;
+  --band: #f3f1ec;
+  --panel: #1c1b19;
+  --panel-fg: #faf9f6;
+  --panel-border: #1c1b19;
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --bg: #0f0e0c;
-  --surface: #171512;
-  --chip: #211e1a;
-  --fg: #efebe4;
-  --muted: #a8a196;
-  --border: #322e28;
-  --divider: #24211c;
-  --ink: #efebe4;
-  --ink-fg: #0f0e0c;
-  --accent: #4fc3dc;
-  --accent-soft: #10303a;
+  --bg: #121110;
+  --surface: #1a1917;
+  --chip: #24221f;
+  --fg: #ecebe7;
+  --muted: #a19d95;
+  --border: #2f2c28;
+  --divider: #262420;
+  --ink: #ecebe7;
+  --ink-fg: #121110;
+  --accent: #fb8a4c;
+  --accent-soft: #3a2418;
   --ok: #4ade80;
-  --band: #13110f;
-  --panel: #0a0907;
-  --panel-fg: #e6edf3;
-  --panel-border: #322e28;
-  --get: #4ade80;
-  --post: #fbbf24;
-  --ws: #c4b5fd;
+  --band: #1f1c18;
+  --panel: #261b14;
+  --panel-fg: #ecebe7;
+  --panel-border: #4a2e1d;
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --bg: #0f0e0c;
-    --surface: #171512;
-    --chip: #211e1a;
-    --fg: #efebe4;
-    --muted: #a8a196;
-    --border: #322e28;
-    --divider: #24211c;
-    --ink: #efebe4;
-    --ink-fg: #0f0e0c;
-    --accent: #4fc3dc;
-    --accent-soft: #10303a;
+    --bg: #121110;
+    --surface: #1a1917;
+    --chip: #24221f;
+    --fg: #ecebe7;
+    --muted: #a19d95;
+    --border: #2f2c28;
+    --divider: #262420;
+    --ink: #ecebe7;
+    --ink-fg: #121110;
+    --accent: #fb8a4c;
+    --accent-soft: #3a2418;
     --ok: #4ade80;
-    --band: #13110f;
-    --panel: #0a0907;
-    --panel-fg: #e6edf3;
-    --panel-border: #322e28;
-    --get: #4ade80;
-    --post: #fbbf24;
-    --ws: #c4b5fd;
+    --band: #1f1c18;
+    --panel: #261b14;
+    --panel-fg: #ecebe7;
+    --panel-border: #4a2e1d;
     color-scheme: dark;
   }
 }
@@ -95,19 +85,6 @@
   --color-panel: var(--panel);
   --color-panel-fg: var(--panel-fg);
   --color-panel-border: var(--panel-border);
-  --color-get: var(--get);
-  --color-post: var(--post);
-  --color-ws: var(--ws);
-  /* The console's own terminal theme (Gruvbox dark), the same in both site
-     themes: used as bg-term-bg, text-term-prompt and so on in Terminal.tsx. */
-  --color-term-bg: #1d2021;
-  --color-term-fg: #ebdbb2;
-  --color-term-dim: #a89984;
-  --color-term-prompt: #b8bb26;
-  --color-term-path: #83a598;
-  --color-term-accent: #fabd2f;
-  --color-term-error: #fb4934;
-  --color-term-link: #83a598;
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 }
@@ -115,12 +92,6 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
-}
-
-@media (min-width: 64rem) {
-  html {
-    scroll-padding-top: 1.5rem;
-  }
 }
 
 body {
@@ -131,23 +102,6 @@ body {
 ::selection {
   background: var(--accent);
   color: var(--ink-fg);
-}
-
-/* JSON syntax colours inside the dark code panels (the same in both themes). */
-.json-key {
-  color: #7dd3fc;
-}
-.json-string {
-  color: #a5e1a1;
-}
-.json-number {
-  color: #f5c77e;
-}
-.json-literal {
-  color: #d2a8ff;
-}
-.json-punct {
-  color: #8b98a5;
 }
 
 /* Theme toggle shows the theme you would switch to. */

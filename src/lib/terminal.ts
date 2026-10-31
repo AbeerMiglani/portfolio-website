@@ -1,7 +1,6 @@
 import { earlier } from "@/content/earlier";
 import { profile } from "@/content/profile";
-import { inProgress, projects } from "@/content/projects";
-import { apiIndex, endpoints, pretty, profileJson, projectsJson } from "@/lib/api";
+import { projects } from "@/content/projects";
 import { resumeText } from "@/lib/plaintext";
 
 export type Line =
@@ -59,8 +58,7 @@ const commands: Record<string, Command> = {
           .map(([name, cmd]) => text(`  ${(cmd.usage ?? name).padEnd(22)} ${cmd.summary}`)),
         blank,
         text("Tip: Tab completes, ↑/↓ walks history, Ctrl+L clears.", "muted"),
-        text(`This site also answers \`curl ${profile.siteUrl}\` in a real terminal,`, "muted"),
-        text("and serves JSON under /api (try `curl /api/profile.json`).", "muted"),
+        text(`This site also answers \`curl ${profile.siteUrl}\` in a real terminal.`, "muted"),
       ],
     }),
   },
@@ -82,11 +80,12 @@ const commands: Record<string, Command> = {
   now: {
     summary: "what I'm working on",
     run: () => {
-      const roadmap = inProgress?.roadmap ?? [];
+      const featured = projects.find((p) => p.featured);
+      const roadmap = featured?.roadmap ?? [];
       const done = roadmap.filter((m) => m.done).length;
       return {
         lines: [
-          text(`building  ${inProgress?.title ?? "–"} (${done}/${roadmap.length} milestones)`),
+          text(`building  ${featured?.title ?? "–"} (${done}/${roadmap.length} milestones)`),
           text(`learning  ${profile.learning.join(", ")}`),
           text(`open to   ${profile.status.replace(/^Open to /i, "")}`),
         ],
@@ -290,9 +289,10 @@ const commands: Record<string, Command> = {
     summary: "",
     hidden: true,
     run: () => {
-      const next = inProgress?.roadmap?.find((m) => !m.done)?.label ?? "–";
+      const featured = projects.find((p) => p.featured);
+      const next = featured?.roadmap?.find((m) => !m.done)?.label ?? "–";
       const rows: [string, string, string, string][] = [
-        [inProgress?.shortName ?? "project", "R", "71.3", `next milestone: ${next}`],
+        [featured?.shortName ?? "project", "R", "71.3", `next milestone: ${next}`],
         [profile.learning.join(",").toLowerCase(), "R", "18.9", "learning"],
         ["internships", "S", " 0.0", profile.status.replace(/^Open/, "open")],
         ["sleep", "S", " 9.8", "occasionally"],
@@ -309,14 +309,15 @@ const commands: Record<string, Command> = {
     summary: "",
     hidden: true,
     run: () => {
-      const done = inProgress?.roadmap?.filter((m) => m.done).length ?? 0;
+      const featured = projects.find((p) => p.featured);
+      const done = featured?.roadmap?.filter((m) => m.done).length ?? 0;
       const info: [string, string][] = [
         ["os", "portfolio (Next.js 16, static)"],
         ["host", profile.education.school],
         ["uptime", `B.Tech ECE, class of ${profile.education.graduation}`],
         ["shell", "this one (try `help`)"],
         ["langs", profile.skills.Languages.slice(0, 4).join(", ")],
-        ["building", `${inProgress?.title ?? "–"} (${done}/${inProgress?.roadmap?.length ?? 0})`],
+        ["building", `${featured?.title ?? "–"} (${done}/${featured?.roadmap?.length ?? 0})`],
       ];
       return {
         lines: [
@@ -327,17 +328,6 @@ const commands: Record<string, Command> = {
         ],
       };
     },
-  },
-  go: {
-    summary: "",
-    hidden: true,
-    run: (args) => ({
-      lines: [
-        args[0] === "version"
-          ? text("go: still learning, no Go repo yet. Check back soon.", "muted")
-          : text("Go is the language I'm learning next. Try `now`.", "muted"),
-      ],
-    }),
   },
   vim: {
     summary: "",
@@ -369,16 +359,8 @@ const commands: Record<string, Command> = {
       const target = args.find((a) => !a.startsWith("-"));
       if (!target) return { lines: [text("curl: try 'curl --help' or 'curl --manual' for more information", "error")] };
       const host = profile.siteUrl.replace("https://", "");
-      const bare = target.replace(/^https?:\/\//, "");
-      // "/api/…" on its own means this site, like a relative URL.
-      const path = bare.startsWith("/") ? bare : bare.startsWith(host) ? bare.slice(host.length) || "/" : null;
-      if (path === null) {
-        return { lines: [text(`curl: (6) Could not resolve host: ${bare.split("/")[0]}`, "error")] };
-      }
-      const json = jsonFor(path.replace(/\/$/, "") || "/");
-      if (json !== undefined) {
-        if (json === null) return { lines: [text(`{"detail":"Not Found"}  (try \`curl /api\`)`, "error")] };
-        return { lines: pretty(json).split("\n").map((l) => text(l)) };
+      if (!target.replace(/^https?:\/\//, "").startsWith(host)) {
+        return { lines: [text(`curl: (6) Could not resolve host: ${target.replace(/^https?:\/\//, "").split("/")[0]}`, "error")] };
       }
       return {
         lines: [
@@ -410,15 +392,6 @@ const aliases: Record<string, string> = {
   htop: "top",
   wget: "curl",
 };
-
-/** JSON for a path under /api; undefined for other paths, null for unknown /api paths. */
-function jsonFor(path: string): unknown {
-  if (!path.startsWith("/api")) return undefined;
-  if (path === "/api") return apiIndex();
-  if (path === "/api/profile.json") return profileJson();
-  if (path === "/api/projects.json") return projectsJson();
-  return path in endpoints ? undefined : null;
-}
 
 function emptySession(): Session {
   return { history: [], store: new Map(), tty: false };

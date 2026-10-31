@@ -6,16 +6,9 @@ import { applyTheme } from "@/lib/theme";
 
 type Entry = { id: number; input?: string; lines: Line[] };
 
-// Bash-style prompt: user@host, then the path. Reads as "abeer@portfolio:~$".
-function Prompt() {
-  return (
-    <>
-      <span className="font-medium text-term-prompt">abeer@portfolio</span>:<span className="font-medium text-term-path">~</span>$
-    </>
-  );
-}
+const PROMPT = "abeer@portfolio:~$";
 
-const suggestions = ["help", "now", "cat ripple", "curl /api/profile.json", "ls", "skills", "contact", "ping"];
+const suggestions = ["help", "whoami", "ls", "cat redis", "cat ripple", "skills", "contact", "ping"];
 
 // Deterministic, so server and client render the same first frame.
 const initialEntries: Entry[] = [
@@ -114,29 +107,29 @@ export function Terminal() {
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-3">
+    <div id="terminal" className="flex min-w-0 flex-col gap-3">
       <div
-        className={`overflow-hidden bg-term-bg font-mono text-[0.8rem] leading-relaxed text-term-fg ${
+        className={`overflow-hidden bg-[#1a1917] font-mono text-[0.8rem] leading-relaxed text-[#ecebe7] ${
           tty
             ? "fixed inset-0 z-50 flex flex-col sm:text-sm"
-            : "rounded-xl shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-muted"
+            : "rounded-xl shadow-xl ring-1 ring-black/25 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent"
         }`}
         aria-label={tty ? "Terminal, full screen. Press Escape to leave." : undefined}
         role={tty ? "region" : undefined}
         onClick={() => inputRef.current?.focus()}
       >
-        <div className="flex items-center gap-2 border-b border-term-fg/10 px-4 py-2.5">
-          <span className="text-xs text-term-dim">abeer@portfolio: ~</span>
+        <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
+          <span className="text-xs text-white/60">abeer@portfolio: ~</span>
           {tty ? (
             <button
               type="button"
               onClick={() => setFullScreen(false)}
-              className="ml-auto text-[0.65rem] tracking-wider text-term-dim uppercase hover:text-term-fg"
+              className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase hover:text-white"
             >
               esc · exit
             </button>
           ) : (
-            <span className="ml-auto text-[0.65rem] tracking-wider text-term-dim uppercase">interactive</span>
+            <span className="ml-auto text-[0.65rem] tracking-wider text-white/55 uppercase">interactive</span>
           )}
         </div>
 
@@ -146,7 +139,7 @@ export function Terminal() {
               <div key={entry.id} className="mb-2">
                 {entry.input !== undefined && (
                   <p className="break-all">
-                    <Prompt /> {entry.input}
+                    <span className="text-[#fb8a4c]">{PROMPT}</span> {entry.input}
                   </p>
                 )}
                 {entry.lines.map((line, i) => (
@@ -157,8 +150,8 @@ export function Terminal() {
           </div>
 
           <label className="flex items-center gap-2">
-            <span className="shrink-0" aria-hidden="true">
-              <Prompt />
+            <span className="shrink-0 text-[#fb8a4c]" aria-hidden="true">
+              {PROMPT}
             </span>
             <span className="sr-only">Terminal command</span>
             <input
@@ -174,7 +167,7 @@ export function Terminal() {
               autoCorrect="off"
               spellCheck={false}
               enterKeyHint="go"
-              className="min-w-0 flex-1 bg-transparent text-term-fg caret-term-fg outline-none"
+              className="min-w-0 flex-1 bg-transparent text-[#ecebe7] caret-[#fb8a4c] outline-none"
             />
           </label>
         </div>
@@ -205,7 +198,7 @@ function OutputLine({ line }: { line: Line }) {
           href={line.href}
           target={line.href.startsWith("http") ? "_blank" : undefined}
           rel="noopener noreferrer"
-          className="text-term-link underline decoration-term-link/40 underline-offset-2 hover:decoration-term-link"
+          className="text-[#7cc4ff] underline decoration-white/20 underline-offset-2 hover:decoration-[#7cc4ff]"
         >
           {line.label}
         </a>
@@ -214,11 +207,11 @@ function OutputLine({ line }: { line: Line }) {
   }
   const tone =
     line.tone === "muted"
-      ? "text-term-dim"
+      ? "text-white/50"
       : line.tone === "accent"
-        ? "text-term-accent"
+        ? "text-[#fb8a4c]"
         : line.tone === "error"
-          ? "text-term-error"
+          ? "text-[#ff7b72]"
           : "";
   return <p className={`whitespace-pre-wrap ${tone}`}>{line.text}</p>;
 }

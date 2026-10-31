@@ -3,12 +3,12 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { profile } from "@/content/profile";
 
-export const alt = `${profile.name}, backend engineer`;
+export const alt = `${profile.name}, software engineer`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Link-preview card in the site's API-docs style. next/og cannot read woff2,
-// so the IBM Plex TTFs in src/fonts/ are used here.
+// Link-preview card in the site's style. next/og cannot read woff2, so the
+// IBM Plex TTFs in src/fonts/ are used here.
 export default async function Image() {
   const fonts = join(process.cwd(), "src/fonts");
   const [sans, mono] = await Promise.all([
@@ -26,48 +26,22 @@ export default async function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          background: "#f8f7f5",
-          color: "#191714",
+          background: "#faf9f6",
+          color: "#1c1b19",
           fontFamily: "Plex Sans",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", fontFamily: "Plex Mono", fontSize: 28 }}>
+        <div style={{ display: "flex", fontFamily: "Plex Mono", fontSize: 28 }}>
           <span>{profile.handle}</span>
-          <span style={{ color: "#5f5a53", margin: "0 10px" }}>/</span>
-          <span style={{ color: "#0a6f8b" }}>api</span>
-          <span
-            style={{
-              marginLeft: 16,
-              fontSize: 18,
-              color: "#5f5a53",
-              border: "2px solid #e3dfd9",
-              borderRadius: 6,
-              padding: "2px 10px",
-            }}
-          >
-            v2
-          </span>
+          <span style={{ color: "#6b6760" }}>@portfolio</span>
+          <span style={{ color: "#c2410c" }}>:~$</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", alignItems: "center", fontFamily: "Plex Mono", fontSize: 30, color: "#5f5a53" }}>
-            <span
-              style={{
-                color: "#15803d",
-                background: "#e3f1e8",
-                borderRadius: 6,
-                padding: "4px 14px",
-                marginRight: 18,
-                fontSize: 26,
-              }}
-            >
-              GET
-            </span>
-            <span style={{ color: "#191714" }}>/</span>
-            <span style={{ marginLeft: 18, color: "#15803d" }}>200</span>
-            <span style={{ marginLeft: 10 }}>OK</span>
+          <div style={{ display: "flex", fontFamily: "Plex Mono", fontSize: 30, color: "#6b6760" }}>
+            <span style={{ color: "#c2410c", marginRight: 16 }}>$</span>whoami
           </div>
-          <div style={{ fontSize: 96, letterSpacing: -2, marginTop: 16 }}>{profile.name}</div>
-          <div style={{ fontSize: 40, color: "#3f3b35", marginTop: 8 }}>{profile.tagline}</div>
+          <div style={{ fontSize: 96, letterSpacing: -2, marginTop: 12 }}>{profile.name}</div>
+          <div style={{ fontSize: 40, color: "#3a3833", marginTop: 8 }}>{profile.tagline}</div>
         </div>
         <div
           style={{
@@ -75,14 +49,12 @@ export default async function Image() {
             justifyContent: "space-between",
             fontFamily: "Plex Mono",
             fontSize: 24,
-            color: "#5f5a53",
-            borderTop: "2px solid #e3dfd9",
+            color: "#6b6760",
+            borderTop: "2px solid #e3dfd6",
             paddingTop: 24,
           }}
         >
-          <span>
-            {profile.status} · learning {profile.learning.join(", ")}
-          </span>
+          <span>redis-cpp · ripple</span>
           <span>{profile.siteUrl.replace("https://", "")}</span>
         </div>
       </div>
