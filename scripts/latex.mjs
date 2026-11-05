@@ -6,12 +6,12 @@ import path from "node:path";
 
 // The phone number goes first in the contact line, before the email link. The
 // résumé and the cover letter share this header.
-const CONTACT_START = "\\small \\href{mailto:";
+const CONTACT_START = "\\small \\ulink{mailto:";
 const escapeTex = (text) => text.replace(/[\\#$%&_{}~^]/g, (c) => (c === "\\" ? "\\textbackslash{}" : `\\${c}`));
 
 export function withPhone(tex, phone, file) {
   if (!tex.includes(CONTACT_START)) throw new Error(`Couldn't find "${CONTACT_START}" in ${file} to add the phone number.`);
-  return tex.replace(CONTACT_START, `\\small ${escapeTex(phone)} \\quad \\href{mailto:`);
+  return tex.replace(CONTACT_START, `\\small ${escapeTex(phone)} \\quad \\ulink{mailto:`);
 }
 
 // Writes `files` (name -> source) to a temporary folder, compiles `main` there and

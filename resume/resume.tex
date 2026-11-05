@@ -39,9 +39,14 @@
 % Measured results. Every number was produced by running the code in the repos.
 \newcommand{\metric}[1]{\textbf{#1}}
 
+% Underlined link. \underline follows the text's depth, so on its own an address with
+% no descenders gets a higher line. The \vphantom gives every link the depth of "/",
+% the deepest character in these links, so all the underlines sit at one height.
+\newcommand{\ulink}[2]{\href{#1}{\underline{#2\vphantom{/}}}}
+
 % Repository link: an underlined "GitHub" placed on the right of a heading line,
 % just before the date. The full URL stays in the link.
-\newcommand{\repo}[1]{\href{https://github.com/AbeerMiglani/#1}{\underline{GitHub}}\enspace$|$\enspace}
+\newcommand{\repo}[1]{\ulink{https://github.com/AbeerMiglani/#1}{GitHub}\enspace$|$\enspace}
 
 % Small bullet, as in the original Jake's Resume template
 \newcommand{\smallbullet}{$\vcenter{\hbox{\tiny$\bullet$}}$}
@@ -76,10 +81,10 @@
 %-----------HEADER-----------
 \begin{center}
     \textbf{\Huge \scshape Abeer Miglani} \\ \vspace{3pt}
-    \small \href{mailto:am319@snu.edu.in}{\underline{am319@snu.edu.in}} \quad
-    \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}} \quad
-    \href{https://linkedin.com/in/abeermiglani}{\underline{linkedin.com/in/abeermiglani}} \quad
-    \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}
+    \small \ulink{mailto:am319@snu.edu.in}{am319@snu.edu.in} \quad
+    \ulink{https://portfolio.abbykayo.com}{portfolio.abbykayo.com} \quad
+    \ulink{https://linkedin.com/in/abeermiglani}{linkedin.com/in/abeermiglani} \quad
+    \ulink{https://github.com/AbeerMiglani}{github.com/AbeerMiglani}
 \end{center}
 
 %-----------SUMMARY-----------

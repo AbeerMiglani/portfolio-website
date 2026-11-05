@@ -41,15 +41,19 @@
 
 \newcommand{\placeholder}[1]{\textcolor{red}{[#1]}}
 
+% Underlined link, as in the résumé: the \vphantom gives every link the depth of
+% "/", so all the underlines sit at one height with or without descenders.
+\newcommand{\ulink}[2]{\href{#1}{\underline{#2\vphantom{/}}}}
+
 \begin{document}
 
 %-----------HEADER (same as the résumé)-----------
 \begin{center}
     \textbf{\Huge \scshape Abeer Miglani} \\ \vspace{3pt}
-    \small \href{mailto:am319@snu.edu.in}{\underline{am319@snu.edu.in}} \quad
-    \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}} \quad
-    \href{https://linkedin.com/in/abeermiglani}{\underline{linkedin.com/in/abeermiglani}} \quad
-    \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}
+    \small \ulink{mailto:am319@snu.edu.in}{am319@snu.edu.in} \quad
+    \ulink{https://portfolio.abbykayo.com}{portfolio.abbykayo.com} \quad
+    \ulink{https://linkedin.com/in/abeermiglani}{linkedin.com/in/abeermiglani} \quad
+    \ulink{https://github.com/AbeerMiglani}{github.com/AbeerMiglani}
 \end{center}
 \vspace{-6pt}
 \rule{\textwidth}{0.4pt}
@@ -70,7 +74,7 @@ Since July 2026, I've been building a Redis-style server in C++ using raw POSIX 
 
 \Fit
 
-Both projects have interactive demos on my portfolio at \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}}, and their code is available at \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}. I'd welcome the opportunity to discuss how I could contribute to \Company.
+Both projects have interactive demos on my portfolio at \ulink{https://portfolio.abbykayo.com}{portfolio.abbykayo.com}, and their code is available at \ulink{https://github.com/AbeerMiglani}{github.com/AbeerMiglani}. I'd welcome the opportunity to discuss how I could contribute to \Company.
 
 Thank you for your time and consideration.
 
