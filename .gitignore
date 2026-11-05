@@ -42,3 +42,7 @@ next-env.d.ts
 
 # résumé copy with the phone number (see scripts/render-resume.mjs)
 /resume/out/
+
+# tailored cover letters: the repo is public, so where Abeer applies stays private
+# (see scripts/render-cover.mjs)
+/resume/letters/

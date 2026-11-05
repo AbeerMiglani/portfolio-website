@@ -1,0 +1,78 @@
+% Cover letter in the résumé's style: same header, type and margins.
+% Build with `npm run cover` (see scripts/render-cover.mjs).
+%
+% The per-company parts are the four macros below. Built on its own, this file
+% shows them as red [placeholders]. A tailored letter in resume/letters/
+% (gitignored) defines all four with \newcommand and then \input{cover-letter}.
+% Every fact here must match resume.tex.
+
+\providecommand{\Company}{\placeholder{Company}}
+\providecommand{\Role}{\placeholder{Role} internship}
+\providecommand{\WhyCompany}{\placeholder{One or two sentences on why \Company: what the posting says the team builds, tied to Ripple or the Redis-style server.}}
+\providecommand{\Fit}{I like problems where the answer can be checked. I don't trust a speedup until tests show the results still match, and when Python was too slow for Ripple, I learned enough Rust to write the extension myself. I've also solved 140+ data structures and algorithms problems on LeetCode, Codeforces, CodeChef, and HackerRank.}
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+\raggedright
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.85em}
+
+\pdfgentounicode=1
+
+\newcommand{\placeholder}[1]{\textcolor{red}{[#1]}}
+
+\begin{document}
+
+%-----------HEADER (same as the résumé)-----------
+\begin{center}
+    \textbf{\Huge \scshape Abeer Miglani} \\ \vspace{3pt}
+    \small \href{mailto:am319@snu.edu.in}{\underline{am319@snu.edu.in}} \quad
+    \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}} \quad
+    \href{https://linkedin.com/in/abeermiglani}{\underline{linkedin.com/in/abeermiglani}} \quad
+    \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}
+\end{center}
+\vspace{-6pt}
+\rule{\textwidth}{0.4pt}
+
+%-----------LETTER-----------
+\today
+
+Hiring Team \\
+\Company
+
+Dear Hiring Team,
+
+I'm a second-year Electrical and Computer Engineering student at Shiv Nadar Institution of Eminence, applying for the \Role{} at \Company. \WhyCompany
+
+At Manipal Hackathon 2026, I built Ripple on my own: a simulator that shows how one failure in a city's power, water, transit, or telecom network spreads to the rest, and recommends fixes that it verifies by re-running the simulation. On a synthetic 120-asset city network, its top verified fix prevents up to 91\% of failures. When all-pairs shortest path became the bottleneck, I wrote a parallel Rust extension on PyO3 that made it 25x faster (33x on 2,000-node graphs) and cut worst-case recommendation latency from 1.5\,s to 190\,ms. Because the Rust and Python paths had to agree, I added 300 pytest tests and GitHub Actions CI that checks their results match.
+
+Since July 2026, I've been building a Redis-style server in C++ on raw POSIX sockets, to understand what sits underneath the tools I use. I designed a length-prefixed binary protocol that survives fragmented TCP reads, tested with 1,000 split requests, and added an event loop over non-blocking sockets so one thread serves many clients. On loopback it handles 25,000 requests per second, at 38\,$\mu$s median and 82\,$\mu$s p99 latency over 100,000 round trips.
+
+\Fit
+
+Both projects have interactive demos on my portfolio at \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}}, and the code is at \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}. I'd welcome the chance to talk about how I could contribute to \Company. Thank you for your time and consideration.
+
+Sincerely, \\[0.4em]
+Abeer Miglani
+
+\end{document}
