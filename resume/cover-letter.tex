@@ -9,7 +9,7 @@
 \providecommand{\Company}{\placeholder{Company}}
 \providecommand{\Role}{\placeholder{Role} internship}
 \providecommand{\WhyCompany}{\placeholder{One or two sentences on why \Company: what the posting says the team builds, tied to Ripple or the Redis-style server.}}
-\providecommand{\Fit}{I like problems where the answer can be checked. I don't trust a speedup until tests show the results still match, and when Python was too slow for Ripple, I learned enough Rust to write the extension myself. I've also solved 140+ data structures and algorithms problems on LeetCode, Codeforces, CodeChef, and HackerRank.}
+\providecommand{\Fit}{I'd value the chance to work alongside experienced engineers, contribute to code reviews, collaborate across teams, and build software where correctness, performance, and reliability matter. I don't trust a speedup until testing confirms that the results remain consistent, and when Python became a bottleneck in Ripple, I learned enough Rust to build the extension myself. C++ and Python are the languages I use most, and I've solved over 140 data structures and algorithms problems.}
 
 \documentclass[letterpaper,11pt]{article}
 
@@ -62,15 +62,17 @@ Hiring Team \\
 
 Dear Hiring Team,
 
-I'm a second-year Electrical and Computer Engineering student at Shiv Nadar Institution of Eminence, applying for the \Role{} at \Company. \WhyCompany
+I'm a second-year Electrical and Computer Engineering student at Shiv Nadar Institution of Eminence, and I'm excited to apply for \Company's \Role. \WhyCompany
 
-At Manipal Hackathon 2026, I built Ripple on my own: a simulator that shows how one failure in a city's power, water, transit, or telecom network spreads to the rest, and recommends fixes that it verifies by re-running the simulation. On a synthetic 120-asset city network, its top verified fix prevents up to 91\% of failures. When all-pairs shortest path became the bottleneck, I wrote a parallel Rust extension on PyO3 that made it 25x faster (33x on 2,000-node graphs) and cut worst-case recommendation latency from 1.5\,s to 190\,ms. Because the Rust and Python paths had to agree, I added 300 pytest tests and GitHub Actions CI that checks their results match.
+At Manipal Hackathon 2026, I independently built Ripple, a simulator that demonstrates how a failure in a city's power, water, transit, or telecom network can cascade through interconnected infrastructure. It also recommends fixes and verifies them by rerunning the simulation. On a synthetic 120-asset city network, its top verified fix prevents up to 91\% of failures. When all-pairs shortest path became a performance bottleneck, I wrote a parallel Rust extension using PyO3 that made it 25x faster (33x on 2,000-node graphs), reducing worst-case recommendation latency from 1.5\,s to 190\,ms. To ensure the Rust and Python implementations produced consistent results, I added 300 pytest tests and GitHub Actions CI.
 
-Since July 2026, I've been building a Redis-style server in C++ on raw POSIX sockets, to understand what sits underneath the tools I use. I designed a length-prefixed binary protocol that survives fragmented TCP reads, tested with 1,000 split requests, and added an event loop over non-blocking sockets so one thread serves many clients. On loopback it handles 25,000 requests per second, at 38\,$\mu$s median and 82\,$\mu$s p99 latency over 100,000 round trips.
+Since July 2026, I've been building a Redis-style server in C++ using raw POSIX sockets to deepen my understanding of networking and systems programming. I designed a length-prefixed binary protocol that handles fragmented TCP reads, tested with 1,000 split requests, and implemented an event loop using non-blocking sockets to serve multiple clients on a single thread. On loopback, it handles 25,000 requests per second, with 38\,$\mu$s median and 82\,$\mu$s p99 latency across 100,000 round trips.
 
 \Fit
 
-Both projects have interactive demos on my portfolio at \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}}, and the code is at \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}. I'd welcome the chance to talk about how I could contribute to \Company. Thank you for your time and consideration.
+Both projects have interactive demos on my portfolio at \href{https://portfolio.abbykayo.com}{\underline{portfolio.abbykayo.com}}, and their code is available at \href{https://github.com/AbeerMiglani}{\underline{github.com/AbeerMiglani}}. I'd welcome the opportunity to discuss how I could contribute to \Company.
+
+Thank you for your time and consideration.
 
 Sincerely, \\[0.4em]
 Abeer Miglani
