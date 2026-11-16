@@ -6,7 +6,7 @@ export type Link = {
 export const profile = {
   name: "Abeer Miglani",
   handle: "abeer",
-  siteUrl: "https://portfolio.abbykayo.com",
+  siteUrl: "https://portfolio.abeermiglani.com",
   role: "Systems-minded software engineer",
   tagline: "I write systems software in C++.",
   pitch:

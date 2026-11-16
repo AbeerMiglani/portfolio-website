@@ -2,14 +2,15 @@
 
 # Portfolio site: working notes
 
-Abeer Miglani's personal site, live at https://portfolio.abbykayo.com. It's a single static page built with Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS v4, and deployed on Vercel. The audience is recruiters and engineers hiring for SWE internships, so it should stay fast, easy to skim and accurate.
+Abeer Miglani's personal site, live at https://portfolio.abeermiglani.com. It's a single static page built with Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS v4, and deployed on Vercel. The audience is recruiters and engineers hiring for SWE internships, so it should stay fast, easy to skim and accurate.
 
 This is the **systems edition** (C++ headline, terminal look, man-page About). It was replaced by a backend edition in Oct 2026 and rolled back to on Oct 31, 2026; see **Editions** below.
 
 ## Editions (switching)
 
 - **Backend edition** (Go/backend headline, API-docs look, JSON API at `/api`, Gruvbox console): frozen on the branch `archive/backend` at commit `12b0e71`. It carries its own CLAUDE.md, résumé and content. A `backend-v1` tag should point at the same commit; the cloud session can't create tags, so Abeer creates it in GitHub's Releases page.
-- **Systems edition** (this one): archived as `archive/systems` at `f77f019` (tag `systems-v1`). The live copy differs only in the résumé (Rust dropped from Languages) and these docs.
+- **Systems edition** (this one): archived as `archive/systems` at `f77f019` (tag `systems-v1`). The live copy has moved on since: the new domain, résumé edits (Rust and the 33x figure dropped, link underlines aligned), the cover letter template and these docs.
+- **Old domain in the archives:** both archives still link `portfolio.abbykayo.com`, which was removed. After restoring one, set `siteUrl` in `profile.ts`, the résumé and the cover letter to `portfolio.abeermiglani.com` before opening the PR.
 - **To switch editions:** don't restart the branch from an archive and open a PR. Both archives are ancestors of `main`, so that PR would be empty. Instead, on the work branch (reset to `origin/main`), run `git read-tree -u --reset <archive>`, check `git diff --cached --stat <archive>` is empty, commit that as one change, then add any follow-up edits, push and open a PR into `main`. Archive the outgoing edition first (`create_branch` through the GitHub MCP works; tags don't).
 - **Don't edit an archive branch** except to fix something Abeer asks for there; each is the record of its edition.
 
@@ -38,7 +39,7 @@ There are no unit tests. Before pushing, verify changes by running `lint` and `b
 
 - **Stopping the server:** don't use `pkill -f` or `pgrep -f` with a pattern like `next`; it matches your own shell and kills it (exit 144). Find the PID with `ps -eo pid,args | awk '/next-server|next start -p 3100/ && !/awk/ {print $1}'` and `kill` that.
 - **Browser and network:** Chromium can't reach the internet without the agent proxy, and Playwright's proxy option also routes `localhost` through it (which fails). So run the browser without a proxy against the local server, and stub outside calls with `page.route`. For `git log`, fetch real JSON first with `curl https://api.github.com/repos/AbeerMiglani/redis-cpp/commits?per_page=100` and serve it from the route. Test the failure path with a 403 too.
-- **Production can't be screenshotted from here**, because of the certificate check. Check it with `curl` instead: `curl -s -A "Mozilla/5.0" https://portfolio.abbykayo.com | grep …` for HTML, and plain `curl -s https://portfolio.abbykayo.com` for the text résumé.
+- **Production can't be screenshotted from here**, because of the certificate check. Check it with `curl` instead: `curl -s -A "Mozilla/5.0" https://portfolio.abeermiglani.com | grep …` for HTML, and plain `curl -s https://portfolio.abeermiglani.com` for the text résumé.
 - **Preview deployments need a Vercel login**, so the `curl` user-agent rewrite can only be tested locally (`npm run start`) or on production after merging.
 - **Element screenshots** sometimes render a word (e.g. "comms" in the Ripple legend) blue. That's a screenshot artifact; the computed colour is the normal muted grey.
 
@@ -72,7 +73,8 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 
 - **Vercel project:** `portfolio-website` (`prj_LAImArYCTA7TxXK7ZxlnEF9yTVYG`) in team "Abeer's projects" (`team_MisghZjZoPCf2CdjxcdsDpKx`). Production branch is `main`.
 - **Framework preset:** `vercel.json` pins `"framework": "nextjs"`. The project was created as "Other", and without this pin `/` returns 404.
-- **Domain:** `portfolio.abbykayo.com` uses DNS managed at Cloudflare (registrar Porkbun). It needs a `CNAME portfolio → cname.vercel-dns.com` record set to **DNS only** (grey cloud). Proxying it through Cloudflare breaks SSL with error 525. The root `abbykayo.com` is separate and not part of this project.
+- **Domain:** `portfolio.abeermiglani.com` (since Nov 2026). DNS is at Porkbun: a `CNAME portfolio → ebbbb925b3c98062.vercel-dns-017.com` record, which is Vercel's project-specific target (`cname.vercel-dns.com` also works). The apex `abeermiglani.com` is parked at Porkbun and isn't part of this project.
+- **Old domain:** `portfolio.abbykayo.com` was removed on purpose, from Vercel and from DNS, with no redirect. Abeer wants no link at all between that domain and the portfolio, so never add it back, redirect from it or mention it on the site.
 - **Preview protection:** preview URLs need a Vercel login. To fetch one, use the Vercel MCP `web_fetch_vercel_url`; plain `curl` won't work.
 
 ## Code map
@@ -85,7 +87,7 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 | `src/lib/terminal.ts` | Terminal command table: pure functions that return `Line[]`, optional effects (`clear`, `open`, `theme`, `tty`) and an optional `pending` promise whose lines are appended when it resolves (used by `git log`) |
 | `src/components/Terminal.tsx` | Terminal UI (client component): history, Tab completion, Ctrl+L, suggestion chips, full-screen `tty` mode (Esc or `exit` to leave) |
 | `src/lib/plaintext.ts` | The site as a 78-column text résumé, built from `src/content`. Served at `/resume.txt` (plain) and `/resume.ansi` (coloured), and printed by the terminal's `curl` |
-| `next.config.ts` | Rewrites `/` to `/resume.ansi` when the user agent is `curl`, `wget`, HTTPie or `xh`, so `curl https://portfolio.abbykayo.com` prints the résumé. Both responses stay static |
+| `next.config.ts` | Rewrites `/` to `/resume.ansi` when the user agent is `curl`, `wget`, HTTPie or `xh`, so `curl https://portfolio.abeermiglani.com` prints the résumé. Both responses stay static |
 | `src/components/Hero.tsx` | Name, tagline, pitch, status, CTAs, the "Try `cat redis` or `help`" hint, and the terminal |
 | `src/components/ProjectCard.tsx` | Featured (wide, with roadmap) and secondary (full width, art beside text, smaller type) card layouts |
 | `src/components/ProjectArt.tsx` | Picks each project's artwork by `slug` |
@@ -93,7 +95,7 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 | `src/components/CascadeDemo.tsx`, `src/lib/cascade.ts` | Ripple card: click a node to knock it out and watch its load spread to neighbours in waves (a simplified illustration, not Motter–Lai) |
 | `src/components/Sections.tsx` | Earlier (under Projects), About (the `man abeer` page, on the band), Contact (the panel) |
 | `src/components/SectionHeader.tsx` | `$ command` line above a plain section title |
-| `src/components/TopBar.tsx`, `Footer.tsx`, `ThemeToggle.tsx` | Chrome. The footer's bottom bar carries the `$ curl https://portfolio.abbykayo.com` hint and the build SHA |
+| `src/components/TopBar.tsx`, `Footer.tsx`, `ThemeToggle.tsx` | Chrome. The footer's bottom bar carries the `$ curl https://portfolio.abeermiglani.com` hint and the build SHA |
 | `src/components/ArrowIcon.tsx` | The ↗ used on outbound links, drawn as SVG because IBM Plex has no `↗` glyph (the character fell back to a mismatched font). Don't type `↗` in markup |
 | `src/app/page.tsx` | Page order: Hero, Projects (plus Earlier), About, Contact |
 | `src/app/robots.ts`, `sitemap.ts` | Static SEO routes |
@@ -207,7 +209,6 @@ The goal is a clean, light page whose identity comes from terminal motifs. It wa
 
 - **Redis benchmarks:** the card and the résumé quote the same numbers (25K requests per second, 38 µs median and 82 µs p99 latency over 100K loopback round trips). When Abeer re-benchmarks, for example with many concurrent clients on the event loop, update both together, and keep the conditions (loopback, number of round trips) next to the numbers.
 - **Write-up:** a short post on one thing learned (framing, epoll vs threads, why `read_full` exists), once Abeer writes it.
-- **Name line:** an "also Abby" line explaining the `abbykayo` domain was considered and left out; ask before adding it.
 - **Abeer's to-dos:** pin `redis-cpp` and `ripple` on the GitHub profile, and check the link preview in LinkedIn's Post Inspector.
 
 ## Résumé

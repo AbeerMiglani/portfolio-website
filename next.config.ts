@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Command-line HTTP clients asking for the home page get a plain-text résumé
-  // instead of HTML: `curl https://portfolio.abbykayo.com`. Browsers are
+  // instead of HTML: `curl https://portfolio.abeermiglani.com`. Browsers are
   // unaffected, and both responses stay static.
   async rewrites() {
     return {
