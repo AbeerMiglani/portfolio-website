@@ -13,7 +13,7 @@ export const profile = {
     "ECE undergrad at Shiv Nadar University. Right now I'm building a Redis-style server from scratch in C++; before that, Ripple, a simulator for how failures cascade through a city's infrastructure.",
   status: "Open to SWE internships",
   learning: ["Rust"],
-  email: "am319@snu.edu.in",
+  email: "hello@abeermiglani.com",
   resume: "/resume.pdf",
   links: [
     { label: "GitHub", href: "https://github.com/AbeerMiglani" },

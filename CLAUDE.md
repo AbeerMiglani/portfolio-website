@@ -73,7 +73,8 @@ Audited in Sep 2026 with Lighthouse 12. Take the median of three mobile runs aga
 
 - **Vercel project:** `portfolio-website` (`prj_LAImArYCTA7TxXK7ZxlnEF9yTVYG`) in team "Abeer's projects" (`team_MisghZjZoPCf2CdjxcdsDpKx`). Production branch is `main`.
 - **Framework preset:** `vercel.json` pins `"framework": "nextjs"`. The project was created as "Other", and without this pin `/` returns 404.
-- **Domain:** `portfolio.abeermiglani.com` (since Nov 2026). DNS is at Porkbun: a `CNAME portfolio → ebbbb925b3c98062.vercel-dns-017.com` record, which is Vercel's project-specific target (`cname.vercel-dns.com` also works). The apex `abeermiglani.com` is parked at Porkbun and isn't part of this project.
+- **Domain:** `portfolio.abeermiglani.com` (since Nov 2026). DNS is at Porkbun: a `CNAME portfolio → ebbbb925b3c98062.vercel-dns-017.com` record, which is Vercel's project-specific target (`cname.vercel-dns.com` also works). The apex `abeermiglani.com` has no website and isn't part of this project.
+- **Email:** the contact address is `hello@abeermiglani.com` (`profile.email`, the résumé and the cover letter). Mail on abeermiglani.com runs on Tuta, so keep its MX, SPF, DKIM (`s1`/`s2._domainkey`), DMARC and MTA-STS records at Porkbun whenever DNS is edited.
 - **Old domain:** `portfolio.abbykayo.com` was removed on purpose, from Vercel and from DNS, with no redirect. Abeer wants no link at all between that domain and the portfolio, so never add it back, redirect from it or mention it on the site.
 - **Preview protection:** preview URLs need a Vercel login. To fetch one, use the Vercel MCP `web_fetch_vercel_url`; plain `curl` won't work.
 
