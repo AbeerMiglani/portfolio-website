@@ -1,4 +1,4 @@
-// The site as plain text, for `curl https://portfolio.abbykayo.com` (see the
+// The site as plain text, for `curl https://portfolio.abeermiglani.com` (see the
 // rewrite in next.config.ts) and the terminal's own `curl` command. Built from
 // src/content, so it never drifts from the page. No phone number, ever.
 import { earlier } from "@/content/earlier";

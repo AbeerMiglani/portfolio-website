@@ -1,6 +1,6 @@
 # portfolio-website
 
-Source for [portfolio.abbykayo.com](https://portfolio.abbykayo.com), built with Next.js (App Router), TypeScript and Tailwind CSS, and deployed on Vercel.
+Source for [portfolio.abeermiglani.com](https://portfolio.abeermiglani.com), built with Next.js (App Router), TypeScript and Tailwind CSS, and deployed on Vercel.
 
 ## Editions
 

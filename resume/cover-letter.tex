@@ -1,0 +1,84 @@
+% Cover letter in the résumé's style: same header, type and margins.
+% Build with `npm run cover` (see scripts/render-cover.mjs).
+%
+% The per-company parts are the four macros below. Built on its own, this file
+% shows them as red [placeholders]. A tailored letter in resume/letters/
+% (gitignored) defines all four with \newcommand and then \input{cover-letter}.
+% Every fact here must match resume.tex.
+
+\providecommand{\Company}{\placeholder{Company}}
+\providecommand{\Role}{\placeholder{Role} internship}
+\providecommand{\WhyCompany}{\placeholder{One or two sentences on why \Company: what the posting says the team builds, tied to Ripple or the Redis-style server.}}
+\providecommand{\Fit}{I'd value the chance to work alongside experienced engineers, contribute to code reviews, collaborate across teams, and build software where correctness, performance, and reliability matter. I don't trust a speedup until testing confirms that the results remain consistent, and when Python became a bottleneck in Ripple, I learned enough Rust to build the extension myself. C++ and Python are the languages I use most, and I've solved over 140 data structures and algorithms problems.}
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+\raggedright
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.85em}
+
+\pdfgentounicode=1
+
+\newcommand{\placeholder}[1]{\textcolor{red}{[#1]}}
+
+% Underlined link, as in the résumé: the \vphantom gives every link the depth of
+% "/", so all the underlines sit at one height with or without descenders.
+\newcommand{\ulink}[2]{\href{#1}{\underline{#2\vphantom{/}}}}
+
+\begin{document}
+
+%-----------HEADER (same as the résumé)-----------
+\begin{center}
+    \textbf{\Huge \scshape Abeer Miglani} \\ \vspace{3pt}
+    \small \ulink{mailto:am319@snu.edu.in}{am319@snu.edu.in} \quad
+    \ulink{https://portfolio.abeermiglani.com}{portfolio.abeermiglani.com} \quad
+    \ulink{https://linkedin.com/in/abeermiglani}{linkedin.com/in/abeermiglani} \quad
+    \ulink{https://github.com/AbeerMiglani}{github.com/AbeerMiglani}
+\end{center}
+\vspace{-6pt}
+\rule{\textwidth}{0.4pt}
+
+%-----------LETTER-----------
+\today
+
+Hiring Team \\
+\Company
+
+Dear Hiring Team,
+
+I'm a second-year Electrical and Computer Engineering student at Shiv Nadar Institution of Eminence, and I'm excited to apply for \Company's \Role. \WhyCompany
+
+At Manipal Hackathon 2026, I independently built Ripple, a simulator that demonstrates how a failure in a city's power, water, transit, or telecom network can cascade through interconnected infrastructure. It also recommends fixes and verifies them by rerunning the simulation. On a synthetic 120-asset city network, its top verified fix prevents up to 91\% of failures. When all-pairs shortest path became a performance bottleneck, I wrote a parallel Rust extension using PyO3 that made it 25x faster, reducing worst-case recommendation latency from 1.5\,s to 190\,ms. To ensure the Rust and Python implementations produced consistent results, I added 300 pytest tests and GitHub Actions CI.
+
+Since July 2026, I've been building a Redis-style server in C++ using raw POSIX sockets to deepen my understanding of networking and systems programming. I designed a length-prefixed binary protocol that handles fragmented TCP reads, tested with 1,000 split requests, and implemented an event loop using non-blocking sockets to serve multiple clients on a single thread. On loopback, it handles 25,000 requests per second, with 38\,$\mu$s median and 82\,$\mu$s p99 latency across 100,000 round trips.
+
+\Fit
+
+Both projects have interactive demos on my portfolio at \ulink{https://portfolio.abeermiglani.com}{portfolio.abeermiglani.com}, and their code is available at \ulink{https://github.com/AbeerMiglani}{github.com/AbeerMiglani}. I'd welcome the opportunity to discuss how I could contribute to \Company.
+
+Thank you for your time and consideration.
+
+Sincerely, \\[0.4em]
+Abeer Miglani
+
+\end{document}
